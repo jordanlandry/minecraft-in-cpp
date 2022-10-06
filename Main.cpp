@@ -6,13 +6,13 @@
 #include<glm/gtc/matrix_transform.hpp>
 #include<glm/gtc/type_ptr.hpp>
 
-#include"Texture.h"
-#include"shaderClass.h"
-#include"VAO.h"
-#include"VBO.h"
-#include"EBO.h"
-#include"Camera.h"
-#include "Block.h"
+#include "headers/Texture.h"
+#include "headers/shaderClass.h"
+#include "headers/VAO.h"
+#include "headers/VBO.h"
+#include "headers/EBO.h"
+#include "headers/Camera.h"
+#include "headers/Block.h"
 
 const unsigned int width = 1280;
 const unsigned int height = 720;
@@ -99,7 +99,7 @@ int main()
 
 
 	// Generates Shader object using shaders default.vert and default.frag
-	Shader shaderProgram("default.vert", "default.frag");
+	Shader shaderProgram("shaders/default.vert", "shaders/default.frag");
 
 	VAO VAO1;
 	VAO1.Bind();
