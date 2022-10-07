@@ -35,6 +35,7 @@ void Block::Init(Shader shaderProgram)
 	float y = pos[1];
 	float z = pos[2];
 
+	// Front
 	GLfloat vertices1[] = {
 		-0.5f + x, -0.5f + y,  0.5f + z,		0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
 		 0.5f + x, -0.5f + y,  0.5f + z,		0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
@@ -42,6 +43,7 @@ void Block::Init(Shader shaderProgram)
 		-0.5f + x,  0.5f + y,  0.5f + z,		0.0f, 0.0f, 0.0f,	0.0f, 1.0f,
 	};
 
+	// Right
 	GLfloat vertices2[] = {
 		0.5f + x, -0.5f + y,  0.5f + z,		0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
 		0.5f + x, -0.5f + y, -0.5f + z,		0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
@@ -49,20 +51,23 @@ void Block::Init(Shader shaderProgram)
 		0.5f + x,  0.5f + y,  0.5f + z,		0.0f, 0.0f, 0.0f,	0.0f, 1.0f,
 	};
 
+	// Back
 	GLfloat vertices3[] = {
-		-0.5f + x, -0.5f + y, -0.5f + z,		0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
-		 0.5f + x, -0.5f + y, -0.5f + z,		0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
-		 0.5f + x,  0.5f + y, -0.5f + z,		0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
 		-0.5f + x,  0.5f + y, -0.5f + z,		0.0f, 0.0f, 0.0f,	0.0f, 1.0f,
+		 0.5f + x,  0.5f + y, -0.5f + z,		0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
+		 0.5f + x, -0.5f + y, -0.5f + z,		0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
+		-0.5f + x, -0.5f + y, -0.5f + z,		0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
 	};
 
+	// Left
 	GLfloat vertices4[] = {
-		-0.5f + x, -0.5f + y,  0.5f + z,		0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
-		-0.5f + x, -0.5f + y, -0.5f + z,		0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
-		-0.5f + x,  0.5f + y, -0.5f + z,		0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
 		-0.5f + x,  0.5f + y,  0.5f + z,		0.0f, 0.0f, 0.0f,	0.0f, 1.0f,
+		-0.5f + x,  0.5f + y, -0.5f + z,		0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
+		-0.5f + x, -0.5f + y, -0.5f + z,		0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
+		-0.5f + x, -0.5f + y,  0.5f + z,		0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
 	};
 
+	// Top
 	GLfloat vertices5[] = {
 		-0.5f + x,  0.5f + y,  0.5f + z,		0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
 		 0.5f + x,  0.5f + y,  0.5f + z,		0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
@@ -70,11 +75,12 @@ void Block::Init(Shader shaderProgram)
 		-0.5f + x,  0.5f + y, -0.5f + z,		0.0f, 0.0f, 0.0f,	0.0f, 1.0f,
 	};
 
+	// Bottom
 	GLfloat vertices6[] = {
-		-0.5f + x, -0.5f + y,  0.5f + z,		0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
-		 0.5f + x, -0.5f + y,  0.5f + z,		0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
-		 0.5f + x, -0.5f + y, -0.5f + z,		0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
 		-0.5f + x, -0.5f + y, -0.5f + z,		0.0f, 0.0f, 0.0f,	0.0f, 1.0f,
+		 0.5f + x, -0.5f + y, -0.5f + z,		0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
+		 0.5f + x, -0.5f + y,  0.5f + z,		0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
+		-0.5f + x, -0.5f + y,  0.5f + z,		0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
 	};
 
 	GLuint indices[] = { 0, 2, 1, 0, 3, 2 };
@@ -110,12 +116,12 @@ void Block::Render(bool world[16][16][16])
 		int y = pos[1];
 		int z = pos[2];
 		
-		if (i == 0 && world[x][y][z - 1]) continue;		// Front
-		if (i == 1 && world[x + 1][y][z]) continue;		// Right
-		if (i == 2 && world[x][y][z + 1]) continue;		// Back
-		if (i == 3 && world[x - 1][y][z]) continue;		// Left
-		if (i == 4 && world[x][y + 1][z]) continue;		// Top
-		if (i == 5 && world[x][y - 1][z]) continue;		// Bottom
+		//if (i == 0 && world[x][y][z - 1]) continue;		// Front
+		//if (i == 1 && world[x + 1][y][z]) continue;		// Right
+		//if (i == 2 && world[x][y][z + 1]) continue;		// Back
+		//if (i == 3 && world[x - 1][y][z]) continue;		// Left
+		//if (i == 4 && world[x][y + 1][z]) continue;		// Top
+		//if (i == 5 && world[x][y - 1][z]) continue;		// Bottom
 
 		Textures[i].Bind();
 		VAOs[i].Bind();

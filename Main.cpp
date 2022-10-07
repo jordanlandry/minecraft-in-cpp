@@ -99,7 +99,6 @@ int main()
 	// Game loop
 	while (!glfwWindowShouldClose(window))
 	{
-
 		crntTime = glfwGetTime();
 		timeDiff = crntTime - prevTime;
 		counter++;
