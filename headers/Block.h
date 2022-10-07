@@ -25,6 +25,6 @@ public:
 
 	Block(int aId, float aPos[3]);
 	void Init(Shader shaderProgram);
-	void Render();
+	void Render(bool world[16][16][16]);
 };
 #endif

@@ -101,7 +101,7 @@ void Block::Init(Shader shaderProgram)
 	}
 }
 
-void Block::Render()
+void Block::Render(bool world[16][16][16])
 {
 
 	for (int i = 0; i < 6; i++)
@@ -109,8 +109,13 @@ void Block::Render()
 		int x = pos[0];
 		int y = pos[1];
 		int z = pos[2];
-		/*if (i == 0 && blockFilled[x][y][z - 1]) continue;
-		if (i == 2 && blockFilled[x][y][z + 1]) continue;*/
+		
+		if (i == 0 && world[x][y][z - 1]) continue;		// Front
+		if (i == 1 && world[x + 1][y][z]) continue;		// Right
+		if (i == 2 && world[x][y][z + 1]) continue;		// Back
+		if (i == 3 && world[x - 1][y][z]) continue;		// Left
+		if (i == 4 && world[x][y + 1][z]) continue;		// Top
+		if (i == 5 && world[x][y - 1][z]) continue;		// Bottom
 
 		Textures[i].Bind();
 		VAOs[i].Bind();

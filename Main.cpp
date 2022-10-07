@@ -7,6 +7,7 @@
 #include<glm/gtc/type_ptr.hpp>
 
 #include <vector>
+#include <string>
 #include <time.h>
 
 #include "headers/Texture.h"
@@ -47,9 +48,20 @@ int main()
 	// Generates Shader object using shaders default.vert and default.frag
 	Shader shaderProgram("shaders/default.vert", "shaders/default.frag");
 
-
 	const int maxHeight = 15;
 	std::vector<Block> blocks;
+
+	bool world[16][16][16];
+	for (int i = 0; i < 16; i++)
+	{
+		for (int j = 0; j < 16; j++)
+		{
+			for (int k = 0; k < 16; k++)
+			{
+				world[i][j][k] = false;
+			}
+		}
+	}
 
 	for (int i = 0; i < 15; i++)
 	{
@@ -63,27 +75,56 @@ int main()
 				Block b(id, pos);
 				b.Init(shaderProgram);
 				blocks.push_back(b);
+				world[i][j][k] = true;
 			}
 		}
 	}
 
 	glEnable(GL_DEPTH_TEST);
+
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_FRONT);
+	glFrontFace(GL_CCW);
+
 	Camera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f));
+
+	// Frame rate
+	double prevTime = 0.0;
+	double crntTime = 0.0;
+	double timeDiff;
+	unsigned int counter = 0;
+
+	glfwSwapInterval(0);
 
 	// Game loop
 	while (!glfwWindowShouldClose(window))
 	{
+
+		crntTime = glfwGetTime();
+		timeDiff = crntTime - prevTime;
+		counter++;
+		if (timeDiff >= 1.0 / 30)
+		{
+			std::string FPS = std::to_string((1.0 / timeDiff) * counter);
+			std::string newTitle = "FPS: " + FPS;
+			glfwSetWindowTitle(window, newTitle.c_str());
+
+			prevTime = crntTime;
+			counter = 0;
+			camera.Inputs(window);
+		}
+
+
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);				// Background Color
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		shaderProgram.Activate();
 
 		// Handles camera inputs
-		camera.Inputs(window);
 		camera.Matrix(70.0f, 0.1f, 100.0f, shaderProgram, "camMatrix");
 
 		for (int i = 0; i < blocks.size(); i++)
 		{
-			blocks[i].Render();
+			blocks[i].Render(world);
 		}
 		
 		glfwSwapBuffers(window);
