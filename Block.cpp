@@ -1,6 +1,5 @@
 #include "headers/Block.h"
 
-
 Block::Block(int aId, float aPos[3])
 {
 	indices = { 0, 2, 1, 0, 3, 2 };
@@ -9,10 +8,10 @@ Block::Block(int aId, float aPos[3])
 	{
 		textures[0] = (char*) "assets/grass_block_side.png";
 		textures[1] = (char*) "assets/grass_block_side.png";
-		textures[2] = (char*) "assets/grass_block_side.png";
-		textures[3] = (char*) "assets/grass_block_side.png";
-		textures[4] = (char*) "assets/grass.png";
-		textures[5] = (char*) "assets/dirt.png";
+textures[2] = (char*)"assets/grass_block_side.png";
+textures[3] = (char*)"assets/grass_block_side.png";
+textures[4] = (char*)"assets/grass.png";
+textures[5] = (char*)"assets/dirt.png";
 	}
 
 	if (id == 2)
@@ -78,7 +77,7 @@ void Block::Init(Shader shaderProgram)
 		-0.5f + x, -0.5f + y, -0.5f + z,		0.0f, 0.0f, 0.0f,	0.0f, 1.0f,
 	};
 
-	GLuint indices[] = {0, 2, 1, 0, 3, 2};
+	GLuint indices[] = { 0, 2, 1, 0, 3, 2 };
 	for (int i = 0; i < 6; i++) {
 		VAOs[i].Bind();
 		VBO VBO1(i == 0 ? vertices1 : i == 1 ? vertices2 : i == 2 ? vertices3 : i == 3 ? vertices4 : i == 4 ? vertices5 : vertices6, sizeof(vertices1));
@@ -104,8 +103,15 @@ void Block::Init(Shader shaderProgram)
 
 void Block::Render()
 {
+
 	for (int i = 0; i < 6; i++)
 	{
+		int x = pos[0];
+		int y = pos[1];
+		int z = pos[2];
+		/*if (i == 0 && blockFilled[x][y][z - 1]) continue;
+		if (i == 2 && blockFilled[x][y][z + 1]) continue;*/
+
 		Textures[i].Bind();
 		VAOs[i].Bind();
 		glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(int), GL_UNSIGNED_INT, 0);

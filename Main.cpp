@@ -7,6 +7,7 @@
 #include<glm/gtc/type_ptr.hpp>
 
 #include <vector>
+#include <time.h>
 
 #include "headers/Texture.h"
 #include "headers/shaderClass.h"
@@ -15,6 +16,7 @@
 #include "headers/EBO.h"
 #include "headers/Camera.h"
 #include "headers/Block.h"
+
 
 const unsigned int width = 1280;
 const unsigned int height = 720;
@@ -45,22 +47,25 @@ int main()
 	// Generates Shader object using shaders default.vert and default.frag
 	Shader shaderProgram("shaders/default.vert", "shaders/default.frag");
 
-	float pos1[] = { 0.0f, 0.0f, 0.0f };
-	Block b1(2, pos1);
-	b1.Init(shaderProgram);
 
-	float pos2[] = { 0.0f, 3.0f, 0.0f };
-	Block b2(1, pos2);
-	b2.Init(shaderProgram);
+	const int maxHeight = 15;
+	std::vector<Block> blocks;
 
-	float pos3[] = { 0.0f, 1.0f, 0.0f };
-	Block b3(2, pos3);
-	b3.Init(shaderProgram);
+	for (int i = 0; i < 15; i++)
+	{
+		for (int j = 0; j < maxHeight; j++)
+		{
 
-	float pos4[] = { 0.0f, 2.0f, 0.0f };
-	Block b4(2, pos4);
-	b4.Init(shaderProgram);
-
+			for (int k = 0; k < 15; k++)
+			{
+				float pos[] = { i, j, k };
+				int id = j == maxHeight - 1 ? 1 : 2;
+				Block b(id, pos);
+				b.Init(shaderProgram);
+				blocks.push_back(b);
+			}
+		}
+	}
 
 	glEnable(GL_DEPTH_TEST);
 	Camera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f));
@@ -76,10 +81,10 @@ int main()
 		camera.Inputs(window);
 		camera.Matrix(70.0f, 0.1f, 100.0f, shaderProgram, "camMatrix");
 
-		b1.Render();
-		b2.Render();
-		b3.Render();
-		b4.Render();
+		for (int i = 0; i < blocks.size(); i++)
+		{
+			blocks[i].Render();
+		}
 		
 		glfwSwapBuffers(window);
 		glfwPollEvents();
