@@ -63,6 +63,8 @@ int main()
 		}
 	}
 
+	srand((unsigned)time(NULL));
+	const unsigned int maxBedrockLayer = 4;
 	for (int i = 0; i < 15; i++)
 	{
 		for (int j = 0; j < maxHeight; j++)
@@ -70,8 +72,22 @@ int main()
 
 			for (int k = 0; k < 15; k++)
 			{
+				bool isBedrock;
+				if (j > maxBedrockLayer) isBedrock = false;
+				else
+				{	
+					if (j == 0) isBedrock = true;
+					else if ((float)rand() / RAND_MAX > 0.5f) isBedrock = true;
+					else isBedrock = false;
+				}
+
 				float pos[] = { i, j, k };
-				int id = j == maxHeight - 1 ? 1 : 2;
+				int id;
+				if (j == maxHeight - 1) id = 1;
+				else if (isBedrock) id = 3;
+				else id = 2;
+
+
 				Block b(id, pos);
 				b.Init(shaderProgram);
 				blocks.push_back(b);

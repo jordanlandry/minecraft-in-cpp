@@ -8,10 +8,10 @@ Block::Block(int aId, float aPos[3])
 	{
 		textures[0] = (char*) "assets/grass_block_side.png";
 		textures[1] = (char*) "assets/grass_block_side.png";
-textures[2] = (char*)"assets/grass_block_side.png";
-textures[3] = (char*)"assets/grass_block_side.png";
-textures[4] = (char*)"assets/grass.png";
-textures[5] = (char*)"assets/dirt.png";
+		textures[2] = (char*)"assets/grass_block_side.png";
+		textures[3] = (char*)"assets/grass_block_side.png";
+		textures[4] = (char*)"assets/grass.png";
+		textures[5] = (char*)"assets/dirt.png";
 	}
 
 	if (id == 2)
@@ -22,6 +22,16 @@ textures[5] = (char*)"assets/dirt.png";
 		textures[3] = (char*)"assets/dirt.png";
 		textures[4] = (char*)"assets/dirt.png";
 		textures[5] = (char*)"assets/dirt.png";
+	}
+
+	if (id == 3)
+	{
+		textures[0] = (char*)"assets/bedrock.png";
+		textures[1] = (char*)"assets/bedrock.png";
+		textures[2] = (char*)"assets/bedrock.png";
+		textures[3] = (char*)"assets/bedrock.png";
+		textures[4] = (char*)"assets/bedrock.png";
+		textures[5] = (char*)"assets/bedrock.png";
 	}
 
 	pos[0] = aPos[0];
