@@ -73,16 +73,12 @@ int main()
 			for (int k = 1; k < 15; k++)
 			{
 
-				if ((float)rand() / RAND_MAX > 0.5f) continue;
-
 				bool isBedrock;
-				if (j > maxBedrockLayer) isBedrock = false;
-				else
-				{
-					if (j == 0) isBedrock = true;
-					else if ((float)rand() / RAND_MAX > 0.5f) isBedrock = true;
-					else isBedrock = false;
-				}
+				if (j == 1) isBedrock = true;
+				else if ((float)rand() / RAND_MAX > 0.5f) continue;
+				else if (j > maxBedrockLayer) isBedrock = false;
+				else if ((float)rand() / RAND_MAX > 0.5f) isBedrock = true;
+				else isBedrock = false;
 
 				float pos[] = { i, j, k };
 				char* id;
