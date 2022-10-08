@@ -14,6 +14,10 @@ public:
 	char* id;
 	float pos[3];
 
+	const static int xSize = 9;
+	const static int ySize = 9;
+	const static int zSize = 9;
+
 	std::vector<unsigned int> indices;
 	char* textures[6];
 
@@ -25,6 +29,6 @@ public:
 
 	Block(char* aId, float aPos[3]);
 	void Init(Shader shaderProgram);
-	void Render(bool world[16][16][16]);
+	void Render(bool world[xSize][ySize][zSize]);
 };
 #endif

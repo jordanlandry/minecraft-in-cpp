@@ -48,41 +48,33 @@ int main()
 	// Generates Shader object using shaders default.vert and default.frag
 	Shader shaderProgram("shaders/default.vert", "shaders/default.frag");
 
+	// Generate world
+	const int worldXSize = 8;
+	const int worldYSize = 8;
+	const int worldZSize = 8;
 
-	bool world[16][16][16];
-	for (int i = 0; i < 16; i++)
-	{
-		for (int j = 0; j < 16; j++)
-		{
-			for (int k = 0; k < 16; k++)
-			{
-				world[i][j][k] = false;
-			}
-		}
-	}
-	const int maxHeight = 15;
+	bool world[worldXSize + 1][worldYSize + 1][worldZSize + 1];
+
 	std::vector<Block> blocks;
 
 	srand((unsigned)time(NULL));
 	const unsigned int maxBedrockLayer = 4;
-	for (int i = 1; i < 15; i++)
+	for (int i = 1; i < worldXSize; i++)
 	{
-		for (int j = 1; j < maxHeight; j++)
+		for (int j = 1; j < worldYSize; j++)
 		{
-
-			for (int k = 1; k < 15; k++)
+			for (int k = 1; k < worldZSize; k++)
 			{
-
 				bool isBedrock;
 				if (j == 1) isBedrock = true;
-				else if ((float)rand() / RAND_MAX > 0.5f) continue;
+				//else if ((float)rand() / RAND_MAX > 0.5f) continue;		
 				else if (j > maxBedrockLayer) isBedrock = false;
 				else if ((float)rand() / RAND_MAX > 0.5f) isBedrock = true;
 				else isBedrock = false;
 
 				float pos[] = { i, j, k };
 				char* id;
-				if (j == maxHeight - 1) id = (char*)"grass_block";
+				if (j == worldYSize - 1) id = (char*)"grass_block";
 				else if (isBedrock) id =  (char*) "bedrock_block";
 				else id =  (char*) "dirt_block";
 
