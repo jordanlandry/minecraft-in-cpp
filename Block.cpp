@@ -129,11 +129,11 @@ void Block::Init(Shader shaderProgram)
 void Block::Render(bool world[16][16][16])
 {
 
+	int x = pos[0];
+	int y = pos[1];
+	int z = pos[2];
 	for (int i = 0; i < 6; i++)
 	{
-		int x = pos[0];
-		int y = pos[1];
-		int z = pos[2];
 
 		if (i == 0 && world[x][y][z + 1] == true) continue;		// Front
 		if (i == 1 && world[x + 1][y][z] == true) continue;		// Right
