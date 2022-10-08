@@ -48,8 +48,6 @@ int main()
 	// Generates Shader object using shaders default.vert and default.frag
 	Shader shaderProgram("shaders/default.vert", "shaders/default.frag");
 
-	const int maxHeight = 15;
-	std::vector<Block> blocks;
 
 	bool world[16][16][16];
 	for (int i = 0; i < 16; i++)
@@ -62,31 +60,35 @@ int main()
 			}
 		}
 	}
+	const int maxHeight = 15;
+	std::vector<Block> blocks;
 
 	srand((unsigned)time(NULL));
 	const unsigned int maxBedrockLayer = 4;
-	for (int i = 0; i < 15; i++)
+	for (int i = 1; i < 15; i++)
 	{
-		for (int j = 0; j < maxHeight; j++)
+		for (int j = 1; j < maxHeight; j++)
 		{
 
-			for (int k = 0; k < 15; k++)
+			for (int k = 1; k < 15; k++)
 			{
+
+				if ((float)rand() / RAND_MAX > 0.5f) continue;
+
 				bool isBedrock;
 				if (j > maxBedrockLayer) isBedrock = false;
 				else
-				{	
+				{
 					if (j == 0) isBedrock = true;
 					else if ((float)rand() / RAND_MAX > 0.5f) isBedrock = true;
 					else isBedrock = false;
 				}
 
 				float pos[] = { i, j, k };
-				int id;
-				if (j == maxHeight - 1) id = 1;
-				else if (isBedrock) id = 3;
-				else id = 2;
-
+				char* id;
+				if (j == maxHeight - 1) id = (char*)"grass_block";
+				else if (isBedrock) id =  (char*) "bedrock_block";
+				else id =  (char*) "dirt_block";
 
 				Block b(id, pos);
 				b.Init(shaderProgram);
@@ -141,7 +143,7 @@ int main()
 		{
 			blocks[i].Render(world);
 		}
-		
+
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}

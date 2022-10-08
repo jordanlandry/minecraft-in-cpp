@@ -11,7 +11,7 @@
 class Block
 {
 public:
-	int id;
+	char* id;
 	float pos[3];
 
 	std::vector<unsigned int> indices;
@@ -23,7 +23,7 @@ public:
 	std::vector<EBO> EBOs;
 	std::vector<Texture> Textures;
 
-	Block(int aId, float aPos[3]);
+	Block(char* aId, float aPos[3]);
 	void Init(Shader shaderProgram);
 	void Render(bool world[16][16][16]);
 };

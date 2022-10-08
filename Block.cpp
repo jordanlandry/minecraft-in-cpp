@@ -1,20 +1,20 @@
 #include "headers/Block.h"
 
-Block::Block(int aId, float aPos[3])
+Block::Block(char* aId, float aPos[3])
 {
 	indices = { 0, 2, 1, 0, 3, 2 };
 	id = aId;
-	if (id == 1)
+	if (id == "grass_block")
 	{
-		textures[0] = (char*) "assets/grass_block_side.png";
-		textures[1] = (char*) "assets/grass_block_side.png";
+		textures[0] = (char*)"assets/grass_block_side.png";
+		textures[1] = (char*)"assets/grass_block_side.png";
 		textures[2] = (char*)"assets/grass_block_side.png";
 		textures[3] = (char*)"assets/grass_block_side.png";
 		textures[4] = (char*)"assets/grass.png";
 		textures[5] = (char*)"assets/dirt.png";
 	}
 
-	if (id == 2)
+	else if (id == "dirt_block")
 	{
 		textures[0] = (char*)"assets/dirt.png";
 		textures[1] = (char*)"assets/dirt.png";
@@ -24,7 +24,7 @@ Block::Block(int aId, float aPos[3])
 		textures[5] = (char*)"assets/dirt.png";
 	}
 
-	if (id == 3)
+	else if (id == "bedrock_block")
 	{
 		textures[0] = (char*)"assets/bedrock.png";
 		textures[1] = (char*)"assets/bedrock.png";
@@ -32,6 +32,15 @@ Block::Block(int aId, float aPos[3])
 		textures[3] = (char*)"assets/bedrock.png";
 		textures[4] = (char*)"assets/bedrock.png";
 		textures[5] = (char*)"assets/bedrock.png";
+	}
+	else
+	{
+		textures[0] = (char*)"";
+		textures[1] = (char*)"";
+		textures[2] = (char*)"";
+		textures[3] = (char*)"";
+		textures[4] = (char*)"";
+		textures[5] = (char*)"";
 	}
 
 	pos[0] = aPos[0];
@@ -125,13 +134,13 @@ void Block::Render(bool world[16][16][16])
 		int x = pos[0];
 		int y = pos[1];
 		int z = pos[2];
-		
-		//if (i == 0 && world[x][y][z - 1]) continue;		// Front
-		//if (i == 1 && world[x + 1][y][z]) continue;		// Right
-		//if (i == 2 && world[x][y][z + 1]) continue;		// Back
-		//if (i == 3 && world[x - 1][y][z]) continue;		// Left
-		//if (i == 4 && world[x][y + 1][z]) continue;		// Top
-		//if (i == 5 && world[x][y - 1][z]) continue;		// Bottom
+
+		if (i == 0 && world[x][y][z + 1] == true) continue;		// Front
+		if (i == 1 && world[x + 1][y][z] == true) continue;		// Right
+		if (i == 2 && world[x][y][z - 1] == true) continue;		// Back
+		if (i == 3 && world[x - 1][y][z] == true) continue;		// Left
+		if (i == 4 && world[x][y + 1][z] == true) continue;		// Top
+		if (i == 5 && world[x][y - 1][z] == true) continue;		// Bottom
 
 		Textures[i].Bind();
 		VAOs[i].Bind();
