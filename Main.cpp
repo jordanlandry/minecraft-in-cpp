@@ -146,17 +146,16 @@ int main()
 
 	const int chunkSize = 16;
 	int renderDistance = 4;
-	int loadedChunksX = 0;
-	int loadedChunksZ = 0;
+	int loadedChunks = 0;
 	// Game loop
 	while (!glfwWindowShouldClose(window))
 	{
 		// Load chunks
-		if (loadedChunksX != renderDistance || loadedChunksZ != renderDistance)
+		if (loadedChunks != renderDistance)
 		{
-			for (int x = chunkSize * loadedChunksX; x < (loadedChunksX + 1) * chunkSize; x++)
+			for (int x = chunkSize * loadedChunks; x < (loadedChunks + 1) * chunkSize; x++)
 			{
-				for (int z = chunkSize * loadedChunksZ; z < (loadedChunksZ + 1) * chunkSize; z++)
+				for (int z = chunkSize * loadedChunks; z < (loadedChunks + 1) * chunkSize; z++)
 				{
 					int height = (int)(fPerlinNoise2D[z * worldZSize + x] * 64.0f - 25);
 					if (height < 0) height = 0;
@@ -183,8 +182,7 @@ int main()
 					}
 				}
 			}
-				loadedChunksZ++;
-			loadedChunksX++;
+			loadedChunks++;
 		}
 
 		//camera.PrintCoords();
