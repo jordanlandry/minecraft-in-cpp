@@ -33,6 +33,15 @@ Block::Block(char* aId, float aPos[3])
 		textures[4] = (char*)"assets/bedrock.png";
 		textures[5] = (char*)"assets/bedrock.png";
 	}
+	else if (id == "stone_block")
+	{
+		textures[0] = (char*)"assets/stone.png";
+		textures[1] = (char*)"assets/stone.png";
+		textures[2] = (char*)"assets/stone.png";
+		textures[3] = (char*)"assets/stone.png";
+		textures[4] = (char*)"assets/stone.png";
+		textures[5] = (char*)"assets/stone.png";
+	}
 	else
 	{
 		textures[0] = (char*)"";
@@ -128,9 +137,9 @@ void Block::Init(Shader shaderProgram)
 
 void Block::Render(bool world[xSize][ySize][zSize])
 {
-	int x = pos[0];
-	int y = pos[1];
-	int z = pos[2];
+	int x = pos[0] + 1;
+	int y = pos[1] + 1;
+	int z = pos[2] + 1;
 	for (int i = 0; i < 6; i++)
 	{
 		if (i == 0 && world[x][y][z + 1] == true) continue;		// Front

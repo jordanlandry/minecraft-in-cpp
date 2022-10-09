@@ -100,3 +100,10 @@ void Camera::Inputs(GLFWwindow* window)
 		firstClick = true;
 	}
 }
+
+void Camera::PrintCoords()
+{
+	std::cout << "x: " << (int)Position.x << " ";
+	std::cout << "y: " << (int)Position.y << " ";
+	std::cout << "z: " << (int)Position.z << " " << std::endl;
+}

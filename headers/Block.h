@@ -14,9 +14,9 @@ public:
 	char* id;
 	float pos[3];
 
-	const static int xSize = 9;
-	const static int ySize = 9;
-	const static int zSize = 9;
+	const static int xSize = 101;
+	const static int ySize = 60;
+	const static int zSize = 101;
 
 	std::vector<unsigned int> indices;
 	char* textures[6];
