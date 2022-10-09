@@ -1,6 +1,7 @@
 #ifndef BLOCK_CLASS_H
 #define BLOCK_CLASS_H
 
+
 #include "Texture.h"
 #include <vector>
 #include "VAO.h"
@@ -13,6 +14,8 @@ class Block
 public:
 	char* id;
 	float pos[3];
+
+	bool hasInit;
 
 	const static int xSize = 101;
 	const static int ySize = 60;
@@ -28,7 +31,8 @@ public:
 	std::vector<Texture> Textures;
 
 	Block(char* aId, float aPos[3]);
-	void Init(Shader shaderProgram);
-	void Render(bool world[xSize][ySize][zSize]);
+	void Init(Shader shaderProgram, bool world[101][60][101]);
+	void Render(bool world[101][60][101]);
+	void Delete();
 };
 #endif

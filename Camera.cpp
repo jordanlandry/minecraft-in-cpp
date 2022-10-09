@@ -1,5 +1,12 @@
 #include "headers/Camera.h"
 
+
+Camera::Camera()
+{
+	Camera::width = 1280;
+	Camera::height = 720;
+	Position = glm::vec3(0, 0, 0);
+}
 Camera::Camera(int width, int height, glm::vec3 position)
 {
 	Camera::width = width;
