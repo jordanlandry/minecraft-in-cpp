@@ -81,21 +81,7 @@ int main()
 	PerlinNoise2D(worldXSize, worldZSize, fNoiseSeed2D, 4, 12.0f, fPerlinNoise2D);
 
 
-	// Create World
-	for (int i = 0; i < worldXSize; i++)
-	{
-		for (int j = 0; j < worldZSize; j++)
-		{
-			int height = (int)(fPerlinNoise2D[j * worldZSize + i] * 64.0f);
-			if (height < 0) height = 0;
-			for (int y = 0; y <= height; y++)
-			{
-
-			}
-		}
-	}
-
-
+	
 
 	// Camera
 	Camera camera(width, height, glm::vec3(	0, 12, 0));
@@ -120,6 +106,40 @@ int main()
 
 	int lastX = 0;
 	int lastZ = 0;
+
+	std::vector<std::vector<std::vector<Block>>> worldBlocks;
+
+	// Create World
+	for (int i = 0; i < worldXSize; i++)
+	{
+		std::vector<std::vector<Block>> temp;
+		worldBlocks.push_back(temp);
+		for (int j = 0; j < worldZSize; j++)
+		{
+			std::vector < Block > temp1;
+			worldBlocks[i].push_back(temp1);
+
+			int height = (int)(fPerlinNoise2D[j * worldZSize + i] * 32.0f);
+			if (height < 0) height = 0;
+			for (int y = 0; y <= height; y++)
+			{
+				bool isBedrock;
+				if (y == 0) isBedrock = true;
+				else isBedrock = false;
+
+				float pos[] = { i, y, j };
+				char* id;
+
+				if (isBedrock) id = (char*)"bedrock_block";
+				else if (y == height) id = (char*)"grass_block";
+				else if (y > 0 && y < height - 4) id = (char*)"stone_block";
+				else id = (char*)"dirt_block";
+
+				Block b(id, pos);
+				worldBlocks[i][j].push_back(b);
+			}
+		}
+	}
 
 
 	// Game loop
@@ -155,10 +175,25 @@ int main()
 		// Handles camera inputs
 		camera.Matrix(70.0f, 0.1f, 100.0f, shaderProgram, "camMatrix");
 
-		for (int i = 0; i < blocks.size(); i++)
+		/*for (int i = 0; i < blocks.size(); i++)
 		{
 			blocks[i].Init(shaderProgram, world);
 			blocks[i].Render(world);
+		}*/
+		// Load chunks
+		for (int c = loadedChunks; c < renderDistance; c++)
+		{
+			for (int i = chunkX * chunkSize; i < (chunkX + 1) * chunkSize; i++)
+			{
+				for (int j = chunkZ * chunkSize; j < (chunkZ + 1) * chunkSize; j++)
+				{
+					for (int k = 0; k < worldBlocks[i][j].size(); k++)
+					{
+						worldBlocks[i][j][k].Init(shaderProgram, world);
+						worldBlocks[i][j][k].Render(world);
+					}
+				}
+			}
 		}
 
 		glfwSwapBuffers(window);
@@ -173,50 +208,52 @@ int main()
 
 
 
-		// Load chunks
-		for (int i = loadedChunks; i < renderDistance; i++)
-		{
-			for (int j = 0; j < blocks.size(); j++)
-			{
-				blocks[j].Delete();
-			}
+		
 
-			for (int x = chunkX * chunkSize; x < (chunkX + 1) * chunkSize; x++)
-			{
-				for (int z = chunkZ * chunkSize; z < (chunkZ+ 1) * chunkSize; z++)
-				{
-					int height = (int)(fPerlinNoise2D[z * worldZSize + x] * 12.0f);
-					if (height < 0) height = 0;
-					for (int y = 0; y <= height; y++)
-					{
 
-						std::cout << y << std::endl;
-						bool isBedrock;
-						if (y == 0) isBedrock = true;
-						/*else if ((float)rand() / RAND_MAX > 0.5f) continue;
-						else if (y > maxBedrockLayer) isBedrock = false;
-						else if ((float)rand() / RAND_MAX > 0.5f) isBedrock = true;*/
-						else isBedrock = false;
+		//for (int i = loadedChunks; i < renderDistance; i++)
+		//{
+		//	for (int j = 0; j < blocks.size(); j++)
+		//	{
+		//		blocks[j].Delete();
+		//	}
 
-						float pos[] = { x, y, z };
-						char* id;
-						if (isBedrock) id = (char*)"bedrock_block";
-						//else if (height < 10 && y > height - 3) id = (char*)"water";
-						else if (y == height) id = (char*)"grass_block";
-						else if (y > 0 && y < height - 4) id = (char*)"stone_block";
-						else id = (char*)"dirt_block";
+		//	for (int x = chunkX * chunkSize; x < (chunkX + 1) * chunkSize; x++)
+		//	{
+		//		for (int z = chunkZ * chunkSize; z < (chunkZ+ 1) * chunkSize; z++)
+		//		{
+		//			int height = (int)(fPerlinNoise2D[z * worldZSize + x] * 12.0f);
+		//			if (height < 0) height = 0;
+		//			for (int y = 0; y <= height; y++)
+		//			{
 
-						Block b(id, pos);
+		//				//std::cout << y << std::endl;
+		//				bool isBedrock;
+		//				if (y == 0) isBedrock = true;
+		//				/*else if ((float)rand() / RAND_MAX > 0.5f) continue;
+		//				else if (y > maxBedrockLayer) isBedrock = false;
+		//				else if ((float)rand() / RAND_MAX > 0.5f) isBedrock = true;*/
+		//				else isBedrock = false;
 
-						blocks.push_back(b);
-						
-						count++;
-						world[x + 1][y + 1][z + 1] = true;
-					}
-				}
-			}
-			loadedChunks++;
-		}
+		//				float pos[] = { x, y, z };
+		//				char* id;
+		//				if (isBedrock) id = (char*)"bedrock_block";
+		//				//else if (height < 10 && y > height - 3) id = (char*)"water";
+		//				else if (y == height) id = (char*)"grass_block";
+		//				else if (y > 0 && y < height - 4) id = (char*)"stone_block";
+		//				else id = (char*)"dirt_block";
+
+		//				Block b(id, pos);
+
+		//				blocks.push_back(b);
+		//				
+		//				count++;
+		//				world[x + 1][y + 1][z + 1] = true;
+		//			}
+		//		}
+		//	}
+		//	loadedChunks++;
+		//}
 
 		// Update last chunk
 		lastX = chunkX;
