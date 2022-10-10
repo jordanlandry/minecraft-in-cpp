@@ -54,18 +54,9 @@ int main()
 	// Generates Shader object using shaders default.vert and default.frag
 	Shader shaderProgram("shaders/default.vert", "shaders/default.frag");
 
-	// Generate world
-	const int worldXSize = 128;
-	const int worldYSize = 128;
-	const int worldZSize = 128;
-
-	bool world[101][60][101];
-
 	std::vector<Block> blocks;
 
 	srand((unsigned)time(NULL));
-	const unsigned int maxBedrockLayer = 4;
-
 
 	glEnable(GL_DEPTH_TEST);
 
@@ -73,53 +64,40 @@ int main()
 	glCullFace(GL_FRONT);
 	glFrontFace(GL_CCW);
 
+
+	// Generate Seed
 	float* fNoiseSeed2D = nullptr;
 	float* fPerlinNoise2D = nullptr;
-	fNoiseSeed2D = new float[worldXSize * worldZSize];
-	fPerlinNoise2D = new float[worldXSize * worldZSize];
-	for (int i = 0; i < worldXSize * worldZSize; i++) fNoiseSeed2D[i] = (float)rand() / (float)RAND_MAX;
-	PerlinNoise2D(worldXSize, worldZSize, fNoiseSeed2D, 4, 12.0f, fPerlinNoise2D);
-
-
-	
+	fNoiseSeed2D = new float[5000 * 5000];
+	fPerlinNoise2D = new float[5000 * 5000];
+	for (int i = 0; i < 5000 * 5000; i++) fNoiseSeed2D[i] = (float)rand() / (float)RAND_MAX;
+	PerlinNoise2D(5000, 5000, fNoiseSeed2D, 4, 12.0f, fPerlinNoise2D);
 
 	// Camera
-	Camera camera(width, height, glm::vec3(	0, 12, 0));
+	Camera camera(width, height, glm::vec3(0, 12, 0));
 
 	// Frame rate
 	double prevTime = 0.0;
 	double crntTime = 0.0;
 	double timeDiff;
 	unsigned int counter = 0;
-	
+
 	//Player player;
 	glfwSwapInterval(0);
-
-	const int chunkSize = 4;
-	int renderDistance = 2;
-	int currentChunk = 0;
-	int lastChunk = 0;
-	int loadedChunks = 0;
-
-	int chunkX = 0;
-	int chunkZ = 0;
-
-	int lastX = 0;
-	int lastZ = 0;
 
 	std::vector<std::vector<std::vector<Block>>> worldBlocks;
 
 	// Create World
-	for (int i = 0; i < worldXSize; i++)
+	for (int i = 0; i < 32; i++)
 	{
 		std::vector<std::vector<Block>> temp;
 		worldBlocks.push_back(temp);
-		for (int j = 0; j < worldZSize; j++)
+		for (int j = 0; j < 32; j++)
 		{
-			std::vector < Block > temp1;
+			std::vector <Block> temp1;
 			worldBlocks[i].push_back(temp1);
 
-			int height = (int)(fPerlinNoise2D[j * worldZSize + i] * 32.0f);
+			int height = (int)(fPerlinNoise2D[j * 64 + i] * 32.0f);
 			if (height < 0) height = 0;
 			for (int y = 0; y <= height; y++)
 			{
@@ -131,6 +109,7 @@ int main()
 				char* id;
 
 				if (isBedrock) id = (char*)"bedrock_block";
+	
 				else if (y == height) id = (char*)"grass_block";
 				else if (y > 0 && y < height - 4) id = (char*)"stone_block";
 				else id = (char*)"dirt_block";
@@ -141,6 +120,17 @@ int main()
 		}
 	}
 
+	const int chunkSize = 8;
+	int renderDistance = 2;
+	int currentChunk = 0;
+	int lastChunk = 0;
+	int loadedChunks = 0;
+
+	int chunkX = 0;
+	int chunkZ = 0;
+
+	int lastX = 0;
+	int lastZ = 0;
 
 	// Game loop
 	while (!glfwWindowShouldClose(window))
@@ -163,10 +153,10 @@ int main()
 			prevTime = crntTime;
 			counter = 0;
 
-			camera.Inputs(window, world);
+			camera.Inputs(window);
 		}
 
-		//player.camera.PrintCoords();
+		//camera.PrintCoords();
 
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);				// Background Color
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -175,22 +165,71 @@ int main()
 		// Handles camera inputs
 		camera.Matrix(70.0f, 0.1f, 100.0f, shaderProgram, "camMatrix");
 
-		/*for (int i = 0; i < blocks.size(); i++)
-		{
-			blocks[i].Init(shaderProgram, world);
-			blocks[i].Render(world);
-		}*/
 		// Load chunks
-		for (int c = loadedChunks; c < renderDistance; c++)
-		{
-			for (int i = chunkX * chunkSize; i < (chunkX + 1) * chunkSize; i++)
-			{
-				for (int j = chunkZ * chunkSize; j < (chunkZ + 1) * chunkSize; j++)
-				{
-					for (int k = 0; k < worldBlocks[i][j].size(); k++)
+		for (int c = loadedChunks; c < renderDistance; c++) {
+			for (int i = chunkX * chunkSize; i < (chunkX + renderDistance) * chunkSize; i++) {
+				for (int j = chunkZ * chunkSize; j < (chunkZ + renderDistance) * chunkSize; j++) {
+
+					if (i >= worldBlocks.size()) {
+						for (int x = i; x <= i + chunkSize; x++) {
+							std::vector<std::vector<Block>> temp;
+							worldBlocks.push_back(temp);
+
+							for (int z = j; z <= j + chunkSize; z++) {
+								std::vector <Block> temp1;
+								worldBlocks[x].push_back(temp1);
+
+								int height = (int)(fPerlinNoise2D[x * 32 + z] * 32.0f - 11);
+								if (height < 0) height = 0;
+
+								for (int y = 0; y <= height; y++) {
+									bool isBedrock;
+									if (y == 0) isBedrock = true;
+									else isBedrock = false;
+
+									float pos[] = { x, y, z };
+									char* id;
+
+									if (isBedrock) id = (char*)"bedrock_block";
+
+									else if (y == height) id = (char*)"grass_block";
+									else if (y > 0 && y < height - 4) id = (char*)"stone_block";
+									else id = (char*)"dirt_block";
+
+									Block b(id, pos);
+									worldBlocks[x][z].push_back(b);
+								}
+							}
+						}
+					}
+					
+					else
 					{
-						worldBlocks[i][j][k].Init(shaderProgram, world);
-						worldBlocks[i][j][k].Render(world);
+						for (int k = 0; k < worldBlocks[i][j].size(); k++)
+						{
+							bool neighbours[6] = { false, false, false, false, false, false };
+							/*if (worldBlocks[i].size() - 1 > j)
+								if (worldBlocks[i][j + 1][k].id != "air" ) neighbours[0] = true;*/
+
+							if (worldBlocks.size() - 1 > i)
+								if (worldBlocks[i + 1][j][k].id != "air") neighbours[2] = true;
+
+							if (j > 0)
+								if (worldBlocks[i][j - 1][k].id != "air") neighbours[2] = true;
+
+							if (i > 0)
+								if (worldBlocks[i - 1][j][k].id != "air") neighbours[3] = true;
+
+							if (worldBlocks[i][j].size() - 1 > k)
+								if (worldBlocks[i][j][k + 1].id != "air") neighbours[4] = true;
+
+							if (k > 0)
+								if (worldBlocks[i][j][k - 1].id != "air") neighbours[5] = true;
+
+
+							worldBlocks[i][j][k].Init(shaderProgram);
+							worldBlocks[i][j][k].Render(neighbours);
+						}
 					}
 				}
 			}
@@ -205,55 +244,6 @@ int main()
 		chunkZ = camera.Position.z / chunkSize;
 
 		if (chunkX != lastX || chunkZ != lastZ) loadedChunks = 0;
-
-
-
-		
-
-
-		//for (int i = loadedChunks; i < renderDistance; i++)
-		//{
-		//	for (int j = 0; j < blocks.size(); j++)
-		//	{
-		//		blocks[j].Delete();
-		//	}
-
-		//	for (int x = chunkX * chunkSize; x < (chunkX + 1) * chunkSize; x++)
-		//	{
-		//		for (int z = chunkZ * chunkSize; z < (chunkZ+ 1) * chunkSize; z++)
-		//		{
-		//			int height = (int)(fPerlinNoise2D[z * worldZSize + x] * 12.0f);
-		//			if (height < 0) height = 0;
-		//			for (int y = 0; y <= height; y++)
-		//			{
-
-		//				//std::cout << y << std::endl;
-		//				bool isBedrock;
-		//				if (y == 0) isBedrock = true;
-		//				/*else if ((float)rand() / RAND_MAX > 0.5f) continue;
-		//				else if (y > maxBedrockLayer) isBedrock = false;
-		//				else if ((float)rand() / RAND_MAX > 0.5f) isBedrock = true;*/
-		//				else isBedrock = false;
-
-		//				float pos[] = { x, y, z };
-		//				char* id;
-		//				if (isBedrock) id = (char*)"bedrock_block";
-		//				//else if (height < 10 && y > height - 3) id = (char*)"water";
-		//				else if (y == height) id = (char*)"grass_block";
-		//				else if (y > 0 && y < height - 4) id = (char*)"stone_block";
-		//				else id = (char*)"dirt_block";
-
-		//				Block b(id, pos);
-
-		//				blocks.push_back(b);
-		//				
-		//				count++;
-		//				world[x + 1][y + 1][z + 1] = true;
-		//			}
-		//		}
-		//	}
-		//	loadedChunks++;
-		//}
 
 		// Update last chunk
 		lastX = chunkX;
@@ -309,4 +299,40 @@ void PerlinNoise2D(int nWidth, int nHeight, float* fSeed, int nOctaves, float fB
 			// Scale to seed range
 			fOutput[y * nWidth + x] = fNoise / fScaleAcc;
 		}
+}
+
+
+void generateWorld(int startX, int endX, int startZ, int endZ, float* fNoiseSeed2d[])
+{
+	/*for (int i = startX; i < endX; i++)
+	{
+		std::vector<std::vector<Block>> temp;
+		worldBlocks.push_back(temp);
+		for (int j = startZ; j < endZ; j++)
+		{
+			std::vector <Block> temp1;
+			worldBlocks[i].push_back(temp1);
+
+			int height = (int)(fPerlinNoise2D[j * worldZSize + i] * 32.0f);
+			if (height < 0) height = 0;
+			for (int y = 0; y <= height; y++)
+			{
+				bool isBedrock;
+				if (y == 0) isBedrock = true;
+				else isBedrock = false;
+
+				float pos[] = { i, y, j };
+				char* id;
+
+				if (isBedrock) id = (char*)"bedrock_block";
+
+				else if (y == height) id = (char*)"grass_block";
+				else if (y > 0 && y < height - 4) id = (char*)"stone_block";
+				else id = (char*)"dirt_block";
+
+				Block b(id, pos);
+				worldBlocks[i][j].push_back(b);
+			}
+		}
+	}*/
 }

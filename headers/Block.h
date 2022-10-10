@@ -31,8 +31,8 @@ public:
 	std::vector<Texture> Textures;
 
 	Block(char* aId, float aPos[3]);
-	void Init(Shader shaderProgram, bool world[101][60][101]);
-	void Render(bool world[101][60][101]);
+	void Init(Shader shaderProgram);
+	void Render(bool neighbours[6]);
 	void Delete();
 };
 #endif

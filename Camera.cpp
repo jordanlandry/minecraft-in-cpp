@@ -19,7 +19,7 @@ void Camera::Matrix(float FOVdeg, float nearPlane, float farPlane, Shader& shade
 }
 
 
-void Camera::Inputs(GLFWwindow* window, bool world[101][60][101])
+void Camera::Inputs(GLFWwindow* window)
 {
 	// Update Position
 	int x = Position.x;
