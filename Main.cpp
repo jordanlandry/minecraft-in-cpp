@@ -78,7 +78,7 @@ int main()
 	fNoiseSeed2D = new float[worldXSize * worldZSize];
 	fPerlinNoise2D = new float[worldXSize * worldZSize];
 	for (int i = 0; i < worldXSize * worldZSize; i++) fNoiseSeed2D[i] = (float)rand() / (float)RAND_MAX;
-	PerlinNoise2D(worldXSize, worldZSize, fNoiseSeed2D, 6, 12.0f, fPerlinNoise2D);
+	PerlinNoise2D(worldXSize, worldZSize, fNoiseSeed2D, 6, 128.0f, fPerlinNoise2D);
 
 	// Camera
 	Camera camera(width, height, glm::vec3(	29, 12, 29));
@@ -89,20 +89,21 @@ int main()
 	double timeDiff;
 	unsigned int counter = 0;
 	
+	//Player player;
 	glfwSwapInterval(0);
 
 	const int chunkSize = 16;
-	int renderDistance = 2;
+	int renderDistance = 3;
 	int currentChunk = 0;
 	int lastChunk = 0;
 	int loadedChunks = 0;
 
-
 	// Game loop
-	Player player;
 	while (!glfwWindowShouldClose(window))
 	{
-		player.HandleInputs(window);
+		/*player.HandleInputs(window);
+		player.Update(world);*/
+
 		//camera.PrintCoords();
 
 		// FPS 
@@ -118,9 +119,10 @@ int main()
 			prevTime = crntTime;
 			counter = 0;
 
-			camera.Inputs(window);
+			camera.Inputs(window, world);
 		}
 
+		//player.camera.PrintCoords();
 
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);				// Background Color
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -147,7 +149,7 @@ int main()
 			{
 				for (int z = 0; z < (loadedChunks + 1) * chunkSize; z++)
 				{
-					int height = (int)(fPerlinNoise2D[z * worldZSize + x] * 64.0f - 25);
+					int height = (int)(fPerlinNoise2D[z * worldZSize + x] * 64.0f -20);
 					if (height < 0) height = 0;
 					for (int y = 0; y <= height; y++)
 					{

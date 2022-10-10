@@ -1,12 +1,5 @@
 #include "headers/Camera.h"
 
-
-Camera::Camera()
-{
-	Camera::width = 1280;
-	Camera::height = 720;
-	Position = glm::vec3(0, 0, 0);
-}
 Camera::Camera(int width, int height, glm::vec3 position)
 {
 	Camera::width = width;
@@ -26,8 +19,38 @@ void Camera::Matrix(float FOVdeg, float nearPlane, float farPlane, Shader& shade
 }
 
 
-void Camera::Inputs(GLFWwindow* window)
+void Camera::Inputs(GLFWwindow* window, bool world[101][60][101])
 {
+	// Update Position
+	int x = Position.x;
+	int y = Position.y;
+	int z = Position.z;
+
+	/*if (world[x][y - playerHeight][z] == 204 || world[x][y - playerHeight][z] == false)
+	{
+		yVel -= G;
+	}
+
+	else
+	{
+		yVel = 0;
+		if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && !isJumping)
+		{
+			isJumping = true;
+			yVel += jumpSpeed;
+		}
+
+		if (yVel == 0)
+		{
+			isJumping = false;
+		}
+	}*/
+
+
+
+	// Update Position
+	//Position.y += yVel;
+
 	// Handles key inputs
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 	{
@@ -53,29 +76,19 @@ void Camera::Inputs(GLFWwindow* window)
 	{
 		Position += speed * -Up;
 	}
-	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+	if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS)
 	{
-		speed = 0.4f;
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 	}
-	else if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE)
-	{
-		speed = 0.2f;
-	}
-
-
-	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
-	{
+	else {
 		// Hides mouse cursor
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
-
-		if (firstClick)
+		/*if (firstClick)
 		{
 			glfwSetCursorPos(window, (width / 2), (height / 2));
 			firstClick = false;
-		}
-
-		
+		}*/
 		double mouseX;
 		double mouseY;
 
@@ -100,12 +113,12 @@ void Camera::Inputs(GLFWwindow* window)
 		// Sets mouse cursor to the middle of the screen so that it doesn't end up roaming around
 		glfwSetCursorPos(window, (width / 2), (height / 2));
 	}
-	else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE)
-	{
-		// Unhides cursor since camera is not looking around anymore
-		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-		firstClick = true;
-	}
+	//else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE)
+	//{
+	//	// Unhides cursor since camera is not looking around anymore
+	//	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+	//	firstClick = true;
+	//}
 }
 
 void Camera::PrintCoords()
