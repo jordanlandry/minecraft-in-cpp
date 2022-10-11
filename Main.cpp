@@ -121,7 +121,7 @@ int main()
 	}*/
 
 	const int chunkSize = 2;
-	int renderDistance = 1;
+	int renderDistance = 2;
 	int currentChunk = 0;
 	int lastChunk = 0;
 	int loadedChunks = 0;
@@ -133,6 +133,39 @@ int main()
 	int lastZ = 0;
 
 	std::vector<Block> blocks;
+
+
+	std::vector<std::vector<std::vector<Block>>> chunks;
+	for (int x = 0; x < chunkSize * renderDistance; x++)
+	{
+		std::vector<std::vector<Block>> temp;
+		chunks.push_back(temp);
+		for (int z = 0; z < chunkSize * renderDistance; z++)
+		{
+			std::vector <Block> temp1;
+			chunks[x].push_back(temp1);
+
+			int height = (int)(fPerlinNoise2D[z * 12 + x] * 32.0f);
+			if (height < 0) height = 0;
+			for (int y = 0; y <= height; y++)
+			{
+				bool isBedrock;
+				if (y == 0) isBedrock = true;
+				else isBedrock = false;
+
+				float pos[] = { x, y, z };
+				char* id;
+
+				if (isBedrock) id = (char*)"bedrock_block";
+				else if (y == height) id = (char*)"grass_block";
+				else if (y > 0 && y < height - 4) id = (char*)"stone_block";
+				else id = (char*)"dirt_block";
+
+				Block b(id, pos);
+				chunks[x][z].push_back(b);
+			}
+		}
+	}
 
 
 	// TODO
@@ -174,48 +207,77 @@ int main()
 		// Handles camera inputs
 		camera.Matrix(70.0f, 0.1f, 100.0f, shaderProgram, "camMatrix");
 
+		std::cout << chunkX << std::endl;
 		// Load chunks
-		for (int chunk = loadedChunks; chunk < renderDistance; chunk++)
-		{
-			for (int x = chunkX * chunkSize; x < (chunkX + renderDistance) * chunkSize; x++)
-			{
-				for (int z = chunkZ * chunkSize; z < (chunkZ + renderDistance) * chunkSize; z++)
-				{
-					int height = (int)(fPerlinNoise2D[x * 12 + z] * 32.0f - 15);
-					if (height < 0) height = 0;
-
-					for (int y = 0; y <= height; y++)
-					{
-						char* id;
-						if (y == 0) id = (char*)"bedrock_block";
-						else if (y == height) id = (char*)"grass_block";
-						else if (y > height - 4) id = (char*)"dirt_block";
-						else id = (char*)"stone_block";
-
-						float pos[] = {x, y, z};
-						Block b(id, pos);
-						blocks.push_back(b);
-					}
-				}
-			}
-		}
-
-		for (int i = 0; i < blocks.size(); i++)
-		{
-			bool neighbours[6] = { true, true, true, true, false, false };
-			blocks[i].Init(&shaderProgram);
-			blocks[i].Render(neighbours);
-		}
-
-		glfwSwapBuffers(window);
-		glfwPollEvents();
-
-		int count = 0;
 
 		chunkX = camera.Position.x / chunkSize;
 		chunkZ = camera.Position.z / chunkSize;
 
-		if (chunkX != lastX || chunkZ != lastZ) loadedChunks = 0;
+		if (chunkX != lastX || chunkZ != lastZ)
+		{
+			// Check if you are already rendering that chunk
+			
+			// Overwrite the current chunk data
+			for (int x = 0; x < renderDistance * chunkSize; x++)
+			{
+				for (int z = 0; z < renderDistance * chunkSize; z++)
+				{
+					int height = (int)(fPerlinNoise2D[(chunkX * chunkSize) * 12 + (chunkZ * chunkSize)] * 32.0f);
+					if (height < 0) height = 0;
+
+					for (int y = 0; y <= height; y++)
+					{
+						bool isBedrock;
+						if (y == 0) isBedrock = true;
+						else isBedrock = false;
+
+						float pos[] = { x + chunkX * chunkSize, y, z + chunkZ * chunkSize };
+						char* id;
+
+						if (isBedrock) id = (char*)"bedrock_block";
+						else if (y == height) id = (char*)"grass_block";
+						else if (y > 0 && y < height - 4) id = (char*)"stone_block";
+						else id = (char*)"dirt_block";
+
+						Block b(id, pos);
+						chunks[x][z][y] = b;
+					}
+				}	
+			}
+		}
+
+		else
+		{
+			/*for (int chunk = loadedChunks; chunk < renderDistance; chunk++)
+			{*/
+				for (int x = 0; x < (chunkSize * renderDistance); x++)
+				{
+					for (int z = 0; z < (chunkSize * renderDistance); z++)
+					{
+						int height = (int)(fPerlinNoise2D[x * 12 + z] * 32.0f);
+						if (height < 0) height = 0;
+
+						for (int y = 0; y <= height; y++)
+						{
+							bool pos[6] = { false, false, false, false, false, false };
+							chunks[x][z][y].Init(&shaderProgram);
+							chunks[x][z][y].Render(pos);
+						}
+					}
+				}
+				//loadedChunks++;
+			//}
+		}
+
+		/*for (int i = 0; i < blocks.size(); i++)
+		{
+			bool neighbours[6] = { true, true, true, true, false, false };
+			blocks[i].Init(&shaderProgram);
+			blocks[i].Render(neighbours);
+		}*/
+
+		glfwSwapBuffers(window);
+		glfwPollEvents();
 
 		// Update last chunk
 		lastX = chunkX;
