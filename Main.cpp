@@ -257,9 +257,27 @@ int main()
 					if (height < 0) height = 0;
 					for (int y = 0; y <= height; y++)
 					{
-						bool a[6] = { false, false, false, false, false, false };
+						bool pos[6] = { false, false, false, false, false, false };
+						if (chunkBuffer[x].size() > z + 1)
+							if (chunkBuffer[x][z + 1][y].id != "air") pos[0] = true;
+
+						if (chunkBuffer.size() > x + 1)
+							if (chunkBuffer[x + 1][z][y].id != "air") pos[1] = true;
+
+						if (z > 0)
+							if (chunkBuffer[x][z - 1][y].id != "air") pos[2] = true;
+
+						if (x > 0)
+							if (chunkBuffer[x - 1][z][y].id != "air") pos[3] = true;
+
+						if (chunkBuffer[x][z].size() > y + 1)
+							if (chunkBuffer[x][z][y + 1].id != "air") pos[4] = true;
+
+						if (y > 0)
+							if (chunkBuffer[x][z][y - 1].id != "air") pos[5] = true;
+
 						chunkBuffer[x][z][y].Init(&shaderProgram);
-						chunkBuffer[x][z][y].Render(a);
+						chunkBuffer[x][z][y].Render(pos);
 					}
 				}
 			}
