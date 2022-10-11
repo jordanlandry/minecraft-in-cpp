@@ -68,10 +68,10 @@ int main()
 	// Generate Seed
 	float* fNoiseSeed2D = nullptr;
 	float* fPerlinNoise2D = nullptr;
-	fNoiseSeed2D = new float[5000 * 5000];
-	fPerlinNoise2D = new float[5000 * 5000];
-	for (int i = 0; i < 5000 * 5000; i++) fNoiseSeed2D[i] = (float)rand() / (float)RAND_MAX;
-	PerlinNoise2D(5000, 5000, fNoiseSeed2D, 4, 32.0f, fPerlinNoise2D);
+	fNoiseSeed2D = new float[128 * 128];
+	fPerlinNoise2D = new float[128 * 128];
+	for (int i = 0; i < 128 * 127; i++) fNoiseSeed2D[i] = (float)rand() / (float)RAND_MAX;
+	PerlinNoise2D(128, 128, fNoiseSeed2D, 4, 32.0f, fPerlinNoise2D);
 
 	// Camera
 	Camera camera(width, height, glm::vec3(0, 12, 0));
@@ -87,7 +87,7 @@ int main()
 
 
 	const int chunkSize = 16;
-	int renderDistance = 1;
+	int renderDistance = 2;
 	int currentChunk = 0;
 	int lastChunk = 0;
 	int loadedChunks = 0;
