@@ -15,7 +15,7 @@ public:
 	char* id;
 	float pos[3];
 
-	bool hasInit;
+	bool hasInit = false;
 
 	const static int xSize = 101;
 	const static int ySize = 60;
