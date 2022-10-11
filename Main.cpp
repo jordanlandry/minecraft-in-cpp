@@ -71,7 +71,7 @@ int main()
 	fNoiseSeed2D = new float[5000 * 5000];
 	fPerlinNoise2D = new float[5000 * 5000];
 	for (int i = 0; i < 5000 * 5000; i++) fNoiseSeed2D[i] = (float)rand() / (float)RAND_MAX;
-	PerlinNoise2D(5000, 5000, fNoiseSeed2D, 4, 12.0f, fPerlinNoise2D);
+	PerlinNoise2D(5000, 5000, fNoiseSeed2D, 4, 32.0f, fPerlinNoise2D);
 
 	// Camera
 	Camera camera(width, height, glm::vec3(0, 12, 0));
@@ -132,7 +132,9 @@ int main()
 		}
 	}
 
+	// Initialize Chunk Buffer
 	std::vector<std::vector<std::vector<Block>>> chunkBuffer;
+
 	// Game loop
 	while (!glfwWindowShouldClose(window))
 	{
@@ -177,7 +179,27 @@ int main()
 
 				for (int y = 0; y <= height; y++)
 				{
-					bool pos[6] = { true, true, true, true, false, true};
+					bool pos[6] = { false, false, false, false, false, false};
+					
+					if (chunks[x].size() > z + 1)
+						if (chunks[x][z + 1][y].id != "air") pos[0] = true;
+
+					if (chunks.size() > x + 1)
+						if (chunks[x + 1][z][y].id != "air") pos[1] = true;
+
+					if (z > 0)
+						if (chunks[x][z - 1][y].id != "air") pos[2] = true;
+
+					if (x > 0)
+						if (chunks[x - 1][z][y].id != "air") pos[3] = true;
+
+					if (chunks[x][z].size() > y + 1)
+						if (chunks[x][z][y + 1].id != "air") pos[4] = true;
+
+					if (y > 0)
+						if (chunks[x][z][y - 1].id != "air") pos[5] = true;
+
+
 					chunks[x][z][y].Init(&shaderProgram);
 					chunks[x][z][y].Render(pos);
 				}
