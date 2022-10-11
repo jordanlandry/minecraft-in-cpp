@@ -179,8 +179,8 @@ int main()
 
 				for (int y = 0; y <= height; y++)
 				{
-					bool pos[6] = { false, false, false, false, false, false};
-					
+					bool pos[6] = { false, false, false, false, false, false };
+
 					if (chunks[x].size() > z + 1)
 						if (chunks[x][z + 1][y].id != "air") pos[0] = true;
 
@@ -200,7 +200,7 @@ int main()
 						if (chunks[x][z][y - 1].id != "air") pos[5] = true;
 
 
-					chunks[x][z][y].Init(&shaderProgram);
+					chunks[x][z][y].Init(&shaderProgram, pos);
 					chunks[x][z][y].Render(pos);
 				}
 			}
@@ -208,7 +208,7 @@ int main()
 
 		// Load new chunk
 		if (chunkX != lastX || chunkZ != lastZ)
-		{	
+		{
 			// Overwrite the current chunk data
 			for (int x = 0; x < renderDistance * chunkSize; x++)
 			{
@@ -239,11 +239,9 @@ int main()
 						Block b(id, pos);
 						chunkBuffer[x][z].push_back(b);
 					}
-				}	
+				}
 			}
 		}
-
-		
 
 		else if (chunkBuffer.size() > 1)
 		{
@@ -276,7 +274,7 @@ int main()
 						if (y > 0)
 							if (chunkBuffer[x][z][y - 1].id != "air") pos[5] = true;
 
-						chunkBuffer[x][z][y].Init(&shaderProgram);
+						chunkBuffer[x][z][y].Init(&shaderProgram, pos);
 						chunkBuffer[x][z][y].Render(pos);
 					}
 				}
@@ -286,7 +284,7 @@ int main()
 			std::vector<std::vector<std::vector<Block>>> t;
 			chunkBuffer = t;
 		}
-			
+
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -354,7 +352,6 @@ void generateWorld(int startX, int endX, int startZ, int endZ, float* fNoiseSeed
 		{
 			std::vector <Block> temp1;
 			worldBlocks[i].push_back(temp1);
-
 			int height = (int)(fPerlinNoise2D[j * worldZSize + i] * 32.0f);
 			if (height < 0) height = 0;
 			for (int y = 0; y <= height; y++)
@@ -362,16 +359,12 @@ void generateWorld(int startX, int endX, int startZ, int endZ, float* fNoiseSeed
 				bool isBedrock;
 				if (y == 0) isBedrock = true;
 				else isBedrock = false;
-
 				float pos[] = { i, y, j };
 				char* id;
-
 				if (isBedrock) id = (char*)"bedrock_block";
-
 				else if (y == height) id = (char*)"grass_block";
 				else if (y > 0 && y < height - 4) id = (char*)"stone_block";
 				else id = (char*)"dirt_block";
-
 				Block b(id, pos);
 				worldBlocks[i][j].push_back(b);
 			}

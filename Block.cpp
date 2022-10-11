@@ -70,7 +70,7 @@ Block::Block(char* aId, float aPos[3])
 	pos[2] = aPos[2];
 }
 
-void Block::Init(Shader* shaderProgram)
+void Block::Init(Shader* shaderProgram, bool chunks[6])
 {
 	if (id == "air") return;
 	if (hasInit) return;
@@ -79,9 +79,8 @@ void Block::Init(Shader* shaderProgram)
 	int y = pos[1];
 	int z = pos[2];
 
-	/*if (world[x + 1][y + 1][z + 2] == true && world[x + 2][y + 1][z + 1] == true && world[x + 1][y + 1][z] == true && world[x][y + 1][z + 1] == true && world[x + 1][y + 2][z + 1] == true && world[x + 1][y][z + 1] == true) {
-		return;
-	}*/
+	if (chunks[0] == true && chunks[1] == true && chunks[2] == true && chunks[3] == true && chunks[4] == true && chunks[5] == true) return;
+
 
 	// Front
 	GLfloat vertices1[] = {
@@ -133,6 +132,7 @@ void Block::Init(Shader* shaderProgram)
 
 	GLuint indices[] = { 0, 2, 1, 0, 3, 2 };
 	for (int i = 0; i < 6; i++) {
+		//if (chunks[i]) continue;
 		VAOs[i].Bind();
 		VBO VBO1(i == 0 ? vertices1 : i == 1 ? vertices2 : i == 2 ? vertices3 : i == 3 ? vertices4 : i == 4 ? vertices5 : vertices6, sizeof(vertices1));
 		EBO EBO1(indices, sizeof(indices));
