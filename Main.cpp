@@ -120,8 +120,8 @@ int main()
 		}
 	}
 
-	const int chunkSize = 8;
-	int renderDistance = 2;
+	const int chunkSize = 2;
+	int renderDistance = 1;
 	int currentChunk = 0;
 	int lastChunk = 0;
 	int loadedChunks = 0;
@@ -132,13 +132,11 @@ int main()
 	int lastX = 0;
 	int lastZ = 0;
 
+	
 	// Game loop
 	while (!glfwWindowShouldClose(window))
 	{
-		/*player.HandleInputs(window);
-		player.Update(world);*/
-
-		//camera.PrintCoords();
+		camera.PrintCoords();
 
 		// FPS 
 		crntTime = glfwGetTime();
@@ -179,7 +177,7 @@ int main()
 								std::vector <Block> temp1;
 								worldBlocks[x].push_back(temp1);
 
-								int height = (int)(fPerlinNoise2D[x * 32 + z] * 32.0f - 11);
+								int height = (int)(fPerlinNoise2D[x * 32 + z] * 32.0f);
 								if (height < 0) height = 0;
 
 								for (int y = 0; y <= height; y++) {
@@ -202,14 +200,54 @@ int main()
 							}
 						}
 					}
+
+					if (j >= worldBlocks[i].size()) {
+
+						for (int n = worldBlocks[i].size(); n < i; n++)
+						{
+							std::vector<std::vector<Block>> temp;
+							worldBlocks.push_back(temp);
+						}
+
+						for (int x = j; x <= j + chunkSize; x++) {
+							std::vector<Block> temp;
+
+							std::cout << i << " " << worldBlocks.size() << std::endl;
+							worldBlocks[i].push_back(temp);
+
+							int height = (int)(fPerlinNoise2D[i * 32 + x] * 32.0f);
+							if (height < 0) height = 0;
+
+							for (int y = 0; y <= height; y++) {
+								bool isBedrock;
+								if (y == 0) isBedrock = true;
+								else isBedrock = false;
+
+								float pos[] = { i, y, x };
+								char* id;
+
+								if (isBedrock) id = (char*)"bedrock_block";
+
+								else if (y == height) id = (char*)"grass_block";
+								else if (y > 0 && y < height - 4) id = (char*)"stone_block";
+								else id = (char*)"dirt_block";
+
+								Block b(id, pos);
+								worldBlocks[i][x].push_back(b);
+							}
+						}
+					}
 					
-					else
+					
+					if (i < worldBlocks.size() && j < worldBlocks[i].size())
 					{
+
 						for (int k = 0; k < worldBlocks[i][j].size(); k++)
 						{
+							//std::cout << "X: " << i << " " << worldBlocks.size() << " Y: " << j << " " << worldBlocks[i].size() << " " << " Z " << k << " " << worldBlocks[i][j].size() << std::endl;
 							bool neighbours[6] = { false, false, false, false, false, false };
 							/*if (worldBlocks[i].size() - 1 > j)
-								if (worldBlocks[i][j + 1][k].id != "air" ) neighbours[0] = true;*/
+								if (worldBlocks[i][j + 1][k].id != "air" ) neighbours[0] = true;
 
 							if (worldBlocks.size() - 1 > i)
 								if (worldBlocks[i + 1][j][k].id != "air") neighbours[2] = true;
@@ -224,7 +262,7 @@ int main()
 								if (worldBlocks[i][j][k + 1].id != "air") neighbours[4] = true;
 
 							if (k > 0)
-								if (worldBlocks[i][j][k - 1].id != "air") neighbours[5] = true;
+								if (worldBlocks[i][j][k - 1].id != "air") neighbours[5] = true;*/
 
 
 							worldBlocks[i][j][k].Init(shaderProgram);
