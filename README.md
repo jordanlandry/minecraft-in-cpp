@@ -59,12 +59,20 @@ Watch me design, create and debug this project on [YouTube](https://www.youtube.
 
 ## How it works
 
+- [Rendering](#rendering)
+- [Textures](#textures)
+- [Optimizations](#optimizations)
+
 ---
 
-### Rendering
+## Rendering
 
-### Textures
+TODO Write this
 
-### Optimizations
+## Textures
 
-###
+TODO Write this
+
+## Optimizations
+
+TODO Write this
