@@ -54,7 +54,7 @@ int main()
 	// Generates Shader object using shaders default.vert and default.frag
 	Shader shaderProgram("shaders/default.vert", "shaders/default.frag");
 
-	std::vector<Block> blocks;
+	//std::vector<Block> blocks;
 
 	srand((unsigned)time(NULL));
 
@@ -85,10 +85,10 @@ int main()
 	//Player player;
 	glfwSwapInterval(0);
 
-	std::vector<std::vector<std::vector<Block>>> worldBlocks;
+	//std::vector<std::vector<std::vector<Block>>> worldBlocks;
 
 	// Create World
-	for (int i = 0; i < 32; i++)
+	/*for (int i = 0; i < 32; i++)
 	{
 		std::vector<std::vector<Block>> temp;
 		worldBlocks.push_back(temp);
@@ -118,7 +118,7 @@ int main()
 				worldBlocks[i][j].push_back(b);
 			}
 		}
-	}
+	}*/
 
 	const int chunkSize = 2;
 	int renderDistance = 1;
@@ -132,6 +132,17 @@ int main()
 	int lastX = 0;
 	int lastZ = 0;
 
+	std::vector<Block> blocks;
+
+
+	// TODO
+	// In order to efficiently render chunks, my idea is to have a vector of set size with the block information
+	// Then have a for loop for each block in that vector, have the init and render methods called,
+	// Once the game decides you should be in a new chunk, overwrite the current chunk vector with the new data based on your new position
+	// This will help manage memory usage by re-using the same variable, and also unrender the blocks not in your view distance because the data would've been overwritten,
+	// This will also make it so I won't get ANOTHER out of range error, as the chunks have a constant size
+	// 
+	// TODO is to implement this ^^
 	
 	// Game loop
 	while (!glfwWindowShouldClose(window))
@@ -164,113 +175,36 @@ int main()
 		camera.Matrix(70.0f, 0.1f, 100.0f, shaderProgram, "camMatrix");
 
 		// Load chunks
-		for (int c = loadedChunks; c < renderDistance; c++) {
-			for (int i = chunkX * chunkSize; i < (chunkX + renderDistance) * chunkSize; i++) {
-				for (int j = chunkZ * chunkSize; j < (chunkZ + renderDistance) * chunkSize; j++) {
+		for (int chunk = loadedChunks; chunk < renderDistance; chunk++)
+		{
+			for (int x = chunkX * chunkSize; x < (chunkX + renderDistance) * chunkSize; x++)
+			{
+				for (int z = chunkZ * chunkSize; z < (chunkZ + renderDistance) * chunkSize; z++)
+				{
+					int height = (int)(fPerlinNoise2D[x * 12 + z] * 32.0f - 15);
+					if (height < 0) height = 0;
 
-					if (i >= worldBlocks.size()) {
-						for (int x = i; x <= i + chunkSize; x++) {
-							std::vector<std::vector<Block>> temp;
-							worldBlocks.push_back(temp);
-
-							for (int z = j; z <= j + chunkSize; z++) {
-								std::vector <Block> temp1;
-								worldBlocks[x].push_back(temp1);
-
-								int height = (int)(fPerlinNoise2D[x * 32 + z] * 32.0f);
-								if (height < 0) height = 0;
-
-								for (int y = 0; y <= height; y++) {
-									bool isBedrock;
-									if (y == 0) isBedrock = true;
-									else isBedrock = false;
-
-									float pos[] = { x, y, z };
-									char* id;
-
-									if (isBedrock) id = (char*)"bedrock_block";
-
-									else if (y == height) id = (char*)"grass_block";
-									else if (y > 0 && y < height - 4) id = (char*)"stone_block";
-									else id = (char*)"dirt_block";
-
-									Block b(id, pos);
-									worldBlocks[x][z].push_back(b);
-								}
-							}
-						}
-					}
-
-					if (j >= worldBlocks[i].size()) {
-
-						for (int n = worldBlocks[i].size(); n < i; n++)
-						{
-							std::vector<std::vector<Block>> temp;
-							worldBlocks.push_back(temp);
-						}
-
-						for (int x = j; x <= j + chunkSize; x++) {
-							std::vector<Block> temp;
-
-							std::cout << i << " " << worldBlocks.size() << std::endl;
-							worldBlocks[i].push_back(temp);
-
-							int height = (int)(fPerlinNoise2D[i * 32 + x] * 32.0f);
-							if (height < 0) height = 0;
-
-							for (int y = 0; y <= height; y++) {
-								bool isBedrock;
-								if (y == 0) isBedrock = true;
-								else isBedrock = false;
-
-								float pos[] = { i, y, x };
-								char* id;
-
-								if (isBedrock) id = (char*)"bedrock_block";
-
-								else if (y == height) id = (char*)"grass_block";
-								else if (y > 0 && y < height - 4) id = (char*)"stone_block";
-								else id = (char*)"dirt_block";
-
-								Block b(id, pos);
-								worldBlocks[i][x].push_back(b);
-							}
-						}
-					}
-					
-					
-					if (i < worldBlocks.size() && j < worldBlocks[i].size())
+					for (int y = 0; y <= height; y++)
 					{
+						char* id;
+						if (y == 0) id = (char*)"bedrock_block";
+						else if (y == height) id = (char*)"grass_block";
+						else if (y > height - 4) id = (char*)"dirt_block";
+						else id = (char*)"stone_block";
 
-						for (int k = 0; k < worldBlocks[i][j].size(); k++)
-						{
-							//std::cout << "X: " << i << " " << worldBlocks.size() << " Y: " << j << " " << worldBlocks[i].size() << " " << " Z " << k << " " << worldBlocks[i][j].size() << std::endl;
-							bool neighbours[6] = { false, false, false, false, false, false };
-							/*if (worldBlocks[i].size() - 1 > j)
-								if (worldBlocks[i][j + 1][k].id != "air" ) neighbours[0] = true;
-
-							if (worldBlocks.size() - 1 > i)
-								if (worldBlocks[i + 1][j][k].id != "air") neighbours[2] = true;
-
-							if (j > 0)
-								if (worldBlocks[i][j - 1][k].id != "air") neighbours[2] = true;
-
-							if (i > 0)
-								if (worldBlocks[i - 1][j][k].id != "air") neighbours[3] = true;
-
-							if (worldBlocks[i][j].size() - 1 > k)
-								if (worldBlocks[i][j][k + 1].id != "air") neighbours[4] = true;
-
-							if (k > 0)
-								if (worldBlocks[i][j][k - 1].id != "air") neighbours[5] = true;*/
-
-
-							worldBlocks[i][j][k].Init(shaderProgram);
-							worldBlocks[i][j][k].Render(neighbours);
-						}
+						float pos[] = {x, y, z};
+						Block b(id, pos);
+						blocks.push_back(b);
 					}
 				}
 			}
+		}
+
+		for (int i = 0; i < blocks.size(); i++)
+		{
+			bool neighbours[6] = { true, true, true, true, false, false };
+			blocks[i].Init(&shaderProgram);
+			blocks[i].Render(neighbours);
 		}
 
 		glfwSwapBuffers(window);

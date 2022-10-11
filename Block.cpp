@@ -70,7 +70,7 @@ Block::Block(char* aId, float aPos[3])
 	pos[2] = aPos[2];
 }
 
-void Block::Init(Shader shaderProgram)
+void Block::Init(Shader* shaderProgram)
 {
 	if (id == "air") return;
 	if (hasInit) return;
@@ -154,7 +154,7 @@ void Block::Init(Shader shaderProgram)
 		Texture tex(textures[i], GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
 		Textures.push_back(tex);
 
-		tex.texUnit(shaderProgram, "tex0", 0);
+		tex.texUnit(*shaderProgram, "tex0", 0);
 	}
 
 	hasInit = true;
