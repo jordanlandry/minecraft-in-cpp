@@ -2,7 +2,6 @@
 
 Block::Block(char* aId, float aPos[3])
 {
-	if (aId == "air") return;
 	hasInit = false;
 
 	indices = { 0, 2, 1, 0, 3, 2 };
@@ -55,14 +54,14 @@ Block::Block(char* aId, float aPos[3])
 		textures[4] = (char*)"assets/water_flow.png";
 		textures[5] = (char*)"assets/water_flow.png";
 	}
-	else
+	else if (id == "air")
 	{
-		textures[0] = (char*)"";
-		textures[1] = (char*)"";
-		textures[2] = (char*)"";
-		textures[3] = (char*)"";
-		textures[4] = (char*)"";
-		textures[5] = (char*)"";
+		textures[0] = (char*)"a";
+		textures[1] = (char*)"a";
+		textures[2] = (char*)"a";
+		textures[3] = (char*)"a";
+		textures[4] = (char*)"a";
+		textures[5] = (char*)"a";
 	}
 
 	pos[0] = aPos[0];
@@ -78,6 +77,7 @@ void Block::Init(Shader* shaderProgram, bool chunks[6])
 	int x = pos[0];
 	int y = pos[1];
 	int z = pos[2];
+
 
 	if (chunks[0] == true && chunks[1] == true && chunks[2] == true && chunks[3] == true && chunks[4] == true && chunks[5] == true) return;
 
@@ -132,7 +132,6 @@ void Block::Init(Shader* shaderProgram, bool chunks[6])
 
 	GLuint indices[] = { 0, 2, 1, 0, 3, 2 };
 	for (int i = 0; i < 6; i++) {
-		//if (chunks[i]) continue;
 		VAOs[i].Bind();
 		VBO VBO1(i == 0 ? vertices1 : i == 1 ? vertices2 : i == 2 ? vertices3 : i == 3 ? vertices4 : i == 4 ? vertices5 : vertices6, sizeof(vertices1));
 		EBO EBO1(indices, sizeof(indices));
@@ -151,10 +150,11 @@ void Block::Init(Shader* shaderProgram, bool chunks[6])
 		EBO1.Delete();
 		VBO1.Delete();
 
+		
 		Texture tex(textures[i], GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
 		Textures.push_back(tex);
-
 		tex.texUnit(*shaderProgram, "tex0", 0);
+
 	}
 
 	hasInit = true;

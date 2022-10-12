@@ -70,11 +70,13 @@ int main()
 	float* fPerlinNoise2D = nullptr;
 	fNoiseSeed2D = new float[128 * 128];
 	fPerlinNoise2D = new float[128 * 128];
-	for (int i = 0; i < 128 * 127; i++) fNoiseSeed2D[i] = (float)rand() / (float)RAND_MAX;
-	PerlinNoise2D(128, 128, fNoiseSeed2D, 4, 32.0f, fPerlinNoise2D);
+	for (int i = 0; i < 128 * 128; i++) fNoiseSeed2D[i] = (float)rand() / (float)RAND_MAX;
+	PerlinNoise2D(128, 128, fNoiseSeed2D, 8, 32.0f, fPerlinNoise2D);
+
 
 	// Camera
 	Camera camera(width, height, glm::vec3(0, 12, 0));
+
 
 	// Frame rate
 	double prevTime = 0.0;
@@ -83,8 +85,7 @@ int main()
 	unsigned int counter = 0;
 
 
-	//glfwSwapInterval(0);
-
+	//glfwSwapInterval(0);          // Turning this on will disable VSync
 
 	const int chunkSize = 16;
 	int renderDistance = 2;
@@ -98,8 +99,7 @@ int main()
 	int lastX = 0;
 	int lastZ = 0;
 
-	std::vector<Block> blocks;
-
+	/*std::vector<Block> blocks;*/
 	std::vector<std::vector<std::vector<Block>>> chunks;
 	for (int x = 0; x < chunkSize * renderDistance; x++)
 	{
@@ -112,7 +112,7 @@ int main()
 
 			int height = (int)(fPerlinNoise2D[z * 12 + x] * 32.0f);
 			if (height < 0) height = 0;
-			for (int y = 0; y <= height; y++)
+			for (int y = 0; y < 40; y++)
 			{
 				bool isBedrock;
 				if (y == 0) isBedrock = true;
@@ -121,10 +121,13 @@ int main()
 				float pos[] = { x, y, z };
 				char* id;
 
+				
 				if (isBedrock) id = (char*)"bedrock_block";
+				else if (y > height) id = (char*)"air";
 				else if (y == height) id = (char*)"grass_block";
 				else if (y > 0 && y < height - 4) id = (char*)"stone_block";
 				else id = (char*)"dirt_block";
+
 
 				Block b(id, pos);
 				chunks[x][z].push_back(b);
@@ -177,7 +180,7 @@ int main()
 				int height = (int)(fPerlinNoise2D[x * 12 + z] * 32.0f);
 				if (height < 0) height = 0;
 
-				for (int y = 0; y <= height; y++)
+				for (int y = 0; y < 40; y++)
 				{
 					bool pos[6] = { false, false, false, false, false, false };
 
@@ -221,7 +224,7 @@ int main()
 					int height = (int)(fPerlinNoise2D[(chunkX * chunkSize) * 12 + (chunkZ * chunkSize)] * 32.0f);
 					if (height < 0) height = 0;
 
-					for (int y = 0; y <= height; y++)
+					for (int y = 0; y < 40; y++)
 					{
 						// Get block
 						bool isBedrock;
@@ -232,6 +235,7 @@ int main()
 						char* id;
 
 						if (isBedrock) id = (char*)"bedrock_block";
+						else if (y > height) id = (char*)"air";
 						else if (y == height) id = (char*)"grass_block";
 						else if (y > 0 && y < height - 4) id = (char*)"stone_block";
 						else id = (char*)"dirt_block";
@@ -253,7 +257,7 @@ int main()
 					int height = (int)(fPerlinNoise2D[x * 12 + z] * 32.0f);
 
 					if (height < 0) height = 0;
-					for (int y = 0; y <= height; y++)
+					for (int y = 0; y < 40; y++)
 					{
 						bool pos[6] = { false, false, false, false, false, false };
 						if (chunkBuffer[x].size() > z + 1)
@@ -295,10 +299,10 @@ int main()
 	}
 
 	// Delete all the objects we've created
-	for (int i = 0; i < blocks.size(); i++)
-	{
-		blocks[i].Delete();
-	}
+	//for (int i = 0; i < blocks.size(); i++)
+	//{
+		//blocks[i].Delete();
+	//}
 
 	shaderProgram.Delete();
 	glfwDestroyWindow(window);
