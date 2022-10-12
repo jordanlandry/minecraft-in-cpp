@@ -21,6 +21,8 @@ public:
 	const static int ySize = 60;
 	const static int zSize = 101;
 
+	//GLfloat vertices1[];
+
 	std::vector<unsigned int> indices;
 	char* textures[6];
 
@@ -33,6 +35,7 @@ public:
 	Block(char* aId, float aPos[3]);
 	void Init(Shader* shaderProgram, bool chunks[6]);
 	void Render(bool neighbours[6]);
+	void getTextures();
 	void Delete();
 };
 #endif

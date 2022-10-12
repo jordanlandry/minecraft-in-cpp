@@ -87,6 +87,7 @@ int main()
 
 	//glfwSwapInterval(0);          // Turning this on will disable VSync
 
+	// Rendering Information
 	const int chunkSize = 16;
 	int renderDistance = 2;
 	int currentChunk = 0;
@@ -100,6 +101,8 @@ int main()
 	int lastZ = 0;
 
 	/*std::vector<Block> blocks;*/
+
+	// Generate world
 	std::vector<std::vector<std::vector<Block>>> chunks;
 	for (int x = 0; x < chunkSize * renderDistance; x++)
 	{
@@ -128,7 +131,6 @@ int main()
 				else if (y > 0 && y < height - 4) id = (char*)"stone_block";
 				else id = (char*)"dirt_block";
 
-
 				Block b(id, pos);
 				chunks[x][z].push_back(b);
 			}
@@ -141,8 +143,6 @@ int main()
 	// Game loop
 	while (!glfwWindowShouldClose(window))
 	{
-		//camera.PrintCoords();
-
 		// FPS 
 		crntTime = glfwGetTime();
 		timeDiff = crntTime - prevTime;
@@ -159,7 +159,6 @@ int main()
 			camera.Inputs(window);
 		}
 
-		//camera.PrintCoords();
 
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);				// Background Color
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -208,21 +207,17 @@ int main()
 				}
 			}
 		}
-
 		// Load new chunk
 		if (chunkX != lastX || chunkZ != lastZ)
 		{
 			// Overwrite the current chunk data
 			for (int x = 0; x < renderDistance * chunkSize; x++)
 			{
-				std::vector<std::vector<Block>> temp;
-				chunkBuffer.push_back(temp);
 				for (int z = 0; z < renderDistance * chunkSize; z++)
 				{
-					std::vector <Block> temp1;
-					chunkBuffer[x].push_back(temp1);
 					int height = (int)(fPerlinNoise2D[(chunkX * chunkSize) * 12 + (chunkZ * chunkSize)] * 32.0f);
 					if (height < 0) height = 0;
+
 
 					for (int y = 0; y < 40; y++)
 					{
@@ -240,12 +235,69 @@ int main()
 						else if (y > 0 && y < height - 4) id = (char*)"stone_block";
 						else id = (char*)"dirt_block";
 
+						auto start = std::chrono::system_clock::now();
 						Block b(id, pos);
-						chunkBuffer[x][z].push_back(b);
+
+						chunks[x][z][y] = b;
+
+						auto end = std::chrono::system_clock::now();
+
+						std::chrono::duration<double> elapsed_seconds = end - start;
+						std::time_t end_time = std::chrono::system_clock::to_time_t(end);
+
+						std::cout << "elapsed time: " << elapsed_seconds.count() * 1000 << "ms" << std::endl;
 					}
 				}
 			}
 		}
+
+		// Load new chunk
+		//if (chunkX != lastX || chunkZ != lastZ)
+		//{
+		//	// Overwrite the current chunk data
+		//	for (int x = 0; x < renderDistance * chunkSize; x++)
+		//	{
+		//		std::vector<std::vector<Block>> temp;
+		//		chunkBuffer.push_back(temp);
+		//		for (int z = 0; z < renderDistance * chunkSize; z++)
+		//		{
+		//			std::vector <Block> temp1;
+		//			chunkBuffer[x].push_back(temp1);
+		//			int height = (int)(fPerlinNoise2D[(chunkX * chunkSize) * 12 + (chunkZ * chunkSize)] * 32.0f);
+		//			if (height < 0) height = 0;
+
+		//			auto start = std::chrono::system_clock::now();
+
+		//			for (int y = 0; y < 40; y++)
+		//			{
+		//				// Get block
+		//				bool isBedrock;
+		//				if (y == 0) isBedrock = true;
+		//				else isBedrock = false;
+
+		//				float pos[] = { x + chunkX * chunkSize, y, z + chunkZ * chunkSize };
+		//				char* id;
+
+		//				if (isBedrock) id = (char*)"bedrock_block";
+		//				else if (y > height) id = (char*)"air";
+		//				else if (y == height) id = (char*)"grass_block";
+		//				else if (y > 0 && y < height - 4) id = (char*)"stone_block";
+		//				else id = (char*)"dirt_block";
+
+		//				Block b(id, pos);
+		//			
+		//				chunkBuffer[x][z].push_back(b);
+
+		//			}
+		//			auto end = std::chrono::system_clock::now();
+
+		//			std::chrono::duration<double> elapsed_seconds = end - start;
+		//			std::time_t end_time = std::chrono::system_clock::to_time_t(end);
+
+		//			std::cout << "elapsed time: " << elapsed_seconds.count() * 1000 << "ms" << std::endl;
+		//		}
+		//	}
+		//}
 
 		else if (chunkBuffer.size() > 1)
 		{
