@@ -15,7 +15,6 @@ public:
 	char* id;
 	float pos[3];
 
-	bool hasInit = false;
 
 	const static int xSize = 101;
 	const static int ySize = 60;
@@ -23,10 +22,12 @@ public:
 
 	//GLfloat vertices1[];
 
-	std::vector<unsigned int> indices;
+	//std::vector<unsigned int> indices;
 	char* textures[6];
+	bool hasInit;
 
 	VAO VAOs[6];
+	unsigned int indices[6] = { 0, 2, 1, 0, 3, 2 };
 
 	std::vector<VBO> VBOs;
 	std::vector<EBO> EBOs;
@@ -37,5 +38,6 @@ public:
 	void Render(bool neighbours[6]);
 	void getTextures();
 	void Delete();
+
 };
 #endif

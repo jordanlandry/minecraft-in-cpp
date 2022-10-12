@@ -2,10 +2,9 @@
 
 Block::Block(char* aId, float aPos[3])
 {
-	hasInit = false;
-
-	indices = { 0, 2, 1, 0, 3, 2 };
 	id = aId;
+
+	hasInit = false;
 
 	getTextures();
 
@@ -73,7 +72,6 @@ void Block::Init(Shader* shaderProgram, bool chunks[6])
 		-0.5f + x, -0.5f + y,  0.5f + z,		0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
 	};
 
-	GLuint indices[] = { 0, 2, 1, 0, 3, 2 };
 	for (int i = 0; i < VBOs.size(); i++) VBOs[i].Delete();
 	for (int i = 0; i < EBOs.size(); i++) EBOs[i].Delete();
 
@@ -97,11 +95,12 @@ void Block::Init(Shader* shaderProgram, bool chunks[6])
 		VBO1.Delete();
 		
 		Texture tex(textures[i], GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
+	
 		Textures.push_back(tex);
 		tex.texUnit(*shaderProgram, "tex0", 0);
 	}
-
 	hasInit = true;
+
 }
 
 void Block::Render(bool neighbours[6])
@@ -111,13 +110,14 @@ void Block::Render(bool neighbours[6])
 	int x = pos[0] + 1;
 	int y = pos[1] + 1;
 	int z = pos[2] + 1;
-	for (int i = 0; i < Textures.size(); i++)
+	for (int i = 0; i < 6; i++)
 	{
 		if (neighbours[i] == true) continue;
 
 		Textures[i].Bind();
 		VAOs[i].Bind();
-		glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(int), GL_UNSIGNED_INT, 0);
+
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	}
 }
 
@@ -181,7 +181,9 @@ void Block::getTextures()
 	}
 }
 
+
 void Block::Delete()
 {
 	for (int i = 0; i < VBOs.size(); i++) VBOs[i].Delete();
 }
+

@@ -147,7 +147,6 @@ int main()
 
 				float pos[] = { x, y, z };
 				char* id;
-
 				
 				if (isBedrock) id = (char*)"bedrock_block";
 				else if (y > height) id = (char*)"air";
@@ -203,7 +202,7 @@ int main()
 				int height = (int)(points[chunkX * chunkSize + x][chunkZ * chunkSize + z] * 2 + 10);
 				if (height < 0) height = 0;
 
-				for (int y = 0; y < 40; y++)
+				for (int y = 0; y < 20; y++)
 				{
 					bool pos[6] = { false, false, false, false, false, false };
 
@@ -225,9 +224,10 @@ int main()
 					if (y > 0)
 						if (chunks[x][z][y - 1].id != "air") pos[5] = true;
 
-
+					
 					chunks[x][z][y].Init(&shaderProgram, pos);
 					chunks[x][z][y].Render(pos);
+				
 				}
 			}
 		}
@@ -244,7 +244,7 @@ int main()
 					if (height < 0) height = 0;
 
 
-					for (int y = 0; y < 40; y++)
+					for (int y = 0; y < 20; y++)
 					{
 						// Get block
 						bool isBedrock;
@@ -260,10 +260,25 @@ int main()
 						else if (y > 0 && y < height - 4) id = (char*)"stone_block";
 						else id = (char*)"dirt_block";
 
-						Block b(id, pos);
+						//Block b(id, pos);
 
-						chunks[x][z][y] = b;
+						chunks[x][z][y].id = id;
+						chunks[x][z][y].pos[0] = x + chunkX * chunkSize;
+						chunks[x][z][y].pos[2] = z + chunkZ * chunkSize;
+						
 
+						std::vector<VBO> VBOs;
+						std::vector<EBO> EBOs;
+						std::vector<Texture> Textures;
+
+						chunks[x][z][y].VBOs = VBOs;
+						chunks[x][z][y].EBOs = EBOs;
+						chunks[x][z][y].Textures = Textures;
+						
+						chunks[x][z][y].hasInit = false;
+						chunks[x][z][y].getTextures();
+
+						//chunks[x][z][y] = b;
 					}
 				}
 			}
@@ -275,47 +290,47 @@ int main()
 			std::cout << "elapsed time: " << elapsed_seconds.count() * 1000 << "ms" << std::endl;
 		}
 
-		else if (chunkBuffer.size() > 1)
-		{
-			// Render Chunk Buffer
-			for (int x = 0; x < chunkSize * renderDistance; x++)
-			{
-				for (int z = 0; z < chunkSize * renderDistance; z++)
-				{
-					int height = (int)(points[chunkX * chunkSize + x][chunkZ * chunkSize + z] * 2 + 10);
+		//else if (chunkBuffer.size() > 1)
+		//{
+		//	// Render Chunk Buffer
+		//	for (int x = 0; x < chunkSize * renderDistance; x++)
+		//	{
+		//		for (int z = 0; z < chunkSize * renderDistance; z++)
+		//		{
+		//			int height = (int)(points[chunkX * chunkSize + x][chunkZ * chunkSize + z] * 2 + 10);
 
-					if (height < 0) height = 0;
-					for (int y = 0; y < 40; y++)
-					{
-						bool pos[6] = { false, false, false, false, false, false };
-						if (chunkBuffer[x].size() > z + 1)
-							if (chunkBuffer[x][z + 1][y].id != "air") pos[0] = true;
+		//			if (height < 0) height = 0;
+		//			for (int y = 0; y < 40; y++)
+		//			{
+		//				bool pos[6] = { false, false, false, false, false, false };
+		//				if (chunkBuffer[x].size() > z + 1)
+		//					if (chunkBuffer[x][z + 1][y].id != "air") pos[0] = true;
 
-						if (chunkBuffer.size() > x + 1)
-							if (chunkBuffer[x + 1][z][y].id != "air") pos[1] = true;
+		//				if (chunkBuffer.size() > x + 1)
+		//					if (chunkBuffer[x + 1][z][y].id != "air") pos[1] = true;
 
-						if (z > 0)
-							if (chunkBuffer[x][z - 1][y].id != "air") pos[2] = true;
+		//				if (z > 0)
+		//					if (chunkBuffer[x][z - 1][y].id != "air") pos[2] = true;
 
-						if (x > 0)
-							if (chunkBuffer[x - 1][z][y].id != "air") pos[3] = true;
+		//				if (x > 0)
+		//					if (chunkBuffer[x - 1][z][y].id != "air") pos[3] = true;
 
-						if (chunkBuffer[x][z].size() > y + 1)
-							if (chunkBuffer[x][z][y + 1].id != "air") pos[4] = true;
+		//				if (chunkBuffer[x][z].size() > y + 1)
+		//					if (chunkBuffer[x][z][y + 1].id != "air") pos[4] = true;
 
-						if (y > 0)
-							if (chunkBuffer[x][z][y - 1].id != "air") pos[5] = true;
+		//				if (y > 0)
+		//					if (chunkBuffer[x][z][y - 1].id != "air") pos[5] = true;
 
-						chunkBuffer[x][z][y].Init(&shaderProgram, pos);
-						chunkBuffer[x][z][y].Render(pos);
-					}
-				}
-			}
+		//				chunkBuffer[x][z][y].Init(&shaderProgram, pos);
+		//				chunkBuffer[x][z][y].Render(pos);
+		//			}
+		//		}
+			//}
 
-			chunks = chunkBuffer;
-			std::vector<std::vector<std::vector<Block>>> t;
-			chunkBuffer = t;
-		}
+			//chunks = chunkBuffer;
+			//std::vector<std::vector<std::vector<Block>>> t;
+			//chunkBuffer = t;
+		//}
 
 
 		glfwSwapBuffers(window);
