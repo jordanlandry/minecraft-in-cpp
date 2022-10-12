@@ -129,7 +129,7 @@ void Block::getTextures()
 		textures[1] = (char*)"assets/grass_block_side.png";
 		textures[2] = (char*)"assets/grass_block_side.png";
 		textures[3] = (char*)"assets/grass_block_side.png";
-		textures[4] = (char*)"assets/grass_block_top.png";
+		textures[4] = (char*)"assets/grass.png";
 		textures[5] = (char*)"assets/dirt.png";
 	}
 

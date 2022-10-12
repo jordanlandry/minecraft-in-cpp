@@ -20,6 +20,7 @@
 #include "headers/Camera.h"
 #include "headers/Block.h"
 #include "headers/Player.h"
+#include <random>
 
 const unsigned int width = 1280;
 const unsigned int height = 720;
@@ -64,6 +65,29 @@ int main()
 	glCullFace(GL_FRONT);
 	glFrontFace(GL_CCW);
 
+
+	// Generate World
+	float points[128][128];
+
+	std::mt19937 random_engine;
+	random_engine.seed(100);	// Add a seed
+	std::uniform_real_distribution<float> random_distribution(0, 1);
+	std::vector<float> terrain(128, 0);
+
+
+	const unsigned int octaves = 12;
+	for (int i = 0; i < 128; i++)
+	{
+		for (int j = 0; j < 128; j++)
+		{
+			points[i][j] = random_distribution(random_engine);
+			for (int k = 1; k < octaves; k++)
+			{
+				int weight = k / octaves / 2;
+				points[i][j] += weight * points[i][j];
+			}
+		}
+	}
 
 	// Generate Seed
 	float* fNoiseSeed2D = nullptr;
@@ -113,7 +137,7 @@ int main()
 			std::vector <Block> temp1;
 			chunks[x].push_back(temp1);
 
-			int height = (int)(fPerlinNoise2D[z * 12 + x] * 32.0f);
+			int height = (int)(points[chunkX * chunkSize + x][chunkZ * chunkSize + z] * 3 + 10);
 			if (height < 0) height = 0;
 			for (int y = 0; y < 40; y++)
 			{
@@ -176,7 +200,7 @@ int main()
 		{
 			for (int z = 0; z < chunkSize * renderDistance; z++)
 			{
-				int height = (int)(fPerlinNoise2D[x * 12 + z] * 32.0f);
+				int height = (int)(points[chunkX * chunkSize + x][chunkZ * chunkSize + z] * 2 + 10);
 				if (height < 0) height = 0;
 
 				for (int y = 0; y < 40; y++)
@@ -210,12 +234,13 @@ int main()
 		// Load new chunk
 		if (chunkX != lastX || chunkZ != lastZ)
 		{
+			auto start = std::chrono::system_clock::now();
 			// Overwrite the current chunk data
 			for (int x = 0; x < renderDistance * chunkSize; x++)
 			{
 				for (int z = 0; z < renderDistance * chunkSize; z++)
 				{
-					int height = (int)(fPerlinNoise2D[(chunkX * chunkSize) * 12 + (chunkZ * chunkSize)] * 32.0f);
+					int height = (int)(points[chunkX * chunkSize + x][chunkZ * chunkSize + z] * 2 + 10);
 					if (height < 0) height = 0;
 
 
@@ -235,69 +260,20 @@ int main()
 						else if (y > 0 && y < height - 4) id = (char*)"stone_block";
 						else id = (char*)"dirt_block";
 
-						auto start = std::chrono::system_clock::now();
 						Block b(id, pos);
 
 						chunks[x][z][y] = b;
 
-						auto end = std::chrono::system_clock::now();
-
-						std::chrono::duration<double> elapsed_seconds = end - start;
-						std::time_t end_time = std::chrono::system_clock::to_time_t(end);
-
-						std::cout << "elapsed time: " << elapsed_seconds.count() * 1000 << "ms" << std::endl;
 					}
 				}
 			}
+			auto end = std::chrono::system_clock::now();
+
+			std::chrono::duration<double> elapsed_seconds = end - start;
+			std::time_t end_time = std::chrono::system_clock::to_time_t(end);
+
+			std::cout << "elapsed time: " << elapsed_seconds.count() * 1000 << "ms" << std::endl;
 		}
-
-		// Load new chunk
-		//if (chunkX != lastX || chunkZ != lastZ)
-		//{
-		//	// Overwrite the current chunk data
-		//	for (int x = 0; x < renderDistance * chunkSize; x++)
-		//	{
-		//		std::vector<std::vector<Block>> temp;
-		//		chunkBuffer.push_back(temp);
-		//		for (int z = 0; z < renderDistance * chunkSize; z++)
-		//		{
-		//			std::vector <Block> temp1;
-		//			chunkBuffer[x].push_back(temp1);
-		//			int height = (int)(fPerlinNoise2D[(chunkX * chunkSize) * 12 + (chunkZ * chunkSize)] * 32.0f);
-		//			if (height < 0) height = 0;
-
-		//			auto start = std::chrono::system_clock::now();
-
-		//			for (int y = 0; y < 40; y++)
-		//			{
-		//				// Get block
-		//				bool isBedrock;
-		//				if (y == 0) isBedrock = true;
-		//				else isBedrock = false;
-
-		//				float pos[] = { x + chunkX * chunkSize, y, z + chunkZ * chunkSize };
-		//				char* id;
-
-		//				if (isBedrock) id = (char*)"bedrock_block";
-		//				else if (y > height) id = (char*)"air";
-		//				else if (y == height) id = (char*)"grass_block";
-		//				else if (y > 0 && y < height - 4) id = (char*)"stone_block";
-		//				else id = (char*)"dirt_block";
-
-		//				Block b(id, pos);
-		//			
-		//				chunkBuffer[x][z].push_back(b);
-
-		//			}
-		//			auto end = std::chrono::system_clock::now();
-
-		//			std::chrono::duration<double> elapsed_seconds = end - start;
-		//			std::time_t end_time = std::chrono::system_clock::to_time_t(end);
-
-		//			std::cout << "elapsed time: " << elapsed_seconds.count() * 1000 << "ms" << std::endl;
-		//		}
-		//	}
-		//}
 
 		else if (chunkBuffer.size() > 1)
 		{
@@ -306,7 +282,7 @@ int main()
 			{
 				for (int z = 0; z < chunkSize * renderDistance; z++)
 				{
-					int height = (int)(fPerlinNoise2D[x * 12 + z] * 32.0f);
+					int height = (int)(points[chunkX * chunkSize + x][chunkZ * chunkSize + z] * 2 + 10);
 
 					if (height < 0) height = 0;
 					for (int y = 0; y < 40; y++)
@@ -395,35 +371,4 @@ void PerlinNoise2D(int nWidth, int nHeight, float* fSeed, int nOctaves, float fB
 			// Scale to seed range
 			fOutput[y * nWidth + x] = fNoise / fScaleAcc;
 		}
-}
-
-
-void generateWorld(int startX, int endX, int startZ, int endZ, float* fNoiseSeed2d[])
-{
-	/*for (int i = startX; i < endX; i++)
-	{
-		std::vector<std::vector<Block>> temp;
-		worldBlocks.push_back(temp);
-		for (int j = startZ; j < endZ; j++)
-		{
-			std::vector <Block> temp1;
-			worldBlocks[i].push_back(temp1);
-			int height = (int)(fPerlinNoise2D[j * worldZSize + i] * 32.0f);
-			if (height < 0) height = 0;
-			for (int y = 0; y <= height; y++)
-			{
-				bool isBedrock;
-				if (y == 0) isBedrock = true;
-				else isBedrock = false;
-				float pos[] = { i, y, j };
-				char* id;
-				if (isBedrock) id = (char*)"bedrock_block";
-				else if (y == height) id = (char*)"grass_block";
-				else if (y > 0 && y < height - 4) id = (char*)"stone_block";
-				else id = (char*)"dirt_block";
-				Block b(id, pos);
-				worldBlocks[i][j].push_back(b);
-			}
-		}
-	}*/
 }
