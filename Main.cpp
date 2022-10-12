@@ -111,8 +111,11 @@ int main()
 
 	//glfwSwapInterval(0);          // Turning this on will disable VSync
 
+	
+
+	/*std::vector<Block> blocks;*/
 	// Rendering Information
-	const int chunkSize = 16;
+	const int chunkSize = 8;
 	int renderDistance = 2;
 	int currentChunk = 0;
 	int lastChunk = 0;
@@ -123,8 +126,7 @@ int main()
 
 	int lastX = 0;
 	int lastZ = 0;
-
-	/*std::vector<Block> blocks;*/
+	const int maxBuildHeight = 128;
 
 	// Generate world
 	std::vector<std::vector<std::vector<Block>>> chunks;
@@ -137,9 +139,9 @@ int main()
 			std::vector <Block> temp1;
 			chunks[x].push_back(temp1);
 
-			int height = (int)(points[chunkX * chunkSize + x][chunkZ * chunkSize + z] * 3 + 10);
+			int height = (int)(points[chunkX * chunkSize + x][chunkZ * chunkSize + z] * 5 + 10);
 			if (height < 0) height = 0;
-			for (int y = 0; y < 40; y++)
+			for (int y = 0; y < maxBuildHeight; y++)
 			{
 				bool isBedrock;
 				if (y == 0) isBedrock = true;
@@ -199,10 +201,10 @@ int main()
 		{
 			for (int z = 0; z < chunkSize * renderDistance; z++)
 			{
-				int height = (int)(points[chunkX * chunkSize + x][chunkZ * chunkSize + z] * 2 + 10);
+				int height = (int)(points[chunkX * chunkSize + x][chunkZ * chunkSize + z] * 5 + 10);
 				if (height < 0) height = 0;
 
-				for (int y = 0; y < 20; y++)
+				for (int y = 0; y < maxBuildHeight; y++)
 				{
 					bool pos[6] = { false, false, false, false, false, false };
 
@@ -225,7 +227,14 @@ int main()
 						if (chunks[x][z][y - 1].id != "air") pos[5] = true;
 
 					
+					//auto start = std::chrono::system_clock::now();
 					chunks[x][z][y].Init(&shaderProgram, pos);
+					/*auto end = std::chrono::system_clock::now();
+
+					std::chrono::duration<double> elapsed_seconds = end - start;
+					std::time_t end_time = std::chrono::system_clock::to_time_t(end);
+
+					std::cout << "elapsed time: " << elapsed_seconds.count() * 1000 << "ms" << std::endl;*/
 					chunks[x][z][y].Render(pos);
 				
 				}
@@ -234,17 +243,16 @@ int main()
 		// Load new chunk
 		if (chunkX != lastX || chunkZ != lastZ)
 		{
-			auto start = std::chrono::system_clock::now();
 			// Overwrite the current chunk data
 			for (int x = 0; x < renderDistance * chunkSize; x++)
 			{
 				for (int z = 0; z < renderDistance * chunkSize; z++)
 				{
-					int height = (int)(points[chunkX * chunkSize + x][chunkZ * chunkSize + z] * 2 + 10);
+					int height = (int)(points[chunkX * chunkSize + x][chunkZ * chunkSize + z] * 5 + 10);
 					if (height < 0) height = 0;
 
 
-					for (int y = 0; y < 20; y++)
+					for (int y = 0; y < maxBuildHeight; y++)
 					{
 						// Get block
 						bool isBedrock;
@@ -277,61 +285,10 @@ int main()
 						
 						chunks[x][z][y].hasInit = false;
 						chunks[x][z][y].getTextures();
-
-						//chunks[x][z][y] = b;
 					}
 				}
 			}
-			auto end = std::chrono::system_clock::now();
-
-			std::chrono::duration<double> elapsed_seconds = end - start;
-			std::time_t end_time = std::chrono::system_clock::to_time_t(end);
-
-			std::cout << "elapsed time: " << elapsed_seconds.count() * 1000 << "ms" << std::endl;
 		}
-
-		//else if (chunkBuffer.size() > 1)
-		//{
-		//	// Render Chunk Buffer
-		//	for (int x = 0; x < chunkSize * renderDistance; x++)
-		//	{
-		//		for (int z = 0; z < chunkSize * renderDistance; z++)
-		//		{
-		//			int height = (int)(points[chunkX * chunkSize + x][chunkZ * chunkSize + z] * 2 + 10);
-
-		//			if (height < 0) height = 0;
-		//			for (int y = 0; y < 40; y++)
-		//			{
-		//				bool pos[6] = { false, false, false, false, false, false };
-		//				if (chunkBuffer[x].size() > z + 1)
-		//					if (chunkBuffer[x][z + 1][y].id != "air") pos[0] = true;
-
-		//				if (chunkBuffer.size() > x + 1)
-		//					if (chunkBuffer[x + 1][z][y].id != "air") pos[1] = true;
-
-		//				if (z > 0)
-		//					if (chunkBuffer[x][z - 1][y].id != "air") pos[2] = true;
-
-		//				if (x > 0)
-		//					if (chunkBuffer[x - 1][z][y].id != "air") pos[3] = true;
-
-		//				if (chunkBuffer[x][z].size() > y + 1)
-		//					if (chunkBuffer[x][z][y + 1].id != "air") pos[4] = true;
-
-		//				if (y > 0)
-		//					if (chunkBuffer[x][z][y - 1].id != "air") pos[5] = true;
-
-		//				chunkBuffer[x][z][y].Init(&shaderProgram, pos);
-		//				chunkBuffer[x][z][y].Render(pos);
-		//			}
-		//		}
-			//}
-
-			//chunks = chunkBuffer;
-			//std::vector<std::vector<std::vector<Block>>> t;
-			//chunkBuffer = t;
-		//}
-
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -340,12 +297,6 @@ int main()
 		lastX = chunkX;
 		lastZ = chunkZ;
 	}
-
-	// Delete all the objects we've created
-	//for (int i = 0; i < blocks.size(); i++)
-	//{
-		//blocks[i].Delete();
-	//}
 
 	shaderProgram.Delete();
 	glfwDestroyWindow(window);
