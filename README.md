@@ -18,7 +18,7 @@ Watch me design, create and debug this project on [YouTube](https://www.youtube.
 
 ## Controls
 
-| Buttion    | Action   |
+| Button     | Action   |
 | ---------- | -------- |
 | Space      | Fly      |
 | Left Ctrl  | Fly down |
