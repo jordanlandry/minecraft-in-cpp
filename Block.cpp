@@ -1,5 +1,16 @@
 #include "headers/Block.h"
 
+
+Block::Block()
+{
+	id =(char*)"dirt_block";
+	hasInit = false;
+	getTextures();
+	pos[0] = 0;
+	pos[1] = 0;
+	pos[2] = 0;
+}
+
 Block::Block(char* aId, float aPos[3])
 {
 	id = aId;
@@ -15,7 +26,7 @@ Block::Block(char* aId, float aPos[3])
 
 void Block::Init(Shader* shaderProgram, bool chunks[6])
 {
-	if (id == "air") return;
+	//if (id == "air") return;
 	if (hasInit) return;
 
 	int x = pos[0];
@@ -169,6 +180,15 @@ void Block::getTextures()
 		textures[3] = (char*)"assets/water_flow.png";
 		textures[4] = (char*)"assets/water_flow.png";
 		textures[5] = (char*)"assets/water_flow.png";
+	}
+	else if (id == "oak_log")
+	{
+		textures[0] = (char*)"assets/oak_log.png";
+		textures[1] = (char*)"assets/oak_log.png";
+		textures[2] = (char*)"assets/oak_log.png";
+		textures[3] = (char*)"assets/oak_log.png";
+		textures[4] = (char*)"assets/oak_log_top.png";
+		textures[5] = (char*)"assets/oak_log_top.png";
 	}
 	else if (id == "air")
 	{

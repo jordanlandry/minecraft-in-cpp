@@ -33,6 +33,7 @@ public:
 	std::vector<EBO> EBOs;
 	std::vector<Texture> Textures;
 
+	Block();
 	Block(char* aId, float aPos[3]);
 	void Init(Shader* shaderProgram, bool chunks[6]);
 	void Render(bool neighbours[6]);

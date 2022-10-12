@@ -89,6 +89,22 @@ int main()
 		}
 	}
 
+	const float treeDensity = 0.025f;
+	unsigned int treeLocations[128][128];
+	for (int i = 0; i < 128; i++)
+	// Generate Trees
+	for (int i = 0; i < 128; i++)
+	{
+		for (int j = 0; j < 128; j++)
+		{
+			if (random_distribution(random_engine) <= treeDensity)
+			{
+				treeLocations[i][j] = random_distribution(random_engine) * 6 + 5;
+			}
+			else treeLocations[i][j] = 0;
+		}
+	}
+
 	// Generate Seed
 	float* fNoiseSeed2D = nullptr;
 	float* fPerlinNoise2D = nullptr;
@@ -139,10 +155,11 @@ int main()
 			std::vector <Block> temp1;
 			chunks[x].push_back(temp1);
 
-			int height = (int)(points[chunkX * chunkSize + x][chunkZ * chunkSize + z] * 5 + 10);
+			int height = (int)(points[chunkX * chunkSize + x][chunkZ * chunkSize + z] * 2 + 10);
 			if (height < 0) height = 0;
 			for (int y = 0; y < maxBuildHeight; y++)
 			{
+
 				bool isBedrock;
 				if (y == 0) isBedrock = true;
 				else isBedrock = false;
@@ -156,8 +173,22 @@ int main()
 				else if (y > 0 && y < height - 4) id = (char*)"stone_block";
 				else id = (char*)"dirt_block";
 
-				Block b(id, pos);
-				chunks[x][z].push_back(b);
+				if (treeLocations[x][z] > 0 && y == height && (id == (char*) "grass_block" || id == (char*) "dirt_block"))
+				{
+					// Place a tree
+					for (int h = 0; h < treeLocations[x][z]; h++)
+					{
+						//std::cout << treeLocations[x][z] << std::endl;
+						float p[] = { x, y + h, z };
+						Block b((char*)"oak_log", p);
+						chunks[x][z].push_back(b);
+					}
+				}
+				else if (chunks[x][z].size() < maxBuildHeight)
+				{
+					Block b(id, pos);
+					chunks[x][z].push_back(b);
+				}
 			}
 		}
 	}
@@ -201,7 +232,7 @@ int main()
 		{
 			for (int z = 0; z < chunkSize * renderDistance; z++)
 			{
-				int height = (int)(points[chunkX * chunkSize + x][chunkZ * chunkSize + z] * 5 + 10);
+				int height = (int)(points[chunkX * chunkSize + x][chunkZ * chunkSize + z] * 2 + 10);
 				if (height < 0) height = 0;
 
 				for (int y = 0; y < maxBuildHeight; y++)
@@ -240,6 +271,7 @@ int main()
 				}
 			}
 		}
+
 		// Load new chunk
 		if (chunkX != lastX || chunkZ != lastZ)
 		{
@@ -248,7 +280,7 @@ int main()
 			{
 				for (int z = 0; z < renderDistance * chunkSize; z++)
 				{
-					int height = (int)(points[chunkX * chunkSize + x][chunkZ * chunkSize + z] * 5 + 10);
+					int height = (int)(points[chunkX * chunkSize + x][chunkZ * chunkSize + z] * 2 + 10);
 					if (height < 0) height = 0;
 
 
@@ -268,23 +300,51 @@ int main()
 						else if (y > 0 && y < height - 4) id = (char*)"stone_block";
 						else id = (char*)"dirt_block";
 
-						//Block b(id, pos);
+						int i = x + chunkX * chunkSize;
+						int j = z + chunkZ * chunkSize;
+						if (treeLocations[i][j] > 0 && y == height && id == (char*)"grass_block")
+						{
+							// Place a tree
+							for (int h = 0; h < treeLocations[i][j]; h++)
+							{
+								std::cout << y + h << std::endl;
+								char* id = (char*)"oak_log";
 
-						chunks[x][z][y].id = id;
-						chunks[x][z][y].pos[0] = x + chunkX * chunkSize;
-						chunks[x][z][y].pos[2] = z + chunkZ * chunkSize;
+								chunks[x][z][y + h].id = id;
+								chunks[x][z][y + h].pos[0] = i;
+								chunks[x][z][y + h].pos[1] = y + h;
+								chunks[x][z][y + h].pos[2] = j;
+
+								std::vector<VBO> VBOs;
+								std::vector<EBO> EBOs;
+								std::vector<Texture> Textures;
+
+								chunks[x][z][y + h].VBOs = VBOs;
+								chunks[x][z][y + h].EBOs = EBOs;
+								chunks[x][z][y + h].Textures = Textures;
+
+								chunks[x][z][y + h].hasInit = false;
+								chunks[x][z][y + h].getTextures();
+							}
+						}
+						else
+						{
+							chunks[x][z][y].id = id;
+							chunks[x][z][y].pos[0] = x + chunkX * chunkSize;
+							chunks[x][z][y].pos[2] = z + chunkZ * chunkSize;
 						
 
-						std::vector<VBO> VBOs;
-						std::vector<EBO> EBOs;
-						std::vector<Texture> Textures;
+							std::vector<VBO> VBOs;
+							std::vector<EBO> EBOs;
+							std::vector<Texture> Textures;
 
-						chunks[x][z][y].VBOs = VBOs;
-						chunks[x][z][y].EBOs = EBOs;
-						chunks[x][z][y].Textures = Textures;
+							chunks[x][z][y].VBOs = VBOs;
+							chunks[x][z][y].EBOs = EBOs;
+							chunks[x][z][y].Textures = Textures;
 						
-						chunks[x][z][y].hasInit = false;
-						chunks[x][z][y].getTextures();
+							chunks[x][z][y].hasInit = false;
+							chunks[x][z][y].getTextures();
+						}
 					}
 				}
 			}
