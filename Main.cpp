@@ -215,7 +215,6 @@ int main()
 			camera.Inputs(window);
 		}
 
-
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);				// Background Color
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		shaderProgram.Activate();
@@ -232,9 +231,6 @@ int main()
 		{
 			for (int z = 0; z < chunkSize * renderDistance; z++)
 			{
-				int height = (int)(points[chunkX * chunkSize + x][chunkZ * chunkSize + z] * 2 + 10);
-				if (height < 0) height = 0;
-
 				for (int y = 0; y < maxBuildHeight; y++)
 				{
 					bool pos[6] = { false, false, false, false, false, false };
@@ -258,14 +254,15 @@ int main()
 						if (chunks[x][z][y - 1].id != "air") pos[5] = true;
 
 					
-					//auto start = std::chrono::system_clock::now();
+					auto start = std::chrono::system_clock::now();
 					chunks[x][z][y].Init(&shaderProgram, pos);
-					/*auto end = std::chrono::system_clock::now();
+					auto end = std::chrono::system_clock::now();
 
 					std::chrono::duration<double> elapsed_seconds = end - start;
 					std::time_t end_time = std::chrono::system_clock::to_time_t(end);
 
-					std::cout << "elapsed time: " << elapsed_seconds.count() * 1000 << "ms" << std::endl;*/
+					//std::cout << "elapsed time: " << elapsed_seconds.count() * 1000 << "ms" << std::endl;
+
 					chunks[x][z][y].Render(pos);
 				
 				}
@@ -307,10 +304,7 @@ int main()
 							// Place a tree
 							for (int h = 0; h < treeLocations[i][j]; h++)
 							{
-								std::cout << y + h << std::endl;
-								char* id = (char*)"oak_log";
-
-								chunks[x][z][y + h].id = id;
+								chunks[x][z][y + h].id = (char*)"oak_log";
 								chunks[x][z][y + h].pos[0] = i;
 								chunks[x][z][y + h].pos[1] = y + h;
 								chunks[x][z][y + h].pos[2] = j;
