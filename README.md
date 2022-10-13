@@ -2,13 +2,11 @@
 
 ## Overview
 
----
 
 This project is my own take on the popular game Minecraft.
 
 ## Table of contents
 
----
 
 - [Build Process](#build-process)
 - [Controls](#controls)
@@ -18,13 +16,11 @@ This project is my own take on the popular game Minecraft.
 
 ## Build process
 
----
 
 Watch me design, create and debug this project on [YouTube](https://www.youtube.com/channel/UCO8fo_fxQgSGLkdEmyVJcFA) (Video is not currently up, will be updated when the video becomes available)
 
 ## Controls
 
----
 
 | Button     | Action   |
 | ---------- | -------- |
@@ -34,14 +30,12 @@ Watch me design, create and debug this project on [YouTube](https://www.youtube.
 
 ## Implemented features
 
----
 
 - Infinite world generation
 - Tree generation
 
 ## Upcoming features
 
----
 
 - Breaking blocks
 - Placing blocks
@@ -100,18 +94,15 @@ Here are some excellent resources for understanding Perlin Noise.
 
 ## Rendering
 
----
 
 TODO Write this
 
 ## Textures
 
----
 
 TODO Write this
 
 ## Optimizations
 
----
 
 TODO Write this
