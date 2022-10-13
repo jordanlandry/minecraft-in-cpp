@@ -2,11 +2,9 @@
 
 ## Overview
 
-
 This project is my own take on the popular game Minecraft.
 
 ## Table of contents
-
 
 - [Build Process](#build-process)
 - [Controls](#controls)
@@ -16,11 +14,9 @@ This project is my own take on the popular game Minecraft.
 
 ## Build process
 
-
 Watch me design, create and debug this project on [YouTube](https://www.youtube.com/channel/UCO8fo_fxQgSGLkdEmyVJcFA) (Video is not currently up, will be updated when the video becomes available)
 
 ## Controls
-
 
 | Button     | Action   |
 | ---------- | -------- |
@@ -30,12 +26,10 @@ Watch me design, create and debug this project on [YouTube](https://www.youtube.
 
 ## Implemented features
 
-
 - Infinite world generation
 - Tree generation
 
 ## Upcoming features
-
 
 - Breaking blocks
 - Placing blocks
@@ -72,8 +66,6 @@ Watch me design, create and debug this project on [YouTube](https://www.youtube.
 
 ## Terrain generation
 
----
-
 In Minecraft, the terrain must appear random yet feel realistic. To achieve this, I used Perlin noise. Perlin noise works by initializing random values at different points and smoothing the values between those points. The result is a map of seemingly random numbers. We can use these values to determine the height at any given coordinate. To better understand, let's take it down to one dimension.
 
 Generated Perlin values:
@@ -94,15 +86,12 @@ Here are some excellent resources for understanding Perlin Noise.
 
 ## Rendering
 
-
 TODO Write this
 
 ## Textures
 
-
 TODO Write this
 
 ## Optimizations
-
 
 TODO Write this
