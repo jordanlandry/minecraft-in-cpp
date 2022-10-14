@@ -21,21 +21,12 @@ Texture::Texture(const char* image, GLenum texType, GLenum slot, GLenum format, 
 	glTexParameteri(texType, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 	
-	 /*float flatColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
-	 glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, flatColor);*/
-
-	
 	glTexImage2D(texType, 0, GL_RGBA, widthImg, heightImg, 0, format, pixelType, bytes);
 	glGenerateMipmap(texType);
 
 	stbi_image_free(bytes);
 
 	glBindTexture(texType, 0);
-}
-
-Texture::Texture()
-{
-	std::cout << "Hi" << std::endl;
 }
 
 void Texture::texUnit(Shader& shader, const char* uniform, GLuint unit)

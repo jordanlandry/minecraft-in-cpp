@@ -10,6 +10,18 @@ Chunk::Chunk(int i, int j)
 
 void Chunk::Init(Shader* shaderProgram, float points[128][128])
 {
+	/*for (int i = 0; i < blocks.size(); i++)
+	{
+		for (int j = 0; j < blocks[i].size(); j++)
+		{
+			for (int k = 0; k < blocks[i][j].size(); k++)
+			{
+				blocks[i][j][k].Delete();
+				delete& blocks[i][j][k];
+			}
+		}
+	}*/
+
 	for (int i = 0; i < chunkSize; i++)
 	{
 		std::vector<std::vector<Block>> temp;
@@ -76,5 +88,14 @@ void Chunk::Render()
 			}
 		}
 	}
-	
+}
+
+void Chunk::Delete()
+{
+	for (int i = 0; i < blocks.size(); i++)
+		for (int j = 0; j < blocks.size(); j++)
+			for (int k = 0; k < blocks.size(); k++)
+			{
+				blocks[i][j][k].Delete();
+			}
 }

@@ -82,9 +82,7 @@ void Block::Init(Shader* shaderProgram, bool chunks[6])
 		 0.5f + x, -0.5f + y,  0.5f + z,		0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
 		-0.5f + x, -0.5f + y,  0.5f + z,		0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
 	};
-
-	for (int i = 0; i < VBOs.size(); i++) VBOs[i].Delete();
-	for (int i = 0; i < EBOs.size(); i++) EBOs[i].Delete();
+	
 
 	for (int i = 0; i < 6; i++) {
 		VAOs[i].Bind();
@@ -104,14 +102,14 @@ void Block::Init(Shader* shaderProgram, bool chunks[6])
 
 		EBO1.Delete();
 		VBO1.Delete();
-		
+
 		Texture tex(textures[i], GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
-	
+
 		Textures.push_back(tex);
 		tex.texUnit(*shaderProgram, "tex0", 0);
 	}
-	hasInit = true;
 
+	hasInit = true;
 }
 
 void Block::Render(bool neighbours[6])
@@ -204,6 +202,9 @@ void Block::getTextures()
 
 void Block::Delete()
 {
+	for (int i = 0; i < sizeof(VAOs) / sizeof(VAO); i++) VAOs[i].Delete();
 	for (int i = 0; i < VBOs.size(); i++) VBOs[i].Delete();
+	for (int i = 0; i < EBOs.size(); i++) EBOs[i].Delete();
+	//for (int i = 0; i < Textures.size(); i++) { Textures[i].Delete(); }
 }
 

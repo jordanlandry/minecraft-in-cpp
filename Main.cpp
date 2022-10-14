@@ -84,7 +84,7 @@ int main()
 			points[i][j] = random_distribution(random_engine);
 			for (int k = 1; k < octaves; k++)
 			{
-				int weight = k / octaves / 2;
+				float weight = k / octaves / 2;
 				points[i][j] += weight * points[i][j];
 			}
 		}
@@ -118,16 +118,13 @@ int main()
 	// Camera
 	Camera camera(width, height, glm::vec3(0, 12, 0));
 
-
 	// Frame rate
 	double prevTime = 0.0;
 	double crntTime = 0.0;
 	double timeDiff;
 	unsigned int counter = 0;
 
-
 	glfwSwapInterval(0);          // Turning this on will disable VSync
-
 	
 
 	/*std::vector<Block> blocks;*/
@@ -196,7 +193,7 @@ int main()
 		// Handles camera inputs
 		camera.Matrix(70.0f, 0.1f, 100.0f, shaderProgram, "camMatrix");
 
-		//camera.PrintCoords();
+		camera.PrintCoords();
 
 		// Get current chunk position
 		chunkX = camera.Position.x / chunkSize;
@@ -231,13 +228,22 @@ int main()
 			{
 				if (firstX == chunks[i].x)
 				{
+					chunks[i].Delete();
 					chunks[i].blocks = chunk.blocks;
 					chunks[i].x = nextX;
+
+					auto start = std::chrono::high_resolution_clock::now();
+
 					chunks[i].Init(&shaderProgram, points);
+
+					auto stop = std::chrono::high_resolution_clock::now();
+
+					auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
+
+					//std::cout << duration.count() << " milliseconds" << std::endl;
 				}
 			}
 		}
-
 		
 		glfwSwapBuffers(window);
 		glfwPollEvents();

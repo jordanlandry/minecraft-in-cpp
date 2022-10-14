@@ -17,6 +17,7 @@ public:
 	Chunk(int i, int j);
 	void Init(Shader* shaderProgram, float points[128][128]);
 	void Render();
+	void Delete();
 };
 
 #endif
