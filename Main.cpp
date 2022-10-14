@@ -20,6 +20,7 @@
 #include "headers/Camera.h"
 #include "headers/Block.h"
 #include "headers/Player.h"
+#include "headers/Chunk.h"
 #include <random>
 
 const unsigned int width = 1280;
@@ -67,6 +68,8 @@ int main()
 
 
 	// Generate World
+	const int maxHeight = 128;
+
 	float points[128][128];
 
 	std::mt19937 random_engine;
@@ -125,14 +128,66 @@ int main()
 	unsigned int counter = 0;
 
 
-	//glfwSwapInterval(0);          // Turning this on will disable VSync
+	glfwSwapInterval(0);          // Turning this on will disable VSync
 
 	
 
 	/*std::vector<Block> blocks;*/
 	// Rendering Information
+	
+
+	// Generate world
+	//std::vector<std::vector<std::vector<Block>>> chunks;
+	//for (int x = 0; x < chunkSize * renderDistance; x++)
+	//{
+	//	std::vector<std::vector<Block>> temp;
+	//	chunks.push_back(temp);
+	//	for (int z = 0; z < chunkSize * renderDistance; z++)
+	//	{
+	//		std::vector <Block> temp1;
+	//		chunks[x].push_back(temp1);
+
+	//		int height = (int)(points[chunkX * chunkSize + x][chunkZ * chunkSize + z] * 2 + 10);
+	//		if (height < 0) height = 0;
+	//		for (int y = 0; y < maxBuildHeight; y++)
+	//		{
+
+	//			bool isBedrock;
+	//			if (y == 0) isBedrock = true;
+	//			else isBedrock = false;
+
+	//			float pos[] = { x, y, z };
+	//			char* id;
+	//			
+	//			if (isBedrock) id = (char*)"bedrock_block";
+	//			else if (y > height) id = (char*)"air";
+	//			else if (y == height) id = (char*)"grass_block";
+	//			else if (y > 0 && y < height - 4) id = (char*)"stone_block";
+	//			else id = (char*)"dirt_block";
+
+	//			if (treeLocations[x][z] > 0 && y == height && (id == (char*) "grass_block" || id == (char*) "dirt_block"))
+	//			{
+	//				// Place a tree
+	//				for (int h = 0; h < treeLocations[x][z]; h++)
+	//				{
+	//					//std::cout << treeLocations[x][z] << std::endl;
+	//					float p[] = { x, y + h, z };
+	//					Block b((char*)"oak_log", p);
+	//					chunks[x][z].push_back(b);
+	//				}
+	//			}
+	//			else if (chunks[x][z].size() < maxBuildHeight)
+	//			{
+	//				Block b(id, pos);
+	//				chunks[x][z].push_back(b);
+	//			}
+	//		}
+	//	}
+	//}
+
+
 	const int chunkSize = 8;
-	int renderDistance = 2;
+	int renderDistance = 5;
 	int currentChunk = 0;
 	int lastChunk = 0;
 	int loadedChunks = 0;
@@ -142,59 +197,31 @@ int main()
 
 	int lastX = 0;
 	int lastZ = 0;
-	const int maxBuildHeight = 128;
+	const int maxBuildHeight = 5;
 
-	// Generate world
-	std::vector<std::vector<std::vector<Block>>> chunks;
-	for (int x = 0; x < chunkSize * renderDistance; x++)
+	// Initialize Chunk
+	std::vector<Chunk> chunks;
+	for (int i = 0; i < renderDistance; i++)
 	{
-		std::vector<std::vector<Block>> temp;
-		chunks.push_back(temp);
-		for (int z = 0; z < chunkSize * renderDistance; z++)
+		for (int j = 0; j < renderDistance; j++)
 		{
-			std::vector <Block> temp1;
-			chunks[x].push_back(temp1);
-
-			int height = (int)(points[chunkX * chunkSize + x][chunkZ * chunkSize + z] * 2 + 10);
-			if (height < 0) height = 0;
-			for (int y = 0; y < maxBuildHeight; y++)
-			{
-
-				bool isBedrock;
-				if (y == 0) isBedrock = true;
-				else isBedrock = false;
-
-				float pos[] = { x, y, z };
-				char* id;
-				
-				if (isBedrock) id = (char*)"bedrock_block";
-				else if (y > height) id = (char*)"air";
-				else if (y == height) id = (char*)"grass_block";
-				else if (y > 0 && y < height - 4) id = (char*)"stone_block";
-				else id = (char*)"dirt_block";
-
-				if (treeLocations[x][z] > 0 && y == height && (id == (char*) "grass_block" || id == (char*) "dirt_block"))
-				{
-					// Place a tree
-					for (int h = 0; h < treeLocations[x][z]; h++)
-					{
-						//std::cout << treeLocations[x][z] << std::endl;
-						float p[] = { x, y + h, z };
-						Block b((char*)"oak_log", p);
-						chunks[x][z].push_back(b);
-					}
-				}
-				else if (chunks[x][z].size() < maxBuildHeight)
-				{
-					Block b(id, pos);
-					chunks[x][z].push_back(b);
-				}
-			}
+			Chunk c(i, j);
+			chunks.push_back(c);
 		}
 	}
 
-	// Initialize Chunk Buffer
-	std::vector<std::vector<std::vector<Block>>> chunkBuffer;
+	//std::vector<Chunk> currentChunks;
+
+	for (int i = 0; i < chunks.size(); i++)
+	{
+		chunks[i].Init(&shaderProgram);
+	}
+
+
+	int nextX;
+	int nextZ;
+	int firstX = 0;
+	int firstZ = 0;
 
 	// Game loop
 	while (!glfwWindowShouldClose(window))
@@ -215,135 +242,56 @@ int main()
 			camera.Inputs(window);
 		}
 
-		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);				// Background Color
+		glClearColor(0.68f, 0.85f, 0.9f, 1.0f);				// Background Color
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		shaderProgram.Activate();
 
 		// Handles camera inputs
 		camera.Matrix(70.0f, 0.1f, 100.0f, shaderProgram, "camMatrix");
 
+		camera.PrintCoords();
+
 		// Get current chunk position
 		chunkX = camera.Position.x / chunkSize;
 		chunkZ = camera.Position.z / chunkSize;
 
-		// Render Chunk
-		for (int x = 0; x < chunkSize * renderDistance; x++)
+		// Render chunks
+		for (int i = 0; i < chunks.size(); i++)
 		{
-			for (int z = 0; z < chunkSize * renderDistance; z++)
+			chunks[i].Render();
+		}
+
+		// Enter new chunk
+		if (chunkX != lastX)
+		{
+			// New chunk
+			if (chunkX > lastX)
 			{
-				for (int y = 0; y < maxBuildHeight; y++)
+				nextX = chunkX + renderDistance / 2 + 1;
+				firstX = chunkX - (renderDistance - 1) / 2;
+			}
+			
+			/*else if (chunkX < lastX)
+			{ 
+				nextX = chunkX - (renderDistance - 1) / 2;
+				firstX = chunkX + renderDistance / 2 + 1;
+			}*/
+			
+			Chunk chunk(nextX, chunkZ);
+
+			// Unrender last chunkX
+			for (int i = 0; i < chunks.size(); i++)
+			{
+				if (firstX == chunks[i].x)
 				{
-					bool pos[6] = { false, false, false, false, false, false };
-
-					if (chunks[x].size() > z + 1)
-						if (chunks[x][z + 1][y].id != "air") pos[0] = true;
-
-					if (chunks.size() > x + 1)
-						if (chunks[x + 1][z][y].id != "air") pos[1] = true;
-
-					if (z > 0)
-						if (chunks[x][z - 1][y].id != "air") pos[2] = true;
-
-					if (x > 0)
-						if (chunks[x - 1][z][y].id != "air") pos[3] = true;
-
-					if (chunks[x][z].size() > y + 1)
-						if (chunks[x][z][y + 1].id != "air") pos[4] = true;
-
-					if (y > 0)
-						if (chunks[x][z][y - 1].id != "air") pos[5] = true;
-
-					
-					auto start = std::chrono::system_clock::now();
-					chunks[x][z][y].Init(&shaderProgram, pos);
-					auto end = std::chrono::system_clock::now();
-
-					std::chrono::duration<double> elapsed_seconds = end - start;
-					std::time_t end_time = std::chrono::system_clock::to_time_t(end);
-
-					//std::cout << "elapsed time: " << elapsed_seconds.count() * 1000 << "ms" << std::endl;
-
-					chunks[x][z][y].Render(pos);
-				
+					chunks[i].blocks = chunk.blocks;
+					chunks[i].x = nextX;
+					chunks[i].Init(&shaderProgram);
 				}
 			}
 		}
 
-		// Load new chunk
-		if (chunkX != lastX || chunkZ != lastZ)
-		{
-			// Overwrite the current chunk data
-			for (int x = 0; x < renderDistance * chunkSize; x++)
-			{
-				for (int z = 0; z < renderDistance * chunkSize; z++)
-				{
-					int height = (int)(points[chunkX * chunkSize + x][chunkZ * chunkSize + z] * 2 + 10);
-					if (height < 0) height = 0;
-
-
-					for (int y = 0; y < maxBuildHeight; y++)
-					{
-						// Get block
-						bool isBedrock;
-						if (y == 0) isBedrock = true;
-						else isBedrock = false;
-
-						float pos[] = { x + chunkX * chunkSize, y, z + chunkZ * chunkSize };
-						char* id;
-
-						if (isBedrock) id = (char*)"bedrock_block";
-						else if (y > height) id = (char*)"air";
-						else if (y == height) id = (char*)"grass_block";
-						else if (y > 0 && y < height - 4) id = (char*)"stone_block";
-						else id = (char*)"dirt_block";
-
-						int i = x + chunkX * chunkSize;
-						int j = z + chunkZ * chunkSize;
-						if (treeLocations[i][j] > 0 && y == height && id == (char*)"grass_block")
-						{
-							// Place a tree
-							for (int h = 0; h < treeLocations[i][j]; h++)
-							{
-								chunks[x][z][y + h].id = (char*)"oak_log";
-								chunks[x][z][y + h].pos[0] = i;
-								chunks[x][z][y + h].pos[1] = y + h;
-								chunks[x][z][y + h].pos[2] = j;
-
-								std::vector<VBO> VBOs;
-								std::vector<EBO> EBOs;
-								std::vector<Texture> Textures;
-
-								chunks[x][z][y + h].VBOs = VBOs;
-								chunks[x][z][y + h].EBOs = EBOs;
-								chunks[x][z][y + h].Textures = Textures;
-
-								chunks[x][z][y + h].hasInit = false;
-								chunks[x][z][y + h].getTextures();
-							}
-						}
-						else
-						{
-							chunks[x][z][y].id = id;
-							chunks[x][z][y].pos[0] = x + chunkX * chunkSize;
-							chunks[x][z][y].pos[2] = z + chunkZ * chunkSize;
-						
-
-							std::vector<VBO> VBOs;
-							std::vector<EBO> EBOs;
-							std::vector<Texture> Textures;
-
-							chunks[x][z][y].VBOs = VBOs;
-							chunks[x][z][y].EBOs = EBOs;
-							chunks[x][z][y].Textures = Textures;
-						
-							chunks[x][z][y].hasInit = false;
-							chunks[x][z][y].getTextures();
-						}
-					}
-				}
-			}
-		}
-
+		
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 
