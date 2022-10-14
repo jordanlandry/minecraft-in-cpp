@@ -19,7 +19,6 @@
 #include "headers/EBO.h"
 #include "headers/Camera.h"
 #include "headers/Block.h"
-#include "headers/Player.h"
 #include "headers/Chunk.h"
 #include <random>
 
@@ -66,7 +65,6 @@ int main()
 	glCullFace(GL_FRONT);
 	glFrontFace(GL_CCW);
 
-
 	// Generate World
 	const int maxHeight = 128;
 
@@ -94,7 +92,7 @@ int main()
 
 	const float treeDensity = 0.025f;
 	unsigned int treeLocations[128][128];
-	for (int i = 0; i < 128; i++)
+	
 	// Generate Trees
 	for (int i = 0; i < 128; i++)
 	{
@@ -134,56 +132,6 @@ int main()
 
 	/*std::vector<Block> blocks;*/
 	// Rendering Information
-	
-
-	// Generate world
-	//std::vector<std::vector<std::vector<Block>>> chunks;
-	//for (int x = 0; x < chunkSize * renderDistance; x++)
-	//{
-	//	std::vector<std::vector<Block>> temp;
-	//	chunks.push_back(temp);
-	//	for (int z = 0; z < chunkSize * renderDistance; z++)
-	//	{
-	//		std::vector <Block> temp1;
-	//		chunks[x].push_back(temp1);
-
-	//		int height = (int)(points[chunkX * chunkSize + x][chunkZ * chunkSize + z] * 2 + 10);
-	//		if (height < 0) height = 0;
-	//		for (int y = 0; y < maxBuildHeight; y++)
-	//		{
-
-	//			bool isBedrock;
-	//			if (y == 0) isBedrock = true;
-	//			else isBedrock = false;
-
-	//			float pos[] = { x, y, z };
-	//			char* id;
-	//			
-	//			if (isBedrock) id = (char*)"bedrock_block";
-	//			else if (y > height) id = (char*)"air";
-	//			else if (y == height) id = (char*)"grass_block";
-	//			else if (y > 0 && y < height - 4) id = (char*)"stone_block";
-	//			else id = (char*)"dirt_block";
-
-	//			if (treeLocations[x][z] > 0 && y == height && (id == (char*) "grass_block" || id == (char*) "dirt_block"))
-	//			{
-	//				// Place a tree
-	//				for (int h = 0; h < treeLocations[x][z]; h++)
-	//				{
-	//					//std::cout << treeLocations[x][z] << std::endl;
-	//					float p[] = { x, y + h, z };
-	//					Block b((char*)"oak_log", p);
-	//					chunks[x][z].push_back(b);
-	//				}
-	//			}
-	//			else if (chunks[x][z].size() < maxBuildHeight)
-	//			{
-	//				Block b(id, pos);
-	//				chunks[x][z].push_back(b);
-	//			}
-	//		}
-	//	}
-	//}
 
 
 	const int chunkSize = 8;
@@ -197,7 +145,7 @@ int main()
 
 	int lastX = 0;
 	int lastZ = 0;
-	const int maxBuildHeight = 5;
+	//const int maxBuildHeight = 128;
 
 	// Initialize Chunk
 	std::vector<Chunk> chunks;
@@ -214,9 +162,8 @@ int main()
 
 	for (int i = 0; i < chunks.size(); i++)
 	{
-		chunks[i].Init(&shaderProgram);
+		chunks[i].Init(&shaderProgram, points);
 	}
-
 
 	int nextX;
 	int nextZ;
@@ -249,7 +196,7 @@ int main()
 		// Handles camera inputs
 		camera.Matrix(70.0f, 0.1f, 100.0f, shaderProgram, "camMatrix");
 
-		camera.PrintCoords();
+		//camera.PrintCoords();
 
 		// Get current chunk position
 		chunkX = camera.Position.x / chunkSize;
@@ -286,7 +233,7 @@ int main()
 				{
 					chunks[i].blocks = chunk.blocks;
 					chunks[i].x = nextX;
-					chunks[i].Init(&shaderProgram);
+					chunks[i].Init(&shaderProgram, points);
 				}
 			}
 		}

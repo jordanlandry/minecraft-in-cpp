@@ -8,7 +8,7 @@ Chunk::Chunk(int i, int j)
 }
 
 
-void Chunk::Init(Shader* shaderProgram)
+void Chunk::Init(Shader* shaderProgram, float points[128][128])
 {
 	for (int i = 0; i < chunkSize; i++)
 	{
@@ -19,10 +19,20 @@ void Chunk::Init(Shader* shaderProgram)
 		{
 			std::vector <Block> temp1;
 			blocks[i].push_back(temp1);
-			for (int k = 0; k < maxWorldHeight; k++)
+
+			int height = points[i][j] * 5 + 2;		// Get perlin noise value eventually
+
+			for (int k = 0; k <= 10; k++)
 			{
+				char* id;
+				if (k == 0) id = (char*)"bedrock_block";
+				else if (k == height) id = (char*)"grass_block";
+				else if (k > height) id = (char*)"air";
+				else id = (char*)"dirt_block";
+
+
 				float pos[] = { i + x * chunkSize, k, j + y * chunkSize };
-				Block b((char*)"dirt_block", pos);
+				Block b(id, pos);
 
 				bool n[] = { false, false, false, false, false, false };
 				b.Init(shaderProgram, n);
@@ -38,7 +48,9 @@ void Chunk::Render()
 	{
 		for (int j = 0; j < chunkSize; j++)
 		{
-			for (int k = 0; k < maxWorldHeight; k++)
+			int a = blocks[i][j].size();
+
+			for (int k = 0; k < a; k++)
 			{
 				bool neighbours[6] = { false, false, false, false, false, false };
 

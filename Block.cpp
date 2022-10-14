@@ -26,7 +26,7 @@ Block::Block(char* aId, float aPos[3])
 
 void Block::Init(Shader* shaderProgram, bool chunks[6])
 {
-	//if (id == "air") return;
+	if (id == "air") return;
 	if (hasInit) return;
 
 	int x = pos[0];

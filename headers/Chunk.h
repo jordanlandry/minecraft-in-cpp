@@ -10,12 +10,12 @@ public:
 	int y;
 
 	const int chunkSize = 8;
-	const int maxWorldHeight = 5;
+	//const int maxWorldHeight = 128;
 
 	std::vector<std::vector<::std::vector<Block>>> blocks;
 
 	Chunk(int i, int j);
-	void Init(Shader* shaderProgram);
+	void Init(Shader* shaderProgram, float points[128][128]);
 	void Render();
 };
 
