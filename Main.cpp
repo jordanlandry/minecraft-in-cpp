@@ -66,56 +66,6 @@ int main()
 	glCullFace(GL_FRONT);
 	glFrontFace(GL_CCW);
 
-	// Generate World
-	const int maxHeight = 128;
-
-	//float points[128][128];
-
-	//// Create world
-	//std::mt19937 random_engine;
-	//random_engine.seed(100);	// Add a seed
-	//std::uniform_real_distribution<float> random_distribution(0, 1);
-	//std::vector<float> terrain(128, 0);
-
-	//const unsigned int octaves = 12;
-	//for (int i = 0; i < 128; i++)
-	//{
-	//	for (int j = 0; j < 128; j++)
-	//	{
-	//		points[i][j] = random_distribution(random_engine);
-	//		for (int k = 1; k < octaves; k++)
-	//		{
-	//			float weight = k / octaves / 2;
-	//			points[i][j] += weight * points[i][j];
-	//		}
-	//	}
-	//}
-
-	const float treeDensity = 0.025f;
-	unsigned int treeLocations[128][128];
-	
-	// Generate Trees
-	/*for (int i = 0; i < 128; i++)
-	{
-		for (int j = 0; j < 128; j++)
-		{
-			if (random_distribution(random_engine) <= treeDensity)
-			{
-				treeLocations[i][j] = random_distribution(random_engine) * 6 + 5;
-			}
-			else treeLocations[i][j] = 0;
-		}
-	}*/
-
-
-	// Generate Seed
-	/*float* fNoiseSeed2D = nullptr;
-	float* fPerlinNoise2D = nullptr;
-	fNoiseSeed2D = new float[128 * 128];
-	fPerlinNoise2D = new float[128 * 128];
-	for (int i = 0; i < 128 * 128; i++) fNoiseSeed2D[i] = (float)rand() / (float)RAND_MAX;
-	PerlinNoise2D(128, 128, fNoiseSeed2D, 8, 32.0f, fPerlinNoise2D);*/
-
 
 	// Camera
 	Camera camera(width, height, glm::vec3(0, 12, 0));
@@ -128,40 +78,8 @@ int main()
 
 	glfwSwapInterval(0);          // Turning this on will disable VSync
 
-	// Rendering Information
-	const int chunkSize = 8;
-	int renderDistance = 5;
-	int currentChunk = 0;
-	int lastChunk = 0;
-	int loadedChunks = 0;
-
-	int chunkX = 0;
-	int chunkZ = 0;
-
-	int lastX = 0;
-	int lastZ = 0;
-
 	World world;
 	world.Generate(&shaderProgram);
-
-	// Initialize Chunk
-	/*std::vector<Chunk> chunks;
-	for (int i = 0; i < renderDistance; i++)
-	{
-		for (int j = 0; j < renderDistance; j++)
-		{
-			Chunk c(i, j);
-			chunks.push_back(c);
-		}
-	}*/
-
-	//for (int i = 0; i < chunks.size(); i++) chunks[i].Init(&shaderProgram, points);
-	
-
-	int nextX;
-	int nextZ;
-	int firstX = 0;
-	int firstZ = 0;
 
 	// Game loop
 	while (!glfwWindowShouldClose(window))
@@ -192,55 +110,17 @@ int main()
 		//camera.PrintCoords();
 
 		// Get current chunk position
-		chunkX = camera.Position.x / chunkSize;
-		chunkZ = camera.Position.z / chunkSize;
+		/*chunkX = camera.Position.x / chunkSize;
+		chunkZ = camera.Position.z / chunkSize;*/
 
-		// Render chunks
-		/*for (int i = 0; i < chunks.size(); i++)
-		{
-			chunks[i].Render();
-		}*/
-
-		world.Render();
-
-		// Enter new chunk
-		if (chunkX != lastX)
-		{
-			// New chunk
-			if (chunkX > lastX)
-			{
-				nextX = chunkX + renderDistance / 2 + 1;
-				firstX = chunkX - (renderDistance - 1) / 2;
-			}
-			
-			/*else if (chunkX < lastX)
-			{ 
-				nextX = chunkX - (renderDistance - 1) / 2;
-				firstX = chunkX + renderDistance / 2 + 1;
-			}*/
-			
-			Chunk chunk(nextX, chunkZ);
-
-			// Unrender last chunkX
-			/*for (int i = 0; i < chunks.size(); i++)
-			{
-				if (firstX == chunks[i].x)
-				{
-					chunks[i].Delete();
-					chunks[i].blocks = chunk.blocks;
-					chunks[i].x = nextX;
-
-					chunks[i].Init(&shaderProgram, points);
-				}
-			}*/
-		}
+		world.Render(camera.Position.x, camera.Position.z, &shaderProgram);
 		
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 
 		// Update last chunk
-		lastX = chunkX;
-		lastZ = chunkZ;
+		/*lastX = chunkX;
+		lastZ = chunkZ;*/
 	}
 
 	shaderProgram.Delete();

@@ -45,10 +45,42 @@ void World::Generate(Shader *shaderProgram)
 	for (int i = 0; i < chunks.size(); i++) chunks[i].Init(shaderProgram, points);
 }
 
-void World::Render()
+void World::Render(float x, float z, Shader* shaderProgram)
 {
 	for (int i = 0; i < chunks.size(); i++)
 	{
 		chunks[i].Render();
 	}
+
+	// Enter new chunk
+		if (chunkX != lastX)
+		{
+			// New chunk
+			if (chunkX > lastX)
+			{
+				nextX = chunkX + renderDistance / 2 + 1;
+				firstX = chunkX - (renderDistance - 1) / 2;
+			}
+			
+			else if (chunkX < lastX)
+			{ 
+				nextX = chunkX - (renderDistance - 1) / 2;
+				firstX = chunkX + renderDistance / 2 + 1;
+			}
+			
+			Chunk chunk(nextX, chunkZ);
+
+			// Unrender last chunkX
+			for (int i = 0; i < chunks.size(); i++)
+			{
+				if (firstX == chunks[i].x)
+				{
+					chunks[i].Delete();
+					chunks[i].blocks = chunk.blocks;
+					chunks[i].x = nextX;
+
+					chunks[i].Init(shaderProgram, points);
+				}
+			}
+		}
 }

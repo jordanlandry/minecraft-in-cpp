@@ -13,16 +13,21 @@ public:
 	float treeFreq;		// From 0 to 1
 
 	int chunkX;
-	int chunkY;
+	int chunkZ;
 	int nextX;
-	int nextY;
+	int nextZ;
+
+	int firstX;
+	int firstZ;
+	int lastX;
+	int lastZ;
 
 	float points[128][128];
 	std::vector<Chunk> chunks;
 
 	World();
 	void Generate(Shader *shaderProgram);
-	void Render();
+	void Render(float x, float z, Shader* shaderProgram);
 };
 
 #endif
