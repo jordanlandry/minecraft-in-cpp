@@ -57,9 +57,7 @@ void Chunk::Init(Shader* shaderProgram, float points[128][128])
 void Chunk::Render()
 {
 	for (int i = 0; i < chunkSize; i++)
-	{
-		for (int j = 0; j < chunkSize; j++)
-		{
+		for (int j = 0; j < chunkSize; j++) {
 			int a = blocks[i][j].size();
 
 			for (int k = 0; k < a; k++)
@@ -87,7 +85,6 @@ void Chunk::Render()
 				blocks[i][j][k].Render(neighbours);
 			}
 		}
-	}
 }
 
 void Chunk::Delete()

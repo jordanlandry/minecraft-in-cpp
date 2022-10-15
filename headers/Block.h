@@ -15,7 +15,6 @@ public:
 	char* id;
 	float pos[3];
 
-
 	const static int xSize = 101;
 	const static int ySize = 60;
 	const static int zSize = 101;
@@ -32,6 +31,8 @@ public:
 	std::vector<VBO> VBOs;
 	std::vector<EBO> EBOs;
 	std::vector<Texture> Textures;
+
+	std::vector<Texture> texels;
 
 	Block();
 	Block(char* aId, float aPos[3]);

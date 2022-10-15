@@ -11,6 +11,7 @@
 #include <time.h>
 #include <thread>
 #include <chrono>
+#include <random>
 
 #include "headers/Texture.h"
 #include "headers/shaderClass.h"
@@ -20,7 +21,7 @@
 #include "headers/Camera.h"
 #include "headers/Block.h"
 #include "headers/Chunk.h"
-#include <random>
+#include "headers/World.h"
 
 const unsigned int width = 1280;
 const unsigned int height = 720;
@@ -68,33 +69,33 @@ int main()
 	// Generate World
 	const int maxHeight = 128;
 
-	float points[128][128];
+	//float points[128][128];
 
-	std::mt19937 random_engine;
-	random_engine.seed(100);	// Add a seed
-	std::uniform_real_distribution<float> random_distribution(0, 1);
-	std::vector<float> terrain(128, 0);
+	//// Create world
+	//std::mt19937 random_engine;
+	//random_engine.seed(100);	// Add a seed
+	//std::uniform_real_distribution<float> random_distribution(0, 1);
+	//std::vector<float> terrain(128, 0);
 
-
-	const unsigned int octaves = 12;
-	for (int i = 0; i < 128; i++)
-	{
-		for (int j = 0; j < 128; j++)
-		{
-			points[i][j] = random_distribution(random_engine);
-			for (int k = 1; k < octaves; k++)
-			{
-				float weight = k / octaves / 2;
-				points[i][j] += weight * points[i][j];
-			}
-		}
-	}
+	//const unsigned int octaves = 12;
+	//for (int i = 0; i < 128; i++)
+	//{
+	//	for (int j = 0; j < 128; j++)
+	//	{
+	//		points[i][j] = random_distribution(random_engine);
+	//		for (int k = 1; k < octaves; k++)
+	//		{
+	//			float weight = k / octaves / 2;
+	//			points[i][j] += weight * points[i][j];
+	//		}
+	//	}
+	//}
 
 	const float treeDensity = 0.025f;
 	unsigned int treeLocations[128][128];
 	
 	// Generate Trees
-	for (int i = 0; i < 128; i++)
+	/*for (int i = 0; i < 128; i++)
 	{
 		for (int j = 0; j < 128; j++)
 		{
@@ -104,15 +105,16 @@ int main()
 			}
 			else treeLocations[i][j] = 0;
 		}
-	}
+	}*/
+
 
 	// Generate Seed
-	float* fNoiseSeed2D = nullptr;
+	/*float* fNoiseSeed2D = nullptr;
 	float* fPerlinNoise2D = nullptr;
 	fNoiseSeed2D = new float[128 * 128];
 	fPerlinNoise2D = new float[128 * 128];
 	for (int i = 0; i < 128 * 128; i++) fNoiseSeed2D[i] = (float)rand() / (float)RAND_MAX;
-	PerlinNoise2D(128, 128, fNoiseSeed2D, 8, 32.0f, fPerlinNoise2D);
+	PerlinNoise2D(128, 128, fNoiseSeed2D, 8, 32.0f, fPerlinNoise2D);*/
 
 
 	// Camera
@@ -125,12 +127,8 @@ int main()
 	unsigned int counter = 0;
 
 	glfwSwapInterval(0);          // Turning this on will disable VSync
-	
 
-	/*std::vector<Block> blocks;*/
 	// Rendering Information
-
-
 	const int chunkSize = 8;
 	int renderDistance = 5;
 	int currentChunk = 0;
@@ -142,10 +140,12 @@ int main()
 
 	int lastX = 0;
 	int lastZ = 0;
-	//const int maxBuildHeight = 128;
+
+	World world;
+	world.Generate(&shaderProgram);
 
 	// Initialize Chunk
-	std::vector<Chunk> chunks;
+	/*std::vector<Chunk> chunks;
 	for (int i = 0; i < renderDistance; i++)
 	{
 		for (int j = 0; j < renderDistance; j++)
@@ -153,14 +153,10 @@ int main()
 			Chunk c(i, j);
 			chunks.push_back(c);
 		}
-	}
+	}*/
 
-	//std::vector<Chunk> currentChunks;
-
-	for (int i = 0; i < chunks.size(); i++)
-	{
-		chunks[i].Init(&shaderProgram, points);
-	}
+	//for (int i = 0; i < chunks.size(); i++) chunks[i].Init(&shaderProgram, points);
+	
 
 	int nextX;
 	int nextZ;
@@ -193,17 +189,19 @@ int main()
 		// Handles camera inputs
 		camera.Matrix(70.0f, 0.1f, 100.0f, shaderProgram, "camMatrix");
 
-		camera.PrintCoords();
+		//camera.PrintCoords();
 
 		// Get current chunk position
 		chunkX = camera.Position.x / chunkSize;
 		chunkZ = camera.Position.z / chunkSize;
 
 		// Render chunks
-		for (int i = 0; i < chunks.size(); i++)
+		/*for (int i = 0; i < chunks.size(); i++)
 		{
 			chunks[i].Render();
-		}
+		}*/
+
+		world.Render();
 
 		// Enter new chunk
 		if (chunkX != lastX)
@@ -224,7 +222,7 @@ int main()
 			Chunk chunk(nextX, chunkZ);
 
 			// Unrender last chunkX
-			for (int i = 0; i < chunks.size(); i++)
+			/*for (int i = 0; i < chunks.size(); i++)
 			{
 				if (firstX == chunks[i].x)
 				{
@@ -232,17 +230,9 @@ int main()
 					chunks[i].blocks = chunk.blocks;
 					chunks[i].x = nextX;
 
-					auto start = std::chrono::high_resolution_clock::now();
-
 					chunks[i].Init(&shaderProgram, points);
-
-					auto stop = std::chrono::high_resolution_clock::now();
-
-					auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
-
-					//std::cout << duration.count() << " milliseconds" << std::endl;
 				}
-			}
+			}*/
 		}
 		
 		glfwSwapBuffers(window);

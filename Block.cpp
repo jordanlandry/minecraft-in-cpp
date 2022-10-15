@@ -1,11 +1,12 @@
 #include "headers/Block.h"
+#include <chrono>
 
 
 Block::Block()
 {
 	id =(char*)"dirt_block";
 	hasInit = false;
-	getTextures();
+	//getTextures();
 	pos[0] = 0;
 	pos[1] = 0;
 	pos[2] = 0;
@@ -90,6 +91,7 @@ void Block::Init(Shader* shaderProgram, bool chunks[6])
 		EBO EBO1(indices, sizeof(indices));
 
 		VBOs.push_back(VBO1);
+
 		EBOs.push_back(EBO1);
 
 		VAOs[i].LinkAttrib(VBO1, 0, 3, GL_FLOAT, 8 * sizeof(float), (void*)0);
@@ -103,8 +105,9 @@ void Block::Init(Shader* shaderProgram, bool chunks[6])
 		EBO1.Delete();
 		VBO1.Delete();
 
-		Texture tex(textures[i], GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
 
+
+		Texture tex(textures[i], GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
 		Textures.push_back(tex);
 		tex.texUnit(*shaderProgram, "tex0", 0);
 	}
@@ -161,6 +164,7 @@ void Block::getTextures()
 		textures[4] = (char*)"assets/bedrock.png";
 		textures[5] = (char*)"assets/bedrock.png";
 	}
+
 	else if (id == "stone_block")
 	{
 		textures[0] = (char*)"assets/stone.png";
@@ -170,6 +174,7 @@ void Block::getTextures()
 		textures[4] = (char*)"assets/stone.png";
 		textures[5] = (char*)"assets/stone.png";
 	}
+
 	else if (id == "water")
 	{
 		textures[0] = (char*)"assets/water_flow.png";
@@ -179,6 +184,7 @@ void Block::getTextures()
 		textures[4] = (char*)"assets/water_flow.png";
 		textures[5] = (char*)"assets/water_flow.png";
 	}
+
 	else if (id == "oak_log")
 	{
 		textures[0] = (char*)"assets/oak_log.png";
@@ -188,6 +194,7 @@ void Block::getTextures()
 		textures[4] = (char*)"assets/oak_log_top.png";
 		textures[5] = (char*)"assets/oak_log_top.png";
 	}
+
 	else if (id == "air")
 	{
 		textures[0] = (char*)"a";
