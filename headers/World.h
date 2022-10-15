@@ -22,6 +22,8 @@ public:
 	int lastX;
 	int lastZ;
 
+	std::vector<Texture> Texels;
+
 	float points[128][128];
 	std::vector<Chunk> chunks;
 

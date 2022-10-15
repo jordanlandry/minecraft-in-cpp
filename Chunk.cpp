@@ -8,19 +8,8 @@ Chunk::Chunk(int i, int j)
 }
 
 
-void Chunk::Init(Shader* shaderProgram, float points[128][128])
+void Chunk::Init(Shader* shaderProgram, float points[128][128], std::vector<Texture> Texels)
 {
-	/*for (int i = 0; i < blocks.size(); i++)
-	{
-		for (int j = 0; j < blocks[i].size(); j++)
-		{
-			for (int k = 0; k < blocks[i][j].size(); k++)
-			{
-				blocks[i][j][k].Delete();
-				delete& blocks[i][j][k];
-			}
-		}
-	}*/
 
 	for (int i = 0; i < chunkSize; i++)
 	{
@@ -32,7 +21,7 @@ void Chunk::Init(Shader* shaderProgram, float points[128][128])
 			std::vector <Block> temp1;
 			blocks[i].push_back(temp1);
 
-			int height = points[i][j] * 5 + 2;		// Get perlin noise value eventually
+			int height = points[i + x * chunkSize][j + y * chunkSize] * 5 + 2;		// Get perlin noise value eventually
 
 			for (int k = 0; k <= 10; k++)
 			{
@@ -42,12 +31,11 @@ void Chunk::Init(Shader* shaderProgram, float points[128][128])
 				else if (k > height) id = (char*)"air";
 				else id = (char*)"dirt_block";
 
-
 				float pos[] = { i + x * chunkSize, k, j + y * chunkSize };
 				Block b(id, pos);
 
 				bool n[] = { false, false, false, false, false, false };
-				b.Init(shaderProgram, n);
+				b.Init(shaderProgram, n, Texels);
 				blocks[i][j].push_back(b);
 			}
 		}

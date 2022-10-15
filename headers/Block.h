@@ -36,7 +36,7 @@ public:
 
 	Block();
 	Block(char* aId, float aPos[3]);
-	void Init(Shader* shaderProgram, bool chunks[6]);
+	void Init(Shader* shaderProgram, bool chunks[6], std::vector<Texture> Texels);
 	void Render(bool neighbours[6]);
 	void getTextures();
 	void Delete();

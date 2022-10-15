@@ -1,7 +1,5 @@
 #include "headers/World.h"
-
 #include <random>
-
 
 World::World()
 {
@@ -9,7 +7,6 @@ World::World()
 	chunkSize = 8;
 	renderDistance = 3;
 }
-
 
 void World::Generate(Shader *shaderProgram)
 {
@@ -33,6 +30,24 @@ void World::Generate(Shader *shaderProgram)
 		}
 	}
 
+	// Generate textures
+	char* textures[] = {
+		(char*)"assets/grass.png",
+		(char*)"assets/grass_block_side.png",
+		(char*)"assets/dirt.png",
+		(char*)"assets/bedrock.png",
+		(char*)"assets/stone.png",
+	};
+
+
+	for (int i = 0; i < sizeof(textures) / sizeof(*textures); i++)
+	{
+		Texture tex(textures[i], GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
+		Texels.push_back(tex);
+		tex.texUnit(*shaderProgram, "tex0", 0);
+	}
+
+
 	for (int i = 0; i < renderDistance; i++)
 	{
 		for (int j = 0; j < renderDistance; j++)
@@ -42,15 +57,12 @@ void World::Generate(Shader *shaderProgram)
 		}
 	}
 
-	for (int i = 0; i < chunks.size(); i++) chunks[i].Init(shaderProgram, points);
+	for (int i = 0; i < chunks.size(); i++) chunks[i].Init(shaderProgram, points, Texels);
 }
 
 void World::Render(float x, float z, Shader* shaderProgram)
 {
-	for (int i = 0; i < chunks.size(); i++)
-	{
-		chunks[i].Render();
-	}
+	for (int i = 0; i < chunks.size(); i++) chunks[i].Render();
 
 	chunkX = x / chunkSize;
 	chunkZ = z / chunkSize;
@@ -82,7 +94,7 @@ void World::Render(float x, float z, Shader* shaderProgram)
 				chunks[i].blocks = chunk.blocks;
 				chunks[i].x = nextX;
 
-				chunks[i].Init(shaderProgram, points);
+				chunks[i].Init(shaderProgram, points, Texels);
 			}
 		}
 	}
