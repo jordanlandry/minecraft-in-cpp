@@ -8,7 +8,7 @@ Chunk::Chunk(int i, int j)
 }
 
 
-void Chunk::Init(Shader* shaderProgram, float points[128][128], std::vector<Texture> Texels)
+void Chunk::Init(Shader* shaderProgram, float points[128][128], std::vector<Texture>* Texels)
 {
 
 	for (int i = 0; i < chunkSize; i++)

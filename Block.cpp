@@ -25,7 +25,7 @@ Block::Block(char* aId, float aPos[3])
 	pos[2] = aPos[2];
 }
 
-void Block::Init(Shader* shaderProgram, bool chunks[6], std::vector<Texture> Texels)
+void Block::Init(Shader* shaderProgram, bool chunks[6], std::vector<Texture> *Texels)
 {
 	if (id == "air") return;
 	if (hasInit) return;
@@ -105,11 +105,16 @@ void Block::Init(Shader* shaderProgram, bool chunks[6], std::vector<Texture> Tex
 		EBO1.Delete();
 		VBO1.Delete();
 
-		if (id == "grass_block") Textures = { Texels[1], Texels[1], Texels[1], Texels[1], Texels[0], Texels[2] };
-		else if (id == "dirt_block") Textures = { Texels[2],Texels[2], Texels[2], Texels[2], Texels[2], Texels[2] };
-		else if (id == "bedrock_block") Textures = { Texels[3], Texels[3], Texels[3], Texels[3], Texels[3], Texels[3] };
-		else if (id == "stone_block") Textures = { Texels[4],Texels[4], Texels[4], Texels[4], Texels[4], Texels[4] };
-		else Textures = { Texels[1],Texels[1], Texels[1], Texels[1], Texels[1], Texels[1] };
+		if (id == "grass_block") Textures = { (*Texels)[1], (*Texels)[1], (*Texels)[1], (*Texels)[1], (*Texels)[0], (*Texels)[2] };
+
+		else if (id == "dirt_block") Textures = { (*Texels)[2],(*Texels)[2], (*Texels)[2], (*Texels)[2], (*Texels)[2], (*Texels)[2]};
+
+		
+		else if (id == "bedrock_block") Textures = { (*Texels)[3], (*Texels)[3], (*Texels)[3], (*Texels)[3], (*Texels)[3], (*Texels)[3] };
+
+		else if (id == "stone_block") Textures = { (*Texels)[4],(*Texels)[4], (*Texels)[4], (*Texels)[4], (*Texels)[4], (*Texels)[4] };
+
+		else Textures = { (*Texels)[1], (*Texels)[1], (*Texels)[1], (*Texels)[1], (*Texels)[1], (*Texels)[1] };
 	}
 
 	hasInit = true;

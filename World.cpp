@@ -57,7 +57,7 @@ void World::Generate(Shader *shaderProgram)
 		}
 	}
 
-	for (int i = 0; i < chunks.size(); i++) chunks[i].Init(shaderProgram, points, Texels);
+	for (int i = 0; i < chunks.size(); i++) chunks[i].Init(shaderProgram, points, &Texels);
 }
 
 void World::Render(float x, float z, Shader* shaderProgram)
@@ -94,7 +94,7 @@ void World::Render(float x, float z, Shader* shaderProgram)
 				chunks[i].blocks = chunk.blocks;
 				chunks[i].x = nextX;
 
-				chunks[i].Init(shaderProgram, points, Texels);
+				chunks[i].Init(shaderProgram, points, &Texels);
 			}
 		}
 	}

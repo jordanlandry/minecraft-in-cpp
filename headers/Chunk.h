@@ -15,7 +15,7 @@ public:
 	std::vector<std::vector<::std::vector<Block>>> blocks;
 
 	Chunk(int i, int j);
-	void Init(Shader* shaderProgram, float points[128][128], std::vector<Texture> Texels);
+	void Init(Shader* shaderProgram, float points[128][128], std::vector<Texture> *Texels);
 	void Render();
 	void Delete();
 };
