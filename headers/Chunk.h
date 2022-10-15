@@ -9,7 +9,7 @@ public:
 	int x;
 	int y;
 
-	const int chunkSize = 8;
+	int chunkSize = 8;
 	//const int maxWorldHeight = 128;
 
 	std::vector<std::vector<::std::vector<Block>>> blocks;

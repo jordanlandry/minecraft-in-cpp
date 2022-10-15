@@ -6,7 +6,7 @@
 World::World()
 {
 	maxHeight = 128;
-	chunkSize = 16;
+	chunkSize = 8;
 	renderDistance = 3;
 }
 
@@ -52,35 +52,41 @@ void World::Render(float x, float z, Shader* shaderProgram)
 		chunks[i].Render();
 	}
 
+	chunkX = x / chunkSize;
+	chunkZ = z / chunkSize;
+
 	// Enter new chunk
-		if (chunkX != lastX)
+	if (chunkX != lastX)
+	{
+		// New chunk
+		if (chunkX > lastX)
 		{
-			// New chunk
-			if (chunkX > lastX)
-			{
-				nextX = chunkX + renderDistance / 2 + 1;
-				firstX = chunkX - (renderDistance - 1) / 2;
-			}
+			nextX = chunkX + renderDistance / 2 + 1;
+			firstX = chunkX - (renderDistance - 1) / 2;
+		}
 			
-			else if (chunkX < lastX)
-			{ 
-				nextX = chunkX - (renderDistance - 1) / 2;
-				firstX = chunkX + renderDistance / 2 + 1;
-			}
+		else if (chunkX < lastX)
+		{ 
+			nextX = chunkX - (renderDistance - 1) / 2;
+			firstX = chunkX + renderDistance / 2 + 1;
+		}
 			
-			Chunk chunk(nextX, chunkZ);
+		Chunk chunk(nextX, chunkZ);
 
-			// Unrender last chunkX
-			for (int i = 0; i < chunks.size(); i++)
+		// Unrender last chunkX
+		for (int i = 0; i < chunks.size(); i++)
+		{
+			if (firstX == chunks[i].x)
 			{
-				if (firstX == chunks[i].x)
-				{
-					chunks[i].Delete();
-					chunks[i].blocks = chunk.blocks;
-					chunks[i].x = nextX;
+				chunks[i].Delete();
+				chunks[i].blocks = chunk.blocks;
+				chunks[i].x = nextX;
 
-					chunks[i].Init(shaderProgram, points);
-				}
+				chunks[i].Init(shaderProgram, points);
 			}
 		}
+	}
+
+	lastX = chunkX;
+	lastZ = chunkZ;
 }

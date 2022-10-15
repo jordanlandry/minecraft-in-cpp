@@ -84,7 +84,7 @@ int main()
 	// Game loop
 	while (!glfwWindowShouldClose(window))
 	{
-		// FPS 
+		// FPS
 		crntTime = glfwGetTime();
 		timeDiff = crntTime - prevTime;
 		counter++;
