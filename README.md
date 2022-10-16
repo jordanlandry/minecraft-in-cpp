@@ -74,7 +74,7 @@ Generated Perlin values:
 \
 { 10, 11, 10, 10, 11, 12, 13, 15, 16, 15, 14, 12, 11, 12, 11, 10 }
 
-![1D Perlin Noise Graph](readme/1d_perlin_graph.png)
+![1D Perlin Noise Graph](/readme/1d_perlin_graph.png)
 
 After plotting these numbers on a line graph, it becomes clear how this can be used in terrain generation. When expanded into the 2nd dimension, this will result in terrain.
 
