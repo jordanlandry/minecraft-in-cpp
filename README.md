@@ -66,7 +66,7 @@ Watch me design, create and debug this project on [YouTube](https://www.youtube.
 
 ## Terrain generation
 
-[Library Used](https://github.com/Reputeless/PerlinNoise)
+Check out the library I used from [Reputeless (Ryo Suzuki)](https://github.com/Reputeless/PerlinNoise)
 
 In Minecraft, the terrain must appear random yet feel realistic. To achieve this, I used Perlin noise. Perlin noise works by initializing random values at different points and smoothing the values between those points. The result is a map of seemingly random numbers. We can use these values to determine the height at any given coordinate. To better understand, let's take it down to one dimension.
 
