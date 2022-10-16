@@ -8,7 +8,7 @@ Chunk::Chunk(int i, int j)
 }
 
 
-void Chunk::Init(Shader* shaderProgram, float points[128][128], std::vector<Texture>* Texels)
+void Chunk::Init(Shader* shaderProgram, double points[128][128], std::vector<Texture>* Texels)
 {
 
 	for (int i = 0; i < chunkSize; i++)
@@ -21,9 +21,9 @@ void Chunk::Init(Shader* shaderProgram, float points[128][128], std::vector<Text
 			std::vector <Block> temp1;
 			blocks[i].push_back(temp1);
 
-			int height = points[i + x * chunkSize][j + y * chunkSize] * 5 + 2;		// Get perlin noise value eventually
+			int height = points[i + x * chunkSize][j + y * chunkSize] * 40 + 10;		// Get perlin noise value eventually
 
-			for (int k = 0; k <= 10; k++)
+			for (int k = 0; k <= 128; k++)
 			{
 				char* id;
 				if (k == 0) id = (char*)"bedrock_block";

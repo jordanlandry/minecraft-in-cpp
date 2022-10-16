@@ -1,5 +1,6 @@
 #include "headers/World.h"
 #include <random>
+#include "headers/PerlinNoise.hpp"
 
 World::World()
 {
@@ -11,22 +12,16 @@ World::World()
 void World::Generate(Shader *shaderProgram)
 {
 	// Create world
-	std::mt19937 random_engine;
-	random_engine.seed(100);	// Add a seed
-	std::uniform_real_distribution<float> random_distribution(0, 1);
-	std::vector<float> terrain(128, 0);
-
 	const unsigned int octaves = 12;
-	for (int i = 0; i < 128; i++)
+	const siv::PerlinNoise::seed_type seed = 123456u;
+
+	const siv::PerlinNoise perlin{ seed };
+
+	for (int y = 0; y < 128; ++y)
 	{
-		for (int j = 0; j < 128; j++)
+		for (int x = 0; x < 128; ++x)
 		{
-			points[i][j] = random_distribution(random_engine);
-			for (int k = 1; k < octaves; k++)
-			{
-				float weight = k / octaves / 2;
-				points[i][j] += weight * points[i][j];
-			}
+			points[x][y] = perlin.octave2D_01((x * 0.01), (y * 0.01), 32);
 		}
 	}
 
