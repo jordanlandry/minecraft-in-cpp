@@ -5,7 +5,7 @@
 World::World()
 {
 	maxHeight = 128;
-	chunkSize = 8;
+	chunkSize = 16;
 	renderDistance = 3;
 }
 
@@ -21,7 +21,7 @@ void World::Generate(Shader *shaderProgram)
 	{
 		for (int x = 0; x < 128; ++x)
 		{
-			points[x][y] = perlin.octave2D_01((x * 0.01), (y * 0.01), 32);
+			points[x][y] = perlin.octave2D_01((x * 0.01), (y * 0.01), 128);
 		}
 	}
 

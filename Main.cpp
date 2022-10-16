@@ -13,6 +13,7 @@
 #include <chrono>
 #include <random>
 
+// Include Headers
 #include "headers/Texture.h"
 #include "headers/shaderClass.h"
 #include "headers/VAO.h"
@@ -23,10 +24,8 @@
 #include "headers/Chunk.h"
 #include "headers/World.h"
 
-
 const unsigned int width = 1280;
 const unsigned int height = 720;
-
 
 // Vertices coordinates
 int main()
@@ -46,24 +45,19 @@ int main()
 		return -1;
 	}
 
+	// Making Window
 	glfwMakeContextCurrent(window);
-
 	gladLoadGL();
 	glViewport(0, 0, width, height);
 
 	// Generates Shader object using shaders default.vert and default.frag
 	Shader shaderProgram("shaders/default.vert", "shaders/default.frag");
 
-	//std::vector<Block> blocks;
-
-	srand((unsigned)time(NULL));
-
+	// Window Props
 	glEnable(GL_DEPTH_TEST);
-
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_FRONT);
 	glFrontFace(GL_CCW);
-
 
 	// Camera
 	Camera camera(width, height, glm::vec3(0, 12, 0));
@@ -76,6 +70,7 @@ int main()
 
 	glfwSwapInterval(0);          // Turning this on will disable VSync
 
+	// Generate World
 	World world;
 	world.Generate(&shaderProgram);
 
@@ -105,20 +100,12 @@ int main()
 		// Handles camera inputs
 		camera.Matrix(70.0f, 0.1f, 100.0f, shaderProgram, "camMatrix");
 
-		//camera.PrintCoords();
-
-		// Get current chunk position
-		/*chunkX = camera.Position.x / chunkSize;
-		chunkZ = camera.Position.z / chunkSize;*/
-
+		// Render World
 		world.Render(camera.Position.x, camera.Position.z, &shaderProgram);
 		
+		// Window buffer
 		glfwSwapBuffers(window);
 		glfwPollEvents();
-
-		// Update last chunk
-		/*lastX = chunkX;
-		lastZ = chunkZ;*/
 	}
 
 	shaderProgram.Delete();

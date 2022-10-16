@@ -1,7 +1,6 @@
 #ifndef BLOCK_CLASS_H
 #define BLOCK_CLASS_H
 
-
 #include "Texture.h"
 #include <vector>
 #include "VAO.h"
@@ -19,9 +18,6 @@ public:
 	const static int ySize = 60;
 	const static int zSize = 101;
 
-	//GLfloat vertices1[];
-
-	//std::vector<unsigned int> indices;
 	char* textures[6];
 	bool hasInit;
 
@@ -38,7 +34,6 @@ public:
 	Block(char* aId, float aPos[3]);
 	void Init(Shader* shaderProgram, bool chunks[6], std::vector<Texture> *Texels);
 	void Render(bool neighbours[6]);
-	void getTextures();
 	void Delete();
 
 };

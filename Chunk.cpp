@@ -1,5 +1,5 @@
 #include "headers/Chunk.h"
-
+#include <chrono>
 
 Chunk::Chunk(int i, int j)
 {
@@ -10,7 +10,6 @@ Chunk::Chunk(int i, int j)
 
 void Chunk::Init(Shader* shaderProgram, double points[128][128], std::vector<Texture>* Texels)
 {
-
 	for (int i = 0; i < chunkSize; i++)
 	{
 		std::vector<std::vector<Block>> temp;
@@ -21,9 +20,10 @@ void Chunk::Init(Shader* shaderProgram, double points[128][128], std::vector<Tex
 			std::vector <Block> temp1;
 			blocks[i].push_back(temp1);
 
-			int height = points[i + x * chunkSize][j + y * chunkSize] * 40 + 10;		// Get perlin noise value eventually
+			int height = points[i + x * chunkSize][j + y * chunkSize] * 64;
 
-			for (int k = 0; k <= 128; k++)
+			//auto start = std::chrono::high_resolution_clock::now();
+			for (int k = 0; k <= 64; k++)
 			{
 				char* id;
 				if (k == 0) id = (char*)"bedrock_block";
@@ -38,6 +38,9 @@ void Chunk::Init(Shader* shaderProgram, double points[128][128], std::vector<Tex
 				b.Init(shaderProgram, n, Texels);
 				blocks[i][j].push_back(b);
 			}
+			/*auto stop = std::chrono::high_resolution_clock::now();
+			auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
+			std::cout << duration.count() << " milliseconds" << std::endl;*/
 		}
 	}
 }
