@@ -106,8 +106,10 @@ void World::Render(float x, float z, Shader* shaderProgram)
 
 		else if (chunkZ < lastZ)
 		{
-			nextZ = chunkZ - (renderDistance - 1) / 2;
-			firstZ = chunkZ + (renderDistance - 1) / 2;
+			nextZ = lastZ;
+			firstZ = chunkZ + renderDistance - 1;
+			/*nextZ = chunkZ - (renderDistance - 1) / 2;
+			firstZ = chunkZ + (renderDistance - 1) / 2;*/
 		}
 
 		Chunk chunk(chunkX, nextZ);
@@ -125,4 +127,23 @@ void World::Render(float x, float z, Shader* shaderProgram)
 
 	lastX = chunkX;
 	lastZ = chunkZ;
+}
+
+void World::BreakBlock(int pos[6][3], Shader* shaderProgram)
+{
+	bool n[] = { false, false, false, false, false, false };
+	for (int i = 0; i < 6; i++)
+	{
+		for (int j = 0; j < chunks.size(); j++)
+		{
+			// Check if the chunk you're in contains the blocks you're looking at
+			if (chunks[j].x == pos[i][0] / chunkSize && chunks[j].z == pos[i][2])
+			{
+				// Break the block
+				chunks[j].blocks[pos[i][0]][pos[i][2]][pos[i][1]].id = (char*)"air";
+				chunks[j].blocks[pos[i][0]][pos[i][2]][pos[i][1]].Init(shaderProgram, n, &Texels);
+			}
+
+		}
+	}
 }

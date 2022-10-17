@@ -16,21 +16,21 @@ void Chunk::Init(Shader* shaderProgram, double (&points)[256][256], std::vector<
 
 	//std::vector<std::vector<std::vector<Block>>> newBlocks(chunkSize, std::vector<std::vector<Block>>(chunkSize, std::vector<Block>(maxHeight)));
 
+	srand((unsigned)time(NULL));
 	for (int i = 0; i < chunkSize; i++) {
 	
 		for (int j = 0; j < chunkSize; j++)
 		{
-			int height = points[i + x * chunkSize][j + z * chunkSize] * 10 + 2;
+			int height = points[i + x * chunkSize][j + z * chunkSize] * (maxHeight - 2) + 2;
 		
 			for (int k = 0; k < maxHeight; k++)
 			{
 				bool neighbours[6] = { false, false, false, false, false, false };
-
 				char* id;
-
+			
 				if (k == 0) id = (char*)"bedrock_block";
-				else if (height <= 5 && k == height) id = (char*)"water";
-				else if (k == height && height < 7) id = (char*)"sand_block";
+				else if (height <= 3 && k == height) id = (char*)"water";
+				else if (k == height && height < 5 && (float)rand() / RAND_MAX > 0.2f) id = (char*)"sand_block";
 				else if (k == height) id = (char*)"grass_block";
 				else if (k > height) id = (char*)"air";
 				else id = (char*) "dirt_block";

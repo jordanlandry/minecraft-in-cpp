@@ -50,6 +50,11 @@ int main()
 	gladLoadGL();
 	glViewport(0, 0, width, height);
 
+	// Set window to middle of screen
+	//glutInitWindowPosition((glutGet(GLUT_SCREEN_WIDTH) - 640) / 2 (glutGet(GLUT_SCREEN_HEIGHT) - 480) / 2);
+
+	
+
 	// Generates Shader object using shaders default.vert and default.frag
 	Shader shaderProgram("shaders/default.vert", "shaders/default.frag");
 
@@ -58,6 +63,7 @@ int main()
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_FRONT);
 	glFrontFace(GL_CCW);
+
 
 	// Camera
 	Camera camera(width, height, glm::vec3(0, 12, 0));
@@ -91,6 +97,10 @@ int main()
 			counter = 0;
 
 			camera.Inputs(window);
+			if (camera.clickPositions[0][0] != -1 && camera.clickPositions[0][1] != -1 && camera.clickPositions[0][2] != -1)
+			{
+				world.BreakBlock(camera.clickPositions, &shaderProgram);
+			}
 		}
 
 		glClearColor(0.68f, 0.85f, 0.9f, 1.0f);				// Background Color

@@ -26,6 +26,8 @@ public:
 	float speed = 0.1f;
 	float sensitivity = 100.0f;
 
+	int maxReach = 6;
+	int clickPositions[6][3];
 
 	float yVel = 0;
 	bool isJumping = false;
@@ -38,6 +40,7 @@ public:
 
 	void Matrix(float FOVdeg, float nearPlane, float farPlane, Shader& shader, const char* uniform);
 	void Inputs(GLFWwindow* window);
+	int* GetClickPosition(GLFWwindow* window);
 
 	void PrintCoords();
 };
