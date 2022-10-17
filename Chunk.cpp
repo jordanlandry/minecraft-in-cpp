@@ -35,14 +35,6 @@ void Chunk::Init(Shader* shaderProgram, double (&points)[256][256], std::vector<
 				else if (k > height) id = (char*)"air";
 				else id = (char*) "dirt_block";
 
-				// Check blocks beside 
-				/*if (j > 0 && blocks[i][j - 1][k].id != "air") neighbours[0] = true;
-				if (i < chunkSize - 1 && blocks[i + 1][j][k].id != "air") neighbours[1] = true;
-				if (j < chunkSize - 1 && blocks[i][j + 1][k].id != "air") neighbours[2] = true;
-				if (i > 0 && blocks[i - 1][j][k].id != "air") neighbours[3] = true;
-				if (k < maxHeight - 1 && blocks[i][j][k + 1].id != "air") neighbours[4] = true;
-				if (k > 0 && blocks[i][j][k - 1].id != "air") neighbours[5] = true;*/
-
 				if (neighbours[0] && neighbours[1] && neighbours[2] && neighbours[3] && neighbours[4] && neighbours[5]) continue;
 
 				float pos[] = { i + x * chunkSize, k, j + z * chunkSize };

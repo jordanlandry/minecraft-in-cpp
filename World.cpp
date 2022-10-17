@@ -6,7 +6,7 @@ World::World()
 {
 	maxHeight = 16;
 	chunkSize = 8;
-	renderDistance = 7;
+	renderDistance = 9;
 }
 
 void World::Generate(Shader *shaderProgram)
@@ -83,7 +83,7 @@ void World::Render(float x, float z, Shader* shaderProgram)
 			
 		Chunk chunk(nextX, chunkZ);
 
-		// Unrender last chunkX
+		// Unrender last chunk And render new chunk X
 		for (int i = 0; i < chunks.size(); i++)
 		{
 			if (firstX == chunks[i].x)
@@ -91,6 +91,33 @@ void World::Render(float x, float z, Shader* shaderProgram)
 				chunks[i].Delete();
 
 				chunks[i].x = nextX;
+				chunks[i].Init(shaderProgram, points, &Texels);
+			}
+		}
+	}
+
+	if (chunkZ != lastZ)
+	{
+		if (chunkZ > lastZ)
+		{
+			nextZ = chunkZ + renderDistance - 1;
+			firstZ = lastZ;
+		}
+
+		else if (chunkZ < lastZ)
+		{
+			nextZ = chunkZ - (renderDistance - 1) / 2;
+			firstZ = chunkZ + (renderDistance - 1) / 2;
+		}
+
+		Chunk chunk(chunkX, nextZ);
+		for (int i = 0; i < chunks.size(); i++)
+		{
+			if (firstZ == chunks[i].z)
+			{
+				chunks[i].Delete();
+
+				chunks[i].z = nextZ;
 				chunks[i].Init(shaderProgram, points, &Texels);
 			}
 		}
