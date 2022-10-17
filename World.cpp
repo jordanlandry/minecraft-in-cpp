@@ -36,7 +36,6 @@ void World::Generate(Shader *shaderProgram)
 		(char*)"assets/water_flow.png"
 	};
 
-
 	for (int i = 0; i < sizeof(textures) / sizeof(*textures); i++)
 	{
 		Texture tex(textures[i], GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
@@ -134,15 +133,31 @@ void World::BreakBlock(int pos[6][3], Shader* shaderProgram)
 	bool n[] = { false, false, false, false, false, false };
 	for (int i = 0; i < 6; i++)
 	{
+		if (pos[i][1] > maxHeight) continue;
+
 		for (int j = 0; j < chunks.size(); j++)
 		{
+			int targetChunkX = pos[i][0] / chunkSize;
+			int targetChunkZ = pos[i][2] / chunkSize;
+
+			int relativeX = (pos[i][0] % chunkSize);
+			int relativeZ = (pos[i][2] % chunkSize);
+
 			// Check if the chunk you're in contains the blocks you're looking at
-			if (chunks[j].x == pos[i][0] / chunkSize && chunks[j].z == pos[i][2])
+			std::cout << "t1" << std::endl;
+			if (chunks[j].x == targetChunkX && chunks[j].z == targetChunkZ)
 			{
-				// Break the block
-				chunks[j].blocks[pos[i][0]][pos[i][2]][pos[i][1]].id = (char*)"air";
-				chunks[j].blocks[pos[i][0]][pos[i][2]][pos[i][1]].Init(shaderProgram, n, &Texels);
+				std::cout << "t2" << std::endl;
+				std::cout << relativeX << " " << relativeZ << std::endl;
+				std::cout << chunks[j].blocks.size() << std::endl;
+				chunks[j].blocks[relativeX][relativeZ][pos[i][1]].id = (char*)"air";
+
+				chunks[j].blocks[relativeX][relativeZ][pos[i][1]].Init(shaderProgram, n, &Texels);
+				std::cout << "t4" << std::endl;
+				// Don't break any other blocks
+				return;
 			}
+
 
 		}
 	}
