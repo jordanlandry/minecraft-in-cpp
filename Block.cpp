@@ -4,7 +4,7 @@
 
 Block::Block()
 {
-	id =(char*)"dirt_block";
+	id =(char*)"air";
 	hasInit = false;
 	pos[0] = 0;
 	pos[1] = 0;
@@ -24,9 +24,8 @@ Block::Block(char* aId, float aPos[3])
 
 void Block::Init(Shader* shaderProgram, bool chunks[6], std::vector<Texture> *Texels)
 {
-	if (id == "air") return;
 	if (hasInit) return;
-
+	
 	int x = pos[0];
 	int y = pos[1];
 	int z = pos[2];
@@ -83,17 +82,15 @@ void Block::Init(Shader* shaderProgram, bool chunks[6], std::vector<Texture> *Te
 
 
 	if (id == "grass_block") Textures = { (*Texels)[1], (*Texels)[1], (*Texels)[1], (*Texels)[1], (*Texels)[0], (*Texels)[2] };
-
 	else if (id == "dirt_block") Textures = { (*Texels)[2],(*Texels)[2], (*Texels)[2], (*Texels)[2], (*Texels)[2], (*Texels)[2] };
-
 	else if (id == "bedrock_block") Textures = { (*Texels)[3], (*Texels)[3], (*Texels)[3], (*Texels)[3], (*Texels)[3], (*Texels)[3] };
-
 	else if (id == "stone_block") Textures = { (*Texels)[4],(*Texels)[4], (*Texels)[4], (*Texels)[4], (*Texels)[4], (*Texels)[4] };
-
+	else if (id == "sand_block") Textures = { (*Texels)[5], (*Texels)[5], (*Texels)[5], (*Texels)[5], (*Texels)[5], (*Texels)[5] };
+	else if (id == "water") Textures = { (*Texels)[6], (*Texels)[6], (*Texels)[6], (*Texels)[6], (*Texels)[6], (*Texels)[6] };
 	else Textures = { (*Texels)[1], (*Texels)[1], (*Texels)[1], (*Texels)[1], (*Texels)[1], (*Texels)[1] };
 
 	for (int i = 0; i < 6; i++) {
-		if (chunks[i] == true) continue;
+		//if (chunks[i] == true) continue;
 
 		VAOs[i].Bind();
 		VBO VBO1(i == 0 ? vertices1 : i == 1 ? vertices2 : i == 2 ? vertices3 : i == 3 ? vertices4 : i == 4 ? vertices5 : vertices6, sizeof(vertices1));
@@ -114,7 +111,6 @@ void Block::Init(Shader* shaderProgram, bool chunks[6], std::vector<Texture> *Te
 		VBO1.Delete();
 	}
 
-
 	hasInit = true;
 }
 
@@ -127,8 +123,7 @@ void Block::Render(bool neighbours[6])
 	int z = pos[2] + 1;
 	for (int i = 0; i < 6; i++)
 	{
-		if (neighbours[i] == true) continue;
-
+		if (neighbours[i]) continue;
 		Textures[i].Bind();
 		VAOs[i].Bind();
 
@@ -142,6 +137,5 @@ void Block::Delete()
 	for (int i = 0; i < sizeof(VAOs) / sizeof(VAO); i++) VAOs[i].Delete();
 	for (int i = 0; i < VBOs.size(); i++) VBOs[i].Delete();
 	for (int i = 0; i < EBOs.size(); i++) EBOs[i].Delete();
-	//for (int i = 0; i < Textures.size(); i++) { Textures[i].Delete(); }
 }
 

@@ -7,15 +7,15 @@
 class Chunk {
 public:
 	int x;
-	int y;
+	int z;
 
-	int chunkSize = 16;
-	//const int maxWorldHeight = 128;
+	int chunkSize = 8;
+	int maxHeight = 16;
 
-	std::vector<std::vector<::std::vector<Block>>> blocks;
+	std::vector <std::vector<std::vector<Block>>> blocks;
 
 	Chunk(int i, int j);
-	void Init(Shader* shaderProgram, double points[128][128], std::vector<Texture> *Texels);
+	void Init(Shader* shaderProgram, double (&points)[256][256], std::vector<Texture> *Texels);
 	void Render();
 	void Delete();
 };

@@ -24,7 +24,7 @@ public:
 
 	std::vector<Texture> Texels;
 
-	double points[128][128];
+	double points[256][256];
 	std::vector<Chunk> chunks;
 
 	World();

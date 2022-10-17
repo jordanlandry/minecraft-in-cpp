@@ -4,9 +4,9 @@
 
 World::World()
 {
-	maxHeight = 128;
-	chunkSize = 16;
-	renderDistance = 3;
+	maxHeight = 16;
+	chunkSize = 8;
+	renderDistance = 7;
 }
 
 void World::Generate(Shader *shaderProgram)
@@ -17,11 +17,11 @@ void World::Generate(Shader *shaderProgram)
 
 	const siv::PerlinNoise perlin{ seed };
 
-	for (int y = 0; y < 128; ++y)
+	for (int y = 0; y < 256; ++y)
 	{
-		for (int x = 0; x < 128; ++x)
+		for (int x = 0; x < 256; ++x)
 		{
-			points[x][y] = perlin.octave2D_01((x * 0.01), (y * 0.01), 128);
+			points[x][y] = perlin.octave2D_01((x * 0.01), (y * 0.01), 64);
 		}
 	}
 
@@ -32,6 +32,8 @@ void World::Generate(Shader *shaderProgram)
 		(char*)"assets/dirt.png",
 		(char*)"assets/bedrock.png",
 		(char*)"assets/stone.png",
+		(char*)"assets/sand.png",
+		(char*)"assets/water_flow.png"
 	};
 
 
@@ -53,6 +55,7 @@ void World::Generate(Shader *shaderProgram)
 	}
 
 	for (int i = 0; i < chunks.size(); i++) chunks[i].Init(shaderProgram, points, &Texels);
+	std::cout << sizeof(Block) << std::endl;
 }
 
 void World::Render(float x, float z, Shader* shaderProgram)
@@ -86,9 +89,8 @@ void World::Render(float x, float z, Shader* shaderProgram)
 			if (firstX == chunks[i].x)
 			{
 				chunks[i].Delete();
-				chunks[i].blocks = chunk.blocks;
-				chunks[i].x = nextX;
 
+				chunks[i].x = nextX;
 				chunks[i].Init(shaderProgram, points, &Texels);
 			}
 		}
