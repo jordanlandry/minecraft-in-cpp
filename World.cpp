@@ -144,16 +144,10 @@ void World::BreakBlock(int pos[6][3], Shader* shaderProgram)
 			int relativeZ = (pos[i][2] % chunkSize);
 
 			// Check if the chunk you're in contains the blocks you're looking at
-			std::cout << "t1" << std::endl;
 			if (chunks[j].x == targetChunkX && chunks[j].z == targetChunkZ)
 			{
-				std::cout << "t2" << std::endl;
-				std::cout << relativeX << " " << relativeZ << std::endl;
-				std::cout << chunks[j].blocks.size() << std::endl;
 				chunks[j].blocks[relativeX][relativeZ][pos[i][1]].id = (char*)"air";
-
 				chunks[j].blocks[relativeX][relativeZ][pos[i][1]].Init(shaderProgram, n, &Texels);
-				std::cout << "t4" << std::endl;
 				// Don't break any other blocks
 				return;
 			}
