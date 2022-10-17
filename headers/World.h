@@ -31,6 +31,7 @@ public:
 	void Generate(Shader *shaderProgram);
 	void Render(float x, float z, Shader* shaderProgram);
 	void BreakBlock(int pos[6][3], Shader* shaderProgram);
+	void PlaceBlock(int pos[6][3], Shader* shaderProgram);
 };
 
 #endif

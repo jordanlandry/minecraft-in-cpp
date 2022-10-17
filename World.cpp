@@ -151,8 +151,34 @@ void World::BreakBlock(int pos[6][3], Shader* shaderProgram)
 				// Don't break any other blocks
 				return;
 			}
-
-
 		}
 	}
 }
+
+void World::PlaceBlock(int pos[6][3], Shader* shaderProgram)
+{
+	bool n[] = { false, false, false, false, false, false };
+	for (int i = 0; i < 6; i++)
+	{
+		if (pos[i][1] >= maxHeight) continue;
+
+		for (int j = 0; j < chunks.size(); j++)
+		{
+			int targetChunkX = pos[i][0] / chunkSize;
+			int targetChunkZ = pos[i][2] / chunkSize;
+
+			int relativeX = (pos[i][0] % chunkSize);
+			int relativeZ = (pos[i][2] % chunkSize);
+
+			// Check if the chunk you're in contains the blocks you're looking at
+			if (chunks[j].x == targetChunkX && chunks[j].z == targetChunkZ)
+			{
+				chunks[j].blocks[relativeX][relativeZ][pos[i][1]].id = (char*)"stone_block";
+				chunks[j].blocks[relativeX][relativeZ][pos[i][1]].hasInit = false;
+				chunks[j].blocks[relativeX][relativeZ][pos[i][1]].Init(shaderProgram, n, &Texels);
+				return;
+			}
+		}
+	}
+}
+

@@ -53,7 +53,6 @@ int main()
 	// Set window to middle of screen
 	//glutInitWindowPosition((glutGet(GLUT_SCREEN_WIDTH) - 640) / 2 (glutGet(GLUT_SCREEN_HEIGHT) - 480) / 2);
 
-	
 
 	// Generates Shader object using shaders default.vert and default.frag
 	Shader shaderProgram("shaders/default.vert", "shaders/default.frag");
@@ -100,6 +99,10 @@ int main()
 			if (camera.clickPositions[0][0] != -1 && camera.clickPositions[0][1] != -1 && camera.clickPositions[0][2] != -1)
 			{
 				world.BreakBlock(camera.clickPositions, &shaderProgram);
+			}
+			if (camera.rightClickPositions[0][0] != -1 && camera.rightClickPositions[0][1] != -1 && camera.rightClickPositions[0][2] != -1)
+			{
+				world.PlaceBlock(camera.rightClickPositions, &shaderProgram);
 			}
 		}
 

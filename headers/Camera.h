@@ -28,6 +28,7 @@ public:
 
 	int maxReach = 6;
 	int clickPositions[6][3];
+	int rightClickPositions[6][3];
 
 	float yVel = 0;
 	bool isJumping = false;

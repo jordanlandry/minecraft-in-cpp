@@ -79,6 +79,30 @@ void Camera::Inputs(GLFWwindow* window)
 		}
 	}
 
+	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
+	{
+		glm::vec3 pos = Position;
+		for (int i = 0; i < maxReach; i++)
+		{
+			// Add position
+			pos += Orientation;
+			rightClickPositions[i][0] = pos.x;
+			rightClickPositions[i][1] = pos.y;
+			rightClickPositions[i][2] = pos.z;
+		}
+	}
+	else
+	{
+		for (int i = 0; i < maxReach; i++)
+		{
+			rightClickPositions[i][0] = -1;
+			rightClickPositions[i][1] = -1;
+			rightClickPositions[i][2] = -1;
+		}
+	}
+
+
+
 	// Hides mouse cursor
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 

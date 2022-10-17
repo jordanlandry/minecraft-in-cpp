@@ -81,6 +81,7 @@ void Block::Init(Shader* shaderProgram, bool chunks[6], std::vector<Texture> *Te
 	};
 
 
+	std::cout << id << std::endl;
 	if (id == "grass_block") Textures = { (*Texels)[1], (*Texels)[1], (*Texels)[1], (*Texels)[1], (*Texels)[0], (*Texels)[2] };
 	else if (id == "dirt_block") Textures = { (*Texels)[2],(*Texels)[2], (*Texels)[2], (*Texels)[2], (*Texels)[2], (*Texels)[2] };
 	else if (id == "bedrock_block") Textures = { (*Texels)[3], (*Texels)[3], (*Texels)[3], (*Texels)[3], (*Texels)[3], (*Texels)[3] };
