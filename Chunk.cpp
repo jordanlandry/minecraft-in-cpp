@@ -6,63 +6,9 @@ Chunk::Chunk(int i, int j)
 	x = i;
 	z = j;
 
-	/*std::vector<std::vector<std::vector<Block>>> b(chunkSize, std::vector<std::vector<Block>>(chunkSize, std::vector<Block>(maxHeight)));
-	blocks = b;*/
-
-
 	std::vector<std::vector<std::vector<Block>>> c(chunkSize, std::vector<std::vector<Block>>(chunkSize, std::vector<Block>(maxHeight)));
 	chunkBlocks = c;
 }
-
-//void Chunk::Init(Shader* shaderProgram, double (&points)[256][256], std::vector<Texture>* Texels)
-//{
-	//auto start = std::chrono::high_resolution_clock::now();
-
-	//std::vector<std::vector<std::vector<Block>>> newBlocks(chunkSize, std::vector<std::vector<Block>>(chunkSize, std::vector<Block>(maxHeight)));
-
-	//srand((unsigned)time(NULL));
-	//for (int i = 0; i < chunkSize; i++) {
-	//
-	//	for (int j = 0; j < chunkSize; j++)
-	//	{
-	//		int height = points[i + x * chunkSize][j + z * chunkSize] * (maxHeight - 2) + 2;
-	//	
-	//		for (int k = 0; k < maxHeight; k++)
-	//		{
-	//			bool neighbours[6] = { false, false, false, false, false, true };
-	//			// Check if side will be air
-	//			if (i > 0 && points[i - 1 + x * chunkSize][j + z * chunkSize] * (maxHeight - 2) + 2 > height) neighbours[3] = true;
-	//			if (j > 0 && points[i + x * chunkSize][j - 1 + z * chunkSize] * (maxHeight - 2) + 2 > height) neighbours[0] = true;
-
-	//			if (i < chunkSize -1 && points[1 + i + x * chunkSize][j + z * chunkSize] * (maxHeight - 2) + 2 > height) neighbours[3] = true;
-	//			if (j < chunkSize -1 && points[i + x * chunkSize][1 + j + z * chunkSize] * (maxHeight - 2) + 2 > height) neighbours[0] = true;
-
-	//			if (k != height) neighbours[4] = true;
-
-
-	//			char* id;
-	//		
-	//			if (k == 0) id = (char*)"bedrock_block";
-	//			else if (height <= 3 && k == height) id = (char*)"water";
-	//			else if (k == height && height < 5 && (float)rand() / RAND_MAX > 0.2f) id = (char*)"sand_block";
-	//			else if (k == height) id = (char*)"grass_block";
-	//			else if (k > height) id = (char*)"air";
-	//			else id = (char*) "dirt_block";
-
-	//			if (neighbours[0] && neighbours[1] && neighbours[2] && neighbours[3] && neighbours[4] && neighbours[5]) continue;
-
-	//			float pos[] = { i + x * chunkSize, k, j + z * chunkSize };
-	//			Block b(id, pos);
-
-	//			b.Init(shaderProgram, neighbours, Texels);
-	//			blocks[i][j][k] = b;
-	//		}
-	//	}
-	//}
-	/*auto stop = std::chrono::high_resolution_clock::now();
-	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
-	std::cout << duration.count() << " millis" << std::endl;*/		
-//}
 
 void Chunk::Init(Shader* shaderProgram, std::vector<Texture>* Texels, siv::PerlinNoise::seed_type seed)
 {
@@ -75,7 +21,7 @@ void Chunk::Init(Shader* shaderProgram, std::vector<Texture>* Texels, siv::Perli
 	{
 		for (int j = 0; j < chunkSize + 2; j++)
 		{
-			map[i][j] = perlin.octave2D_01(((i + (x * chunkSize)) * 0.01), ((j + (z * chunkSize)) * 0.01), 64);
+			map[i][j] = perlin.octave2D_01(((i + (x * chunkSize)) * 0.01), ((j + (z * chunkSize)) * 0.01), octaves);
 
 			// Don't run if you are on the boundries because that is just to check for conditional rendering
 			if (i == 0 || j == 0 || i == chunkSize + 1 || j == chunkSize + 1) continue;
@@ -86,10 +32,10 @@ void Chunk::Init(Shader* shaderProgram, std::vector<Texture>* Texels, siv::Perli
 				bool neighbours[6] = { false, false, false, false, false, false};
 
 				if (k == height) neighbours[4] = false;
-				/*if (map[i - 1][j] > map[i][j]) neighbours[0] = true;
+				if (map[i - 1][j] > map[i][j]) neighbours[0] = true;
 				if (map[i + 1][j] > map[i][j]) neighbours[1] = true;
-				if (map[i][j + 1] > map[i][j]) neighbours[2] = true;*/
-				//if (map[i][j - 1] > map[i][j]) neighbours[3] = true;
+				if (map[i][j + 1] > map[i][j]) neighbours[2] = true;
+				if (map[i][j - 1] > map[i][j]) neighbours[3] = true;
 
 				// Get the correct block id
 				char* id;
@@ -99,7 +45,8 @@ void Chunk::Init(Shader* shaderProgram, std::vector<Texture>* Texels, siv::Perli
 				else if (k > height) id = (char*)"air";
 				else id = (char*)"dirt_block";
 
-				//if (neighbours[0] && neighbours[1] && neighbours[2] && neighbours[3] && neighbours[4] && neighbours[5]) continue;
+				if (id == (char*)"air" && chunkBlocks[i - 1][j - 1][k].id == (char*)"air") continue;
+				if (neighbours[0] && neighbours[1] && neighbours[2] && neighbours[3] && neighbours[4] && neighbours[5]) continue;
 
 				float pos[] = { i + x * chunkSize, k, j + z * chunkSize };
 
@@ -118,14 +65,12 @@ void Chunk::Init(Shader* shaderProgram, std::vector<Texture>* Texels, siv::Perli
 				{
 					Block b(id, pos);
 					b.Init(shaderProgram, neighbours, Texels);
-
 					chunkBlocks[i - 1][j - 1][k] = b;
 				}
-
-
 			}
 		}
 	}
+	
 }
 
 void Chunk::Render()
@@ -166,6 +111,6 @@ void Chunk::Delete()
 		for (int j = 0; j < chunkSize; j++)
 			for (int k = 0; k < 128; k++)
 			{
-				chunk[i][j][k].Delete();
+				chunkBlocks[i][j][k].Delete();
 			}*/
 }
