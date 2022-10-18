@@ -102,7 +102,6 @@ void Camera::Inputs(GLFWwindow* window)
 	}
 
 
-
 	// Hides mouse cursor
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 

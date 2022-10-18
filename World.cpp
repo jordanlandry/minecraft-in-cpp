@@ -5,25 +5,20 @@
 World::World()
 {
 	maxHeight = 16;
-	chunkSize = 8;
-	renderDistance = 9;
+	chunkSize = 16;
+	renderDistance = 3;
 }
 
 void World::Generate(Shader *shaderProgram)
 {
-	// Create world
-	const unsigned int octaves = 12;
-	const siv::PerlinNoise::seed_type seed = 123456u;
 
-	const siv::PerlinNoise perlin{ seed };
-
-	for (int y = 0; y < 256; ++y)
+	/*for (int y = 0; y < 256; ++y)
 	{
 		for (int x = 0; x < 256; ++x)
 		{
 			points[x][y] = perlin.octave2D_01((x * 0.01), (y * 0.01), 64);
 		}
-	}
+	}*/
 
 	// Generate textures
 	char* textures[] = {
@@ -53,8 +48,7 @@ void World::Generate(Shader *shaderProgram)
 		}
 	}
 
-	for (int i = 0; i < chunks.size(); i++) chunks[i].Init(shaderProgram, points, &Texels);
-	std::cout << sizeof(Block) << std::endl;
+	for (int i = 0; i < chunks.size(); i++) chunks[i].Init(shaderProgram, &Texels, seed);
 }
 
 void World::Render(float x, float z, Shader* shaderProgram)
@@ -90,7 +84,7 @@ void World::Render(float x, float z, Shader* shaderProgram)
 				chunks[i].Delete();
 
 				chunks[i].x = nextX;
-				chunks[i].Init(shaderProgram, points, &Texels);
+				chunks[i].Init(shaderProgram, &Texels, seed);
 			}
 		}
 	}
@@ -119,7 +113,7 @@ void World::Render(float x, float z, Shader* shaderProgram)
 				chunks[i].Delete();
 
 				chunks[i].z = nextZ;
-				chunks[i].Init(shaderProgram, points, &Texels);
+				chunks[i].Init(shaderProgram, &Texels, seed);
 			}
 		}
 	}

@@ -10,6 +10,11 @@ public:
 	int renderDistance;
 	int maxHeight;
 
+	const unsigned int octaves = 12;
+	const siv::PerlinNoise::seed_type seed = 123456u;
+
+	const siv::PerlinNoise perlin{ seed };
+
 	float treeFreq;		// From 0 to 1
 
 	int chunkX;
