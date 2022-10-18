@@ -98,11 +98,11 @@ int main()
 			camera.Inputs(window);
 			if (camera.clickPositions[0][0] != -1 && camera.clickPositions[0][1] != -1 && camera.clickPositions[0][2] != -1)
 			{
-				world.BreakBlock(camera.clickPositions, &shaderProgram);
+				//world.BreakBlock(camera.clickPositions, &shaderProgram);
 			}
 			if (camera.rightClickPositions[0][0] != -1 && camera.rightClickPositions[0][1] != -1 && camera.rightClickPositions[0][2] != -1)
 			{
-				world.PlaceBlock(camera.rightClickPositions, &shaderProgram);
+				//world.PlaceBlock(camera.rightClickPositions, &shaderProgram);
 			}
 		}
 

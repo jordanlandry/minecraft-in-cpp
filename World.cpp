@@ -122,6 +122,7 @@ void World::Render(float x, float z, Shader* shaderProgram)
 	lastZ = chunkZ;
 }
 
+/*
 void World::BreakBlock(int pos[6][3], Shader* shaderProgram)
 {
 	bool n[] = { false, false, false, false, false, false };
@@ -175,4 +176,4 @@ void World::PlaceBlock(int pos[6][3], Shader* shaderProgram)
 		}
 	}
 }
-
+*/

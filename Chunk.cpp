@@ -14,8 +14,8 @@ Chunk::Chunk(int i, int j)
 	chunkBlocks = c;
 }
 
-void Chunk::Init(Shader* shaderProgram, double (&points)[256][256], std::vector<Texture>* Texels)
-{
+//void Chunk::Init(Shader* shaderProgram, double (&points)[256][256], std::vector<Texture>* Texels)
+//{
 	//auto start = std::chrono::high_resolution_clock::now();
 
 	//std::vector<std::vector<std::vector<Block>>> newBlocks(chunkSize, std::vector<std::vector<Block>>(chunkSize, std::vector<Block>(maxHeight)));
@@ -62,7 +62,7 @@ void Chunk::Init(Shader* shaderProgram, double (&points)[256][256], std::vector<
 	/*auto stop = std::chrono::high_resolution_clock::now();
 	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
 	std::cout << duration.count() << " millis" << std::endl;*/		
-}
+//}
 
 void Chunk::Init(Shader* shaderProgram, std::vector<Texture>* Texels, siv::PerlinNoise::seed_type seed)
 {
@@ -81,33 +81,31 @@ void Chunk::Init(Shader* shaderProgram, std::vector<Texture>* Texels, siv::Perli
 			if (i == 0 || j == 0 || i == chunkSize + 1 || j == chunkSize + 1) continue;
 			int height = map[i][j] * 12;
 
-
-			//std::cout << "t1" << std::endl;
 			for (int k = maxHeight - 1; k >= 0; k--)
 			{
 				bool neighbours[6] = { false, false, false, false, true, true };
 
-				if (k == maxHeight) neighbours[4] = false;
+				if (k == height) neighbours[4] = false;
 				if (map[i - 1][j] > map[i][j]) neighbours[0] = true;
 				if (map[i + 1][j] > map[i][j]) neighbours[1] = true;
 				if (map[i][j + 1] > map[i][j]) neighbours[2] = true;
-				if (map[i][j - 1] > map[i][j]) neighbours[3] = true;
+				//if (map[i][j - 1] > map[i][j]) neighbours[3] = true;
 
 				// Get the correct block id
 				char* id;
-				//std::cout << "t2" << std::endl;
 
 				if (k == 0) id = (char*)"bedrock_block";
 				else if (k == height) id = (char*)"grass_block";
 				else if (k > height) id = (char*)"air";
 				else id = (char*)"dirt_block";
 
-				if (neighbours[0] && neighbours[1] && neighbours[2] && neighbours[3] && neighbours[4] && neighbours[5]) continue;
+				//if (neighbours[0] && neighbours[1] && neighbours[2] && neighbours[3] && neighbours[4] && neighbours[5]) continue;
 
 				float pos[] = { i + x * chunkSize, k, j + z * chunkSize };
-				Block b(id, pos);
 
+				Block b(id, pos);
 				b.Init(shaderProgram, neighbours, Texels);
+
 				chunkBlocks[i - 1][j - 1][k] = b;
 			}
 		}
