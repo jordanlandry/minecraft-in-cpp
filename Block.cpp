@@ -23,15 +23,13 @@ Block::Block(char* aId, float aPos[3])
 }
 
 void Block::Init(Shader* shaderProgram, bool chunks[6], std::vector<Texture> *Texels)
-{
-	if (hasInit) return;
-	
+{	
 	int x = pos[0];
 	int y = pos[1];
 	int z = pos[2];
 
-	if (chunks[0] == true && chunks[1] == true && chunks[2] == true && chunks[3] == true && chunks[4] == true && chunks[5] == true) return;
-
+	//if (chunks[0] == true && chunks[1] == true && chunks[2] == true && chunks[3] == true && chunks[4] == true && chunks[5] == true) return;
+	
 	// Front
 	GLfloat vertices1[] = {
 		-0.5f + x, -0.5f + y,  0.5f + z,		0.0f, 0.0f, 0.0f,	0.0f, 0.0f,

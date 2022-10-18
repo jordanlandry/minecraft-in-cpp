@@ -83,12 +83,12 @@ void Chunk::Init(Shader* shaderProgram, std::vector<Texture>* Texels, siv::Perli
 
 			for (int k = maxHeight - 1; k >= 0; k--)
 			{
-				bool neighbours[6] = { false, false, false, false, true, true };
+				bool neighbours[6] = { false, false, false, false, false, false};
 
 				if (k == height) neighbours[4] = false;
-				if (map[i - 1][j] > map[i][j]) neighbours[0] = true;
+				/*if (map[i - 1][j] > map[i][j]) neighbours[0] = true;
 				if (map[i + 1][j] > map[i][j]) neighbours[1] = true;
-				if (map[i][j + 1] > map[i][j]) neighbours[2] = true;
+				if (map[i][j + 1] > map[i][j]) neighbours[2] = true;*/
 				//if (map[i][j - 1] > map[i][j]) neighbours[3] = true;
 
 				// Get the correct block id
@@ -103,10 +103,26 @@ void Chunk::Init(Shader* shaderProgram, std::vector<Texture>* Texels, siv::Perli
 
 				float pos[] = { i + x * chunkSize, k, j + z * chunkSize };
 
-				Block b(id, pos);
-				b.Init(shaderProgram, neighbours, Texels);
+				if (chunkBlocks[i - 1][j - 1][k].hasInit == true)
+				{
+					chunkBlocks[i - 1][j - 1][k].id = id;
+					chunkBlocks[i - 1][j - 1][k].hasInit = false;
 
-				chunkBlocks[i - 1][j - 1][k] = b;
+					chunkBlocks[i - 1][j - 1][k].pos[0] = pos[0];
+					chunkBlocks[i - 1][j - 1][k].pos[1] = pos[1];
+					chunkBlocks[i - 1][j - 1][k].pos[2] = pos[2];
+
+					chunkBlocks[i - 1][j - 1][k].Init(shaderProgram, neighbours, Texels);
+				}
+				else
+				{
+					Block b(id, pos);
+					b.Init(shaderProgram, neighbours, Texels);
+
+					chunkBlocks[i - 1][j - 1][k] = b;
+				}
+
+
 			}
 		}
 	}
