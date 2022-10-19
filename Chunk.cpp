@@ -37,11 +37,28 @@ void Chunk::Init(Shader* shaderProgram, std::vector<Texture>* Texels, siv::Perli
 				// Get the correct block id
 				char* id;
 
+				char* biome = GetBiome(i, j, seed);
 				if (k == 0) id = (char*)"bedrock_block";
+				else if (k > height) id = (char*)"air";
+				else if (biome == (char*)"desert")
+				{
+					if (k + 3 >= height) id = (char*)"sand_block";
+					else id = (char*)"stone_block";
+				}
+				else if (biome == (char*)"plains")
+				{
+					if (k == height) id = (char*)"grass_block";
+					else if (k + 3 >= height) id = (char*)"dirt_block";
+					else id = (char*)"stone_block";
+				}
+
+				else id = (char*)"dirt_block";
+
+				/*if (k == 0) id = (char*)"bedrock_block";
 				else if (k == height) id = (char*)"grass_block";
 				else if (k > height) id = (char*)"air";
 				else if (k + 3 >= height) id = (char*)"dirt_block";
-				else id = (char*)"stone_block";
+				else id = (char*)"stone_block";*/
 
 				if (id == (char*)"air" && chunkBlocks[i - 1][j - 1][k].id == (char*)"air") continue;
 				if (neighbours[0] && neighbours[1] && neighbours[2] && neighbours[3] && neighbours[4] && neighbours[5]) continue;
@@ -78,29 +95,25 @@ void Chunk::Render()
 			for (int k = 0; k < maxHeight; k++) {
 				if (chunkBlocks[i][j][k].id == "air") continue;
 
-				bool n[] = {false, false, false, false, false, true};
-				if (chunkBlocks[i].size() > j + 1)
-					if (chunkBlocks[i][j + 1][k].id != "air") n[0] = true;
-
-				if (chunkBlocks.size() > i + 1)
-					if (chunkBlocks[i + 1][j][k].id != "air") n[1] = true;
-
-				if (j > 0)
-					if (chunkBlocks[i][j - 1][k].id != "air") n[2] = true;
-
-				if (i > 0)
-					if (chunkBlocks[i - 1][j][k].id != "air") n[3] = true;
-
-				if (chunkBlocks[i][j].size() > k + 1)
-					if (chunkBlocks[i][j][k + 1].id != "air") n[4] = true;
-
-				if (k > 0)
-					if (chunkBlocks[i][j][k - 1].id != "air") n[5] = true;
+				bool n[] = { false, false, false, false, false, false };
+				if (chunkBlocks[i].size() > j + 1 && chunkBlocks[i][j + 1][k].id != "air") n[0] = true;
+				if (chunkBlocks.size() > i + 1 && chunkBlocks[i + 1][j][k].id != "air") n[1] = true;
+				if (j > 0 && chunkBlocks[i][j - 1][k].id != "air") n[2] = true;
+				if (i > 0 && chunkBlocks[i - 1][j][k].id != "air") n[3] = true;
+				if (chunkBlocks[i][j].size() > k + 1 && chunkBlocks[i][j][k + 1].id != "air") n[4] = true;
+				if (k > 0 && chunkBlocks[i][j][k - 1].id != "air") n[5] = true;
 
 				chunkBlocks[i][j][k].Render(n);
 			}
 		}
 	}
+}
+
+char* Chunk::GetBiome(int i, int j, siv::PerlinNoise::seed_type seed)
+{
+	const siv::PerlinNoise perlin{ seed };
+	if (perlin.octave2D_01(((i + biomeMapOffset) * 0.01), ((j + biomeMapOffset) * 0.01), octaves) > 0.1) return (char*)"desert";
+	return (char*)"plains";
 }
 
 void Chunk::Delete()

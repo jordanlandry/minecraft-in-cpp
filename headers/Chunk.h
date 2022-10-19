@@ -16,6 +16,7 @@ public:
 
 	double map[18][18];
 
+	const unsigned int biomeMapOffset = 100000;		// Perlin map for biomes
 	const unsigned int octaves = 64;
 	unsigned int heightMultiplier;
 
@@ -28,6 +29,8 @@ public:
 	void Init(Shader* shaderProgram, std::vector<Texture>* Texels, siv::PerlinNoise::seed_type seed);
 	void Render();
 	void Delete();
+
+	char* GetBiome(int i, int j, siv::PerlinNoise::seed_type seed);
 };
 
 #endif
