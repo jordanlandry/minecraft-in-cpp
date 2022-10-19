@@ -125,8 +125,6 @@ void Chunk::CreateTree(Shader* shaderProgram, std::vector<Texture>* Texels, siv:
 	float relativeMap = perlin.octave2D_01((i + x * chunkSize + treeMapOffset) * 0.01, (j + z * chunkSize + treeMapOffset) * 0.01, octaves);
 	treeMapOffset = treeMapOffset > 10000 ? 500 : treeMapOffset + 500;
 
-	unsigned int height = 0;
-
 	if (relativeMap < treeDensity)
 	{
 		//unsigned int size = (1 / treeDensity * rm * 10);	// If I do this, then birch trees will be shorter than oak
