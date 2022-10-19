@@ -27,13 +27,13 @@ Watch me design, create and debug this project on [YouTube](https://www.youtube.
 ## Implemented features
 
 - Infinite world generation
+- Biome generation
 - Tree generation
 
 ## Upcoming features
 
 - Breaking blocks
 - Placing blocks
-- Biome generation
 - Water
 - Entities including
   - Cows
@@ -78,18 +78,7 @@ Generated Perlin values:
 
 After plotting these numbers on a line graph, it becomes clear how this can be used in terrain generation. When expanded into the 2nd dimension, this will result in terrain.
 
-Here are some excellent resources for understanding Perlin Noise.
-
-[Video by Fataho](https://www.youtube.com/watch?v=MJ3bvCkHJtE&ab_channel=Fataho)
-\
-[Video by Blake Gillman](https://www.youtube.com/watch?v=9x6NvGkxXhU&ab_channel=BlakeGillman)
-\
-[Wikipedia Article](https://en.wikipedia.org/wiki/Perlin_noise)
-
-## Biomes
-
-Similar to terrain generation, creating biomes is also done by Perlin noise. (See [terrain generation](#terrain-generation) for more information on Perlin noise).
-Although instead of a map to determine the height of the blocks, each generated Perlin value has a corresponding biome.
+Creating biomes done the same way, although instead of a map to determine the height of the blocks, each generated Perlin value has a corresponding biome.
 
 Example:
 \
@@ -100,6 +89,16 @@ A value between 0.6 and 0.7 = grasslands biome.
 etc.
 
 If we use the same values from the height map, we will end up with each biome generated at specific heights. For example, every desert biome will range from y level 50 - 60 and grasslands 61 - 70. To avoid this, a biome offset value is used. The biome offset tells the game to use the Perlin map several hundred thousand blocks away. This way, the biomes can have the same seed as the terrain making it repeatable, and there will be no correlation to the current terrain and biome.
+
+The same is done for trees, cave generation, ore generation, lakes, etc.
+
+Here are some excellent resources for understanding Perlin Noise.
+
+[Video by Fataho](https://www.youtube.com/watch?v=MJ3bvCkHJtE&ab_channel=Fataho)
+\
+[Video by Blake Gillman](https://www.youtube.com/watch?v=9x6NvGkxXhU&ab_channel=BlakeGillman)
+\
+[Wikipedia Article](https://en.wikipedia.org/wiki/Perlin_noise)
 
 ## Rendering
 
