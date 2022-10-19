@@ -96,6 +96,7 @@ Example:
 A value between 0.5 and 0.6 = desert biome.
 \
 A value between 0.6 and 0.7 = grasslands biome.
+\
 etc.
 
 If we use the same values from the height map, we will end up with each biome generated at specific heights. For example, every desert biome will range from y level 50 - 60 and grasslands 61 - 70. To avoid this, a biome offset value is used. The biome offset tells the game to use the Perlin map several hundred thousand blocks away. This way, the biomes can have the same seed as the terrain making it repeatable, and there will be no correlation to the current terrain and biome.
