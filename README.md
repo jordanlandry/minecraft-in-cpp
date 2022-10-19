@@ -90,6 +90,7 @@ Here are some excellent resources for understanding Perlin Noise.
 
 Similar to terrain generation, creating biomes is also done by Perlin noise. (See [terrain generation](#terrain-generation) for more information on Perlin noise).
 Although instead of a map to determine the height of the blocks, each generated Perlin value has a corresponding biome.
+
 Example
 A value between 0.5 and 0.6 = desert biome.
 A value between 0.6 and 0.7 = grasslands biome.
