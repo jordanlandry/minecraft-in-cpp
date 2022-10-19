@@ -122,14 +122,21 @@ void Chunk::SetBiome(int i, int j, siv::PerlinNoise::seed_type seed)
 void Chunk::CreateTree(Shader* shaderProgram, std::vector<Texture>* Texels, siv::PerlinNoise::seed_type seed, int i, int j, int k)
 {
 	const siv::PerlinNoise perlin{ seed };
-	float rm = perlin.octave2D_01((i + x * chunkSize + treeMapOffset) * 0.01, (j + z * chunkSize + treeMapOffset) * 0.01, octaves);
+	float relativeMap = perlin.octave2D_01((i + x * chunkSize + treeMapOffset) * 0.01, (j + z * chunkSize + treeMapOffset) * 0.01, octaves);
 	treeMapOffset = treeMapOffset > 10000 ? 500 : treeMapOffset + 500;
 
 	unsigned int height = 0;
 
-	if (rm < treeDensity)
+	if (relativeMap < treeDensity)
 	{
-		for (int n = 0; n < 6; n++)
+		//unsigned int size = (1 / treeDensity * rm * 10);	// If I do this, then birch trees will be shorter than oak
+		float negRelativeMap = perlin.octave2D_01((i + x * chunkSize - treeMapOffset) * 0.01, (j + z * chunkSize - treeMapOffset) * 0.01, octaves);
+
+		unsigned int minSize = 4;
+		unsigned int maxSize = 6;		// Maximum size will be this + the minSize
+		unsigned int size = negRelativeMap * maxSize + minSize;
+		
+		for (int n = 0; n < size; n++)
 		{
 			if (n + k >= maxHeight) continue;
 
@@ -137,8 +144,8 @@ void Chunk::CreateTree(Shader* shaderProgram, std::vector<Texture>* Texels, siv:
 
 
 			char* id = (char*)"oak_log";
-			if (rm < treeDensity * 0.5) id = (char*)"birch_log";
-			if (n == 5)
+			if (relativeMap < treeDensity * 0.5) id = (char*)"birch_log";
+			if (n == size - 1)
 			{
 				if (id == (char*)"birch_log") id = (char*)"birch_leaves";
 				if (id == (char*)"oak_log") id = (char*)"oak_leaves";
