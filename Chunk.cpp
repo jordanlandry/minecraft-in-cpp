@@ -37,29 +37,68 @@ void Chunk::Init(Shader* shaderProgram, std::vector<Texture>* Texels, siv::Perli
 				// Get the correct block id
 				char* id;
 
+				// Get the biome
 				if (k == height) SetBiome(i + x * chunkSize, j + z * chunkSize, seed);
 
-				if (k == 0) id = (char*)"bedrock_block";
-				else if (k > height) id = (char*)"air";
+				// Check what blocks to use based on the biome
+				if (k == 0) id = (char*)"bedrock_block";		// Bedrock is always on y = 0
+				else if (k > height) id = (char*)"air";			
 				else if (currentBiome == (char*)"desert")
 				{
 					if (k + 3 >= height) id = (char*)"sand_block";
 					else id = (char*)"stone_block";
+					treeDensity = 0;
 				}
-				else if (currentBiome == (char*)"plains")
+
+				else if (currentBiome == (char*)"plains" || currentBiome == (char*)"forest")
 				{
 					if (k == height) id = (char*)"grass_block";
 					else if (k + 3 >= height) id = (char*)"dirt_block";
 					else id = (char*)"stone_block";
+					treeDensity = currentBiome == (char*) "forest" ? 0.1f : 0.02f;
 				}
-
 				else id = (char*)"dirt_block";
 
-				/*if (k == 0) id = (char*)"bedrock_block";
-				else if (k == height) id = (char*)"grass_block";
-				else if (k > height) id = (char*)"air";
-				else if (k + 3 >= height) id = (char*)"dirt_block";
-				else id = (char*)"stone_block";*/
+
+				// Generate Trees
+				if (k == height + 1)
+				{
+					//float rm = perlin.octave2D_01(((i + x * chunkSize + (biomeMapOffset * (k + i * j))) * 0.01), ((j + z * chunkSize + (biomeMapOffset * (k + i * j))) * 0.01), octaves);
+					/*float rm = perlin.octave2D_01(((i * j + x * chunkSize + biomeMapOffset) * 0.01), ((i * j + z * chunkSize + biomeMapOffset * 0.01), octaves);*/
+
+					float rm = perlin.octave2D_01((i + x * chunkSize + treeMapOffset) * 0.01, (j + z * chunkSize + treeMapOffset) * 0.01, octaves);
+					treeMapOffset += 500;
+					if (rm < treeDensity)
+					{
+						for (int n = 0; n < 5; n++)
+						{
+							if (n + k >= maxHeight) continue;
+
+							float pos[] = { i + x * chunkSize, k + n, j + z * chunkSize };
+
+							id = (char*)"oak_log";
+							bool ln[] = { false, false, false, false, false, false };
+							if (chunkBlocks[i - 1][j - 1][k + n].hasInit == true)
+							{
+								chunkBlocks[i - 1][j - 1][k + n].id = id;
+								chunkBlocks[i - 1][j - 1][k + n].hasInit = false;
+
+								chunkBlocks[i - 1][j - 1][k + n].pos[0] = pos[0];
+								chunkBlocks[i - 1][j - 1][k + n].pos[1] = pos[1];
+								chunkBlocks[i - 1][j - 1][k + n].pos[2] = pos[2];
+
+								chunkBlocks[i - 1][j - 1][k + n].Init(shaderProgram, ln, Texels);
+							}
+							else
+							{
+								Block b(id, pos);
+								b.Init(shaderProgram, ln, Texels);
+								chunkBlocks[i - 1][j - 1][k + n] = b;
+							}
+						}
+					}
+				}
+
 
 				if (id == (char*)"air" && chunkBlocks[i - 1][j - 1][k].id == (char*)"air") continue;
 				if (neighbours[0] && neighbours[1] && neighbours[2] && neighbours[3] && neighbours[4] && neighbours[5]) continue;
@@ -77,7 +116,6 @@ void Chunk::Init(Shader* shaderProgram, std::vector<Texture>* Texels, siv::Perli
 
 					chunkBlocks[i - 1][j - 1][k].Init(shaderProgram, neighbours, Texels);
 				}
-
 				else
 				{
 					Block b(id, pos);
@@ -113,7 +151,9 @@ void Chunk::Render()
 void Chunk::SetBiome(int i, int j, siv::PerlinNoise::seed_type seed)
 {
 	const siv::PerlinNoise perlin{ seed };
-	if (perlin.octave2D_01(((i + biomeMapOffset) * 0.01), ((j + biomeMapOffset) * 0.01), octaves) > 0.5) currentBiome = (char*)"desert";
+	float rm = perlin.octave2D_01 (((i + x * chunkSize + biomeMapOffset) * 0.01), ((j + z * chunkSize + biomeMapOffset) * 0.01), octaves);
+	if (rm < 0.5) currentBiome = (char*)"desert";
+	else if (rm < 0.75) currentBiome = (char*)"forest";
 	else currentBiome = (char*)"plains";
 }
 

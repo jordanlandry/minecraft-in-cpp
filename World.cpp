@@ -19,7 +19,13 @@ void World::Generate(Shader *shaderProgram)
 		(char*)"assets/bedrock.png",
 		(char*)"assets/stone.png",
 		(char*)"assets/sand.png",
-		(char*)"assets/water_flow.png"
+		(char*)"assets/water_flow.png",
+		(char*)"assets/oak_log.png",
+		(char*)"assets/oak_log_top.png",
+		(char*)"assets/oak_leaves.png",
+		(char*)"assets/birch_log.png",
+		(char*)"assets/birch_log_top.png",
+		(char*)"assets/birch_leaves.png",
 	};
 
 	for (int i = 0; i < sizeof(textures) / sizeof(*textures); i++)

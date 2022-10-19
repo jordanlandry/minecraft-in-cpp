@@ -15,9 +15,11 @@ public:
 	unsigned int maxHeight = 128;
 
 	double map[18][18];
+	float treeDensity;
 
 	const unsigned int biomeMapOffset = 100000;		// Perlin map for biomes
 	const unsigned int octaves = 64;
+	unsigned int treeMapOffset = 500;
 	unsigned int heightMultiplier;
 
 	bool neighbours[6] = { false, false, false, false, false, false };
