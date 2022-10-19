@@ -11,8 +11,15 @@ public:
 	int x;
 	int z;
 
-	int chunkSize = 16;
-	int maxHeight = 128;
+	unsigned int chunkSize = 16;
+	unsigned int maxHeight = 128;
+
+	double map[18][18];
+
+	const unsigned int octaves = 64;
+	unsigned int heightMultiplier;
+
+	bool neighbours[6] = { false, false, false, false, false, false };
 
 	std::vector <std::vector<std::vector<Block>>> blocks;
 	std::vector <std::vector<std::vector<Block>>> chunkBlocks;

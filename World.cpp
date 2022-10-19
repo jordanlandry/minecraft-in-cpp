@@ -11,15 +11,6 @@ World::World()
 
 void World::Generate(Shader *shaderProgram)
 {
-
-	/*for (int y = 0; y < 256; ++y)
-	{
-		for (int x = 0; x < 256; ++x)
-		{
-			points[x][y] = perlin.octave2D_01((x * 0.01), (y * 0.01), 64);
-		}
-	}*/
-
 	// Generate textures
 	char* textures[] = {
 		(char*)"assets/grass.png",
@@ -101,8 +92,6 @@ void World::Render(float x, float z, Shader* shaderProgram)
 		{
 			nextZ = lastZ;
 			firstZ = chunkZ + renderDistance - 1;
-			/*nextZ = chunkZ - (renderDistance - 1) / 2;
-			firstZ = chunkZ + (renderDistance - 1) / 2;*/
 		}
 
 		Chunk chunk(chunkX, nextZ);

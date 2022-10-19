@@ -27,6 +27,10 @@
 const unsigned int width = 1280;
 const unsigned int height = 720;
 
+void test(int i, int j);
+//void updateRender(float x, float z, Shader* shaderProgram, World world, GLFWwindow* window);
+void r(Camera* cam, Shader* shaderProgram, GLFWwindow* window);
+
 // Vertices coordinates
 int main()
 {
@@ -53,7 +57,6 @@ int main()
 	// Set window to middle of screen
 	//glutInitWindowPosition((glutGet(GLUT_SCREEN_WIDTH) - 640) / 2 (glutGet(GLUT_SCREEN_HEIGHT) - 480) / 2);
 
-
 	// Generates Shader object using shaders default.vert and default.frag
 	Shader shaderProgram("shaders/default.vert", "shaders/default.frag");
 
@@ -62,7 +65,6 @@ int main()
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_FRONT);
 	glFrontFace(GL_CCW);
-
 
 	// Camera
 	Camera camera(width, height, glm::vec3(0, 12, 0));
@@ -78,6 +80,13 @@ int main()
 	// Generate World
 	World world;
 	world.Generate(&shaderProgram);
+
+	//std::thread t1(test, 0, 1);
+	//std::thread updater(updateRender, camera.Position.x, camera.Position.z, &shaderProgram, world, window);
+
+	//std::thread updater(updateRender, 3.0f);
+	/*std::thread t(r,  &camera, &shaderProgram, &window);
+	t.join();*/
 
 	// Game loop
 	while (!glfwWindowShouldClose(window))
@@ -113,7 +122,8 @@ int main()
 		// Handles camera inputs
 		camera.Matrix(70.0f, 0.1f, 100.0f, shaderProgram, "camMatrix");
 
-		// Render World
+
+		// Render world
 		world.Render(camera.Position.x, camera.Position.z, &shaderProgram);
 		
 		// Window buffer
@@ -126,3 +136,26 @@ int main()
 	glfwTerminate();
 	return 0;
 }
+
+//void r(Camera* cam, Shader* shaderProgram, GLFWwindow* window)
+//{
+//	while (true) std::cout << cam->Position.x << std::endl;
+//}
+
+
+//void updateRender(float x, float z, Shader* shaderProgram, World world, GLFWwindow* window)
+//{
+//	while (!glfwWindowShouldClose(window))
+//	{
+//		world.Render(x, z, shaderProgram);
+//	}
+//}
+
+
+
+void test(int i, int j)
+{
+	while (true) std::cout << i << " " << j << std::endl;
+}
+
+
