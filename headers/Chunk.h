@@ -35,6 +35,7 @@ public:
 	void Render();
 	void Delete();
 	void SetBiome(int i, int j, siv::PerlinNoise::seed_type seed);
+	void CreateTree(Shader* shaderProgram, std::vector<Texture>* Texels, siv::PerlinNoise::seed_type seed, int i, int j, int k);
 };
 
 #endif

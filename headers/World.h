@@ -15,8 +15,6 @@ public:
 
 	const siv::PerlinNoise perlin{ seed };
 
-	float treeFreq;		// From 0 to 1
-
 	int chunkX;
 	int chunkZ;
 	int nextX;

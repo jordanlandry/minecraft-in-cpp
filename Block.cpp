@@ -85,6 +85,9 @@ void Block::Init(Shader* shaderProgram, bool chunks[6], std::vector<Texture> *Te
 	else if (id == "sand_block") Textures = { (*Texels)[5], (*Texels)[5], (*Texels)[5], (*Texels)[5], (*Texels)[5], (*Texels)[5] };
 	else if (id == "water") Textures = { (*Texels)[6], (*Texels)[6], (*Texels)[6], (*Texels)[6], (*Texels)[6], (*Texels)[6] };
 	else if (id == "oak_log") Textures = { (*Texels)[7], (*Texels)[7], (*Texels)[7], (*Texels)[7], (*Texels)[8], (*Texels)[8] };
+	else if (id == "oak_leaves") Textures = { (*Texels)[9], (*Texels)[9], (*Texels)[9], (*Texels)[9], (*Texels)[9], (*Texels)[9] };
+	else if (id == "birch_log") Textures = { (*Texels)[10], (*Texels)[10], (*Texels)[10], (*Texels)[10], (*Texels)[11], (*Texels)[11] };
+	else if (id == "birch_leaves") Textures = { (*Texels)[12], (*Texels)[12], (*Texels)[12], (*Texels)[12], (*Texels)[12], (*Texels)[12] };
 	else Textures = { (*Texels)[1], (*Texels)[1], (*Texels)[1], (*Texels)[1], (*Texels)[1], (*Texels)[1] };
 
 	for (int i = 0; i < 6; i++) {
