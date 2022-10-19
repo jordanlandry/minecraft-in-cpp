@@ -37,15 +37,16 @@ void Chunk::Init(Shader* shaderProgram, std::vector<Texture>* Texels, siv::Perli
 				// Get the correct block id
 				char* id;
 
-				char* biome = GetBiome(i, j, seed);
+				if (k == height) SetBiome(i + x * chunkSize, j + z * chunkSize, seed);
+
 				if (k == 0) id = (char*)"bedrock_block";
 				else if (k > height) id = (char*)"air";
-				else if (biome == (char*)"desert")
+				else if (currentBiome == (char*)"desert")
 				{
 					if (k + 3 >= height) id = (char*)"sand_block";
 					else id = (char*)"stone_block";
 				}
-				else if (biome == (char*)"plains")
+				else if (currentBiome == (char*)"plains")
 				{
 					if (k == height) id = (char*)"grass_block";
 					else if (k + 3 >= height) id = (char*)"dirt_block";
@@ -109,11 +110,11 @@ void Chunk::Render()
 	}
 }
 
-char* Chunk::GetBiome(int i, int j, siv::PerlinNoise::seed_type seed)
+void Chunk::SetBiome(int i, int j, siv::PerlinNoise::seed_type seed)
 {
 	const siv::PerlinNoise perlin{ seed };
-	if (perlin.octave2D_01(((i + biomeMapOffset) * 0.01), ((j + biomeMapOffset) * 0.01), octaves) > 0.1) return (char*)"desert";
-	return (char*)"plains";
+	if (perlin.octave2D_01(((i + biomeMapOffset) * 0.01), ((j + biomeMapOffset) * 0.01), octaves) > 0.5) currentBiome = (char*)"desert";
+	else currentBiome = (char*)"plains";
 }
 
 void Chunk::Delete()

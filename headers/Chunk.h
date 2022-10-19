@@ -25,12 +25,14 @@ public:
 	std::vector <std::vector<std::vector<Block>>> blocks;
 	std::vector <std::vector<std::vector<Block>>> chunkBlocks;
 
+
+	char* currentBiome;
+
 	Chunk(int i, int j);
 	void Init(Shader* shaderProgram, std::vector<Texture>* Texels, siv::PerlinNoise::seed_type seed);
 	void Render();
 	void Delete();
-
-	char* GetBiome(int i, int j, siv::PerlinNoise::seed_type seed);
+	void SetBiome(int i, int j, siv::PerlinNoise::seed_type seed);
 };
 
 #endif
