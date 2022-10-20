@@ -27,10 +27,7 @@
 const unsigned int width = 1280;
 const unsigned int height = 720;
 
-void test(int i, int j);
-//void updateRender(float x, float z, Shader* shaderProgram, World world, GLFWwindow* window);
-void r(Camera* cam, Shader* shaderProgram, GLFWwindow* window);
-
+void render(Camera* cam, Shader* shaderProgram, GLFWwindow* window, World* world);
 // Vertices coordinates
 int main()
 {
@@ -54,8 +51,7 @@ int main()
 	gladLoadGL();
 	glViewport(0, 0, width, height);
 
-	// Set window to middle of screen
-	//glutInitWindowPosition((glutGet(GLUT_SCREEN_WIDTH) - 640) / 2 (glutGet(GLUT_SCREEN_HEIGHT) - 480) / 2);
+	// TODO Set window to middle of screen
 
 	// Generates Shader object using shaders default.vert and default.frag
 	Shader shaderProgram("shaders/default.vert", "shaders/default.frag");
@@ -81,13 +77,10 @@ int main()
 	World world;
 	world.Generate(&shaderProgram);
 
-	//std::thread t1(test, 0, 1);
-	//std::thread updater(updateRender, camera.Position.x, camera.Position.z, &shaderProgram, world, window);
 
-	//std::thread updater(updateRender, 3.0f);
-	/*std::thread t(r,  &camera, &shaderProgram, &window);
-	t.join();*/
-
+	// TODO Add lighting
+	// TODO Add multi-threading for either movement or chunk rendering so it doesn't lag when you enter a new chunk
+	// 
 	// Game loop
 	while (!glfwWindowShouldClose(window))
 	{
@@ -122,7 +115,6 @@ int main()
 		// Handles camera inputs
 		camera.Matrix(70.0f, 0.1f, 100.0f, shaderProgram, "camMatrix");
 
-
 		// Render world
 		world.Render(camera.Position.x, camera.Position.z, &shaderProgram);
 		
@@ -137,25 +129,17 @@ int main()
 	return 0;
 }
 
-//void r(Camera* cam, Shader* shaderProgram, GLFWwindow* window)
-//{
-//	while (true) std::cout << cam->Position.x << std::endl;
-//}
 
-
-//void updateRender(float x, float z, Shader* shaderProgram, World world, GLFWwindow* window)
+//void render(Camera* cam, Shader* shaderProgram, GLFWwindow* window, World* world)
 //{
 //	while (!glfwWindowShouldClose(window))
 //	{
-//		world.Render(x, z, shaderProgram);
+//		glClearColor(0.68f, 0.85f, 0.9f, 1.0f);				// Background Color
+//		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+//		shaderProgram->Activate();
+//
+//		world->Render(cam->Position.x, cam->Position.z, shaderProgram);
+//		glfwSwapBuffers(window);
+//		glfwPollEvents();
 //	}
 //}
-
-
-
-void test(int i, int j)
-{
-	while (true) std::cout << i << " " << j << std::endl;
-}
-
-

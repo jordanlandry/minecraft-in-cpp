@@ -78,6 +78,7 @@ void Block::Init(Shader* shaderProgram, bool chunks[6], std::vector<Texture> *Te
 		-0.5f + x, -0.5f + y,  0.5f + z,		0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
 	};
 
+	// Assign textures based on id
 	if (id == "grass_block") Textures = { (*Texels)[1], (*Texels)[1], (*Texels)[1], (*Texels)[1], (*Texels)[0], (*Texels)[2] };
 	else if (id == "dirt_block") Textures = { (*Texels)[2],(*Texels)[2], (*Texels)[2], (*Texels)[2], (*Texels)[2], (*Texels)[2] };
 	else if (id == "bedrock_block") Textures = { (*Texels)[3], (*Texels)[3], (*Texels)[3], (*Texels)[3], (*Texels)[3], (*Texels)[3] };
@@ -90,6 +91,7 @@ void Block::Init(Shader* shaderProgram, bool chunks[6], std::vector<Texture> *Te
 	else if (id == "birch_leaves") Textures = { (*Texels)[12], (*Texels)[12], (*Texels)[12], (*Texels)[12], (*Texels)[12], (*Texels)[12] };
 	else Textures = { (*Texels)[1], (*Texels)[1], (*Texels)[1], (*Texels)[1], (*Texels)[1], (*Texels)[1] };
 
+	// Link VAOs, VBOs, EBOs
 	for (int i = 0; i < 6; i++) {
 		//if (chunks[i] == true) continue;
 

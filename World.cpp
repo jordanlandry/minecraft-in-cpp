@@ -55,7 +55,7 @@ void World::Render(float x, float z, Shader* shaderProgram)
 	chunkX = x / chunkSize;
 	chunkZ = z / chunkSize;
 
-	// Enter new chunk
+	// Enter new chunk in X direction
 	if (chunkX != lastX)
 	{
 		// New chunk
@@ -86,6 +86,7 @@ void World::Render(float x, float z, Shader* shaderProgram)
 		}
 	}
 
+	// Enter new chunk in Z direction
 	if (chunkZ != lastZ)
 	{
 		if (chunkZ > lastZ)
@@ -117,6 +118,7 @@ void World::Render(float x, float z, Shader* shaderProgram)
 	lastZ = chunkZ;
 }
 
+// TODO Fix Break block
 /*
 void World::BreakBlock(int pos[6][3], Shader* shaderProgram)
 {
@@ -145,6 +147,7 @@ void World::BreakBlock(int pos[6][3], Shader* shaderProgram)
 	}
 }
 
+// TODO fix place block
 void World::PlaceBlock(int pos[6][3], Shader* shaderProgram)
 {
 	bool n[] = { false, false, false, false, false, false };

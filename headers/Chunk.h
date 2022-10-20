@@ -30,6 +30,8 @@ public:
 
 	char* currentBiome;
 
+	// TODO Make shaderProgram, Texels, their own variables here to avoid passing them into every function
+	// TODO Make seed a reference to variable in world class
 	Chunk(int i, int j);
 	void Init(Shader* shaderProgram, std::vector<Texture>* Texels, siv::PerlinNoise::seed_type seed);
 	void Render();

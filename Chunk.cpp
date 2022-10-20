@@ -91,6 +91,7 @@ void Chunk::Init(Shader* shaderProgram, std::vector<Texture>* Texels, siv::Perli
 
 void Chunk::Render()
 {
+	// TODO Unrender the edges of chunks when they cannot be seen
 	for (int i = 0; i < chunkSize; i++) {
 		for (int j = 0; j < chunkSize; j++) {
 			for (int k = 0; k < maxHeight; k++) {
@@ -110,6 +111,8 @@ void Chunk::Render()
 	}
 }
 
+
+// TODO Create more biomes
 void Chunk::SetBiome(int i, int j, siv::PerlinNoise::seed_type seed)
 {
 	const siv::PerlinNoise perlin{ seed };
@@ -119,6 +122,7 @@ void Chunk::SetBiome(int i, int j, siv::PerlinNoise::seed_type seed)
 	else currentBiome = (char*)"plains";
 }
 
+// TODO Add more leaves and fix leaf textures
 void Chunk::CreateTree(Shader* shaderProgram, std::vector<Texture>* Texels, siv::PerlinNoise::seed_type seed, int i, int j, int k)
 {
 	const siv::PerlinNoise perlin{ seed };
@@ -130,8 +134,8 @@ void Chunk::CreateTree(Shader* shaderProgram, std::vector<Texture>* Texels, siv:
 		//unsigned int size = (1 / treeDensity * rm * 10);	// If I do this, then birch trees will be shorter than oak
 		float negRelativeMap = perlin.octave2D_01((i + x * chunkSize - treeMapOffset) * 0.01, (j + z * chunkSize - treeMapOffset) * 0.01, octaves);
 
-		unsigned int minSize = 4;
-		unsigned int maxSize = 6;		// Maximum size will be this + the minSize
+		unsigned int minSize = 6;
+		unsigned int maxSize = 4;		// Maximum size will be this + the minSize
 		unsigned int size = negRelativeMap * maxSize + minSize;
 		
 		for (int n = 0; n < size; n++)
