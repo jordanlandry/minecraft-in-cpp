@@ -11,8 +11,13 @@ Chunk::Chunk(int i, int j)
 	chunkBlocks = c;
 }
 
-void Chunk::Init(Shader* shaderProgram, std::vector<Texture>* Texels, siv::PerlinNoise::seed_type seed)
+void Chunk::Init(Shader* aShaderProgram, std::vector<Texture>* aTexels, siv::PerlinNoise::seed_type aSeed)
 {
+
+	shaderProgram = aShaderProgram;
+	Texels = aTexels;
+	seed = aSeed;
+
 	// Generate perlin height at that position
 	const siv::PerlinNoise perlin{ seed };
 	for (int i = 0; i < chunkSize + 2; i++)
@@ -38,7 +43,7 @@ void Chunk::Init(Shader* shaderProgram, std::vector<Texture>* Texels, siv::Perli
 				char* id;
 
 				// Get the biome
-				if (k == height) SetBiome(i + x * chunkSize, j + z * chunkSize, seed);
+				if (k == height) SetBiome(i + x * chunkSize, j + z * chunkSize);
 
 				// Check what blocks to use based on the biome
 				if (k == 0) id = (char*)"bedrock_block";		// Bedrock is always on y = 0
@@ -60,7 +65,7 @@ void Chunk::Init(Shader* shaderProgram, std::vector<Texture>* Texels, siv::Perli
 				else id = (char*)"dirt_block";
 
 				// Generate trees
-				if (k == height) CreateTree(shaderProgram, Texels, seed, i, j, k);
+				if (k == height) CreateTree(i, j, k);
 
 				if (id == (char*)"air" && chunkBlocks[i - 1][j - 1][k].id == (char*)"air") continue;
 				if (neighbours[0] && neighbours[1] && neighbours[2] && neighbours[3] && neighbours[4] && neighbours[5]) continue;
@@ -113,7 +118,7 @@ void Chunk::Render()
 
 
 // TODO Create more biomes
-void Chunk::SetBiome(int i, int j, siv::PerlinNoise::seed_type seed)
+void Chunk::SetBiome(int i, int j)
 {
 	const siv::PerlinNoise perlin{ seed };
 	float rm = perlin.octave2D_01 (((i + x * chunkSize + biomeMapOffset) * 0.01), ((j + z * chunkSize + biomeMapOffset) * 0.01), octaves);
@@ -123,7 +128,7 @@ void Chunk::SetBiome(int i, int j, siv::PerlinNoise::seed_type seed)
 }
 
 // TODO Add more leaves and fix leaf textures
-void Chunk::CreateTree(Shader* shaderProgram, std::vector<Texture>* Texels, siv::PerlinNoise::seed_type seed, int i, int j, int k)
+void Chunk::CreateTree(int i, int j, int k)
 {
 	const siv::PerlinNoise perlin{ seed };
 	float relativeMap = perlin.octave2D_01((i + x * chunkSize + treeMapOffset) * 0.01, (j + z * chunkSize + treeMapOffset) * 0.01, octaves);

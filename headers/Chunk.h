@@ -24,9 +24,12 @@ public:
 
 	bool neighbours[6] = { false, false, false, false, false, false };
 
+	Shader* shaderProgram;
+	std::vector<Texture>* Texels;
+	siv::PerlinNoise::seed_type seed;
+
 	std::vector <std::vector<std::vector<Block>>> blocks;
 	std::vector <std::vector<std::vector<Block>>> chunkBlocks;
-
 
 	char* currentBiome;
 
@@ -36,8 +39,8 @@ public:
 	void Init(Shader* shaderProgram, std::vector<Texture>* Texels, siv::PerlinNoise::seed_type seed);
 	void Render();
 	void Delete();
-	void SetBiome(int i, int j, siv::PerlinNoise::seed_type seed);
-	void CreateTree(Shader* shaderProgram, std::vector<Texture>* Texels, siv::PerlinNoise::seed_type seed, int i, int j, int k);
+	void SetBiome(int i, int j);
+	void CreateTree(int i, int j, int k); 
 };
 
 #endif
