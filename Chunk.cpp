@@ -103,12 +103,24 @@ void Chunk::Render()
 				if (chunkBlocks[i][j][k].id == "air") continue;
 
 				bool n[] = { false, false, false, false, false, false };
-				if (chunkBlocks[i].size() > j + 1 && chunkBlocks[i][j + 1][k].id != "air") n[0] = true;
-				if (chunkBlocks.size() > i + 1 && chunkBlocks[i + 1][j][k].id != "air") n[1] = true;
-				if (j > 0 && chunkBlocks[i][j - 1][k].id != "air") n[2] = true;
-				if (i > 0 && chunkBlocks[i - 1][j][k].id != "air") n[3] = true;
-				if (chunkBlocks[i][j].size() > k + 1 && chunkBlocks[i][j][k + 1].id != "air") n[4] = true;
-				if (k > 0 && chunkBlocks[i][j][k - 1].id != "air") n[5] = true;
+
+				if (chunkBlocks[i].size() > j + 1 && chunkBlocks[i][j + 1][k].id != "air")		n[0] = true;
+				if (chunkBlocks.size() > i + 1 && chunkBlocks[i + 1][j][k].id != "air")			n[1] = true;
+				if (j > 0 && chunkBlocks[i][j - 1][k].id != "air")								n[2] = true;
+				if (i > 0 && chunkBlocks[i - 1][j][k].id != "air")								n[3] = true;
+				if (chunkBlocks[i][j].size() > k + 1 && chunkBlocks[i][j][k + 1].id != "air")	n[4] = true;
+				if (k > 0 && chunkBlocks[i][j][k - 1].id != "air")								n[5] = true;
+
+
+				if (i == 0)
+				{
+					if ((int) (map[i + 1][j] * heightMultiplier) > k) n[3] = true;
+				}
+
+				if (j == 0)
+				{
+					if ((int) (map[i][j + 1] * heightMultiplier) > k) n[2] = true;
+				}
 
 				chunkBlocks[i][j][k].Render(n);
 			}
