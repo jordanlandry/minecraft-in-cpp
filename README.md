@@ -16,6 +16,20 @@ This project is my own take on the popular game Minecraft.
 
 Watch me design, create and debug this project on [YouTube](https://www.youtube.com/channel/UCO8fo_fxQgSGLkdEmyVJcFA) (Video is not currently up, will be updated when the video becomes available)
 
+TODO Write description for each step in the build process
+
+Textures on screen
+![Textured grass square on an OpenGL window](/readme_images/build_process/texture_on_screen.png)
+
+3 Dimensional blocks
+![Dirt and grass blocks rendered in 3d](/readme_images/build_process/3d_texture.png)
+
+Chunk Rendering
+![16x16x16 flat Minecraft world with grass and dirt](/readme_images/build_process/chunk_rendering.png)
+
+Terrain Generation
+![16x16x16 Minecraft world with small hills](/readme_images/build_process/terrain_generation.png)
+
 ## Controls
 
 | Button     | Action   |
@@ -74,7 +88,7 @@ Generated Perlin values:
 \
 { 10, 11, 10, 10, 11, 12, 13, 15, 16, 15, 14, 12, 11, 12, 11, 10 }
 
-![1D Perlin Noise Graph](/images/1d_perlin_graph.png)
+![1D Perlin Noise Graph](/readme_images/1d_perlin_graph.png)
 
 After plotting these numbers on a line graph, it becomes clear how this can be used in terrain generation. When expanded into the 2nd dimension, this will result in terrain.
 
