@@ -86,8 +86,6 @@ int main()
 	glFrontFace(GL_CCW);
 
 
-
-
 	// Camera
 	Camera* camera = new Camera(width, height, glm::vec3(0, 12, 0));
 
