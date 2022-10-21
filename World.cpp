@@ -4,9 +4,9 @@
 
 World::World()
 {
-	maxHeight = 16;
+	maxHeight = 128;
 	chunkSize = 16;
-	renderDistance = 3;
+	renderDistance = 4;
 }
 
 void World::Generate(Shader *shaderProgram)
@@ -52,71 +52,73 @@ void World::Render(float x, float z, Shader* shaderProgram)
 {
 	for (int i = 0; i < chunks.size(); i++) chunks[i].Render();
 
-	chunkX = x / chunkSize;
-	chunkZ = z / chunkSize;
+
+
+
+	
 
 	// Enter new chunk in X direction
-	if (chunkX != lastX)
-	{
-		// New chunk
-		if (chunkX > lastX)
-		{
-			nextX = chunkX + renderDistance / 2 + 1;
-			firstX = chunkX - (renderDistance - 1) / 2;
-		}
-			
-		else if (chunkX < lastX)
-		{ 
-			nextX = chunkX - (renderDistance - 1) / 2;
-			firstX = chunkX + renderDistance / 2 + 1;
-		}
-			
-		Chunk chunk(nextX, chunkZ);
+	//if (chunkX != lastX)
+	//{
+	//	// New chunk
+	//	if (chunkX > lastX)
+	//	{
+	//		nextX = chunkX + renderDistance / 2 + 1;
+	//		firstX = chunkX - (renderDistance - 1) / 2;
+	//	}
+	//		
+	//	else if (chunkX < lastX)
+	//	{ 
+	//		nextX = chunkX - (renderDistance - 1) / 2;
+	//		firstX = chunkX + renderDistance / 2 + 1;
+	//	}
+	//		
+	//	Chunk chunk(nextX, chunkZ);
 
-		// Unrender last chunk And render new chunk X
-		for (int i = 0; i < chunks.size(); i++)
-		{
-			if (firstX == chunks[i].x)
-			{
-				chunks[i].Delete();
+	//	// Unrender last chunk And render new chunk X
+	//	/*for (int iterator = 0; iterator < chunks.size(); iterator++)
+	//	{*/
+	//		if (firstX == chunks[iterator].x)
+	//		{
+	//			chunks[iterator].Delete();
 
-				chunks[i].x = nextX;
-				chunks[i].Init(shaderProgram, &Texels, seed);
-			}
-		}
-	}
+	//			chunks[iterator].x = nextX;
+	//			chunks[iterator].Init(shaderProgram, &Texels, seed);
+	//		}
+	//	//}
+	//}
 
-	// Enter new chunk in Z direction
-	if (chunkZ != lastZ)
-	{
-		if (chunkZ > lastZ)
-		{
-			nextZ = chunkZ + renderDistance - 1;
-			firstZ = lastZ;
-		}
+	//// Enter new chunk in Z direction
+	//if (chunkZ != lastZ)
+	//{
+	//	if (chunkZ > lastZ)
+	//	{
+	//		nextZ = chunkZ + renderDistance - 1;
+	//		firstZ = lastZ;
+	//	}
 
-		else if (chunkZ < lastZ)
-		{
-			nextZ = lastZ;
-			firstZ = chunkZ + renderDistance - 1;
-		}
+	//	else if (chunkZ < lastZ)
+	//	{
+	//		nextZ = lastZ;
+	//		firstZ = chunkZ + renderDistance - 1;
+	//	}
 
-		Chunk chunk(chunkX, nextZ);
-		for (int i = 0; i < chunks.size(); i++)
-		{
-			if (firstZ == chunks[i].z)
-			{
-				chunks[i].Delete();
+	//	Chunk chunk(chunkX, nextZ);
+	//	/*for (int iterator = 0; iterator < chunks.size(); iterator++)
+	//	{*/
+	//		if (firstZ == chunks[iterator].z)
+	//		{
+	//			chunks[iterator].Delete();
 
-				chunks[i].z = nextZ;
-				chunks[i].Init(shaderProgram, &Texels, seed);
-			}
-		}
-	}
-
-	lastX = chunkX;
-	lastZ = chunkZ;
+	//			chunks[iterator].z = nextZ;
+	//			chunks[iterator].Init(shaderProgram, &Texels, seed);
+	//		}
+	//	//}
+	//}
 }
+
+
+
 
 // TODO Fix Break block
 /*

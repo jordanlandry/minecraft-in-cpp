@@ -5,7 +5,7 @@ Chunk::Chunk(int i, int j)
 {
 	x = i;
 	z = j;
-	heightMultiplier = 24;
+	heightMultiplier = 16;
 
 	std::vector<std::vector<std::vector<Block>>> c(chunkSize, std::vector<std::vector<Block>>(chunkSize, std::vector<Block>(maxHeight)));
 	chunkBlocks = c;
@@ -13,7 +13,6 @@ Chunk::Chunk(int i, int j)
 
 void Chunk::Init(Shader* aShaderProgram, std::vector<Texture>* aTexels, siv::PerlinNoise::seed_type aSeed)
 {
-
 	shaderProgram = aShaderProgram;
 	Texels = aTexels;
 	seed = aSeed;
@@ -29,7 +28,7 @@ void Chunk::Init(Shader* aShaderProgram, std::vector<Texture>* aTexels, siv::Per
 
 			// Don't run if you are on the boundries because that is just to check for conditional rendering
 			if (i == 0 || j == 0 || i == chunkSize + 1 || j == chunkSize + 1) continue;
-			int height = map[i][j] * heightMultiplier;
+			int height = map[i][j] * heightMultiplier + 1;
 
 			for (int k = maxHeight - 1; k >= 0; k--)
 			{
@@ -47,7 +46,7 @@ void Chunk::Init(Shader* aShaderProgram, std::vector<Texture>* aTexels, siv::Per
 
 				// Check what blocks to use based on the biome
 				if (k == 0) id = (char*)"bedrock_block";		// Bedrock is always on y = 0
-				else if (k > height) id = (char*)"air";			
+				else if (k > height) id = (char*)"air";
 				else if (currentBiome == (char*)"desert")
 				{
 					if (k + 3 >= height) id = (char*)"sand_block";
@@ -60,9 +59,11 @@ void Chunk::Init(Shader* aShaderProgram, std::vector<Texture>* aTexels, siv::Per
 					if (k == height) id = (char*)"grass_block";
 					else if (k + 3 >= height) id = (char*)"dirt_block";
 					else id = (char*)"stone_block";
-					treeDensity = currentBiome == (char*) "forest" ? 0.1f : 0.02f;
+					treeDensity = currentBiome == (char*)"forest" ? 0.1f : 0.02f;
 				}
 				else id = (char*)"dirt_block";
+
+
 
 				// Generate trees
 				if (k == height) CreateTree(i, j, k);
@@ -96,7 +97,6 @@ void Chunk::Init(Shader* aShaderProgram, std::vector<Texture>* aTexels, siv::Per
 
 void Chunk::Render()
 {
-	// TODO Unrender the edges of chunks when they cannot be seen
 	for (int i = 0; i < chunkSize; i++) {
 		for (int j = 0; j < chunkSize; j++) {
 			for (int k = 0; k < maxHeight; k++) {
@@ -112,14 +112,29 @@ void Chunk::Render()
 				if (k > 0 && chunkBlocks[i][j][k - 1].id != "air")								n[5] = true;
 
 
+				if (k == 0) n[5] = true;		// Don't render bottom of bedrock
+
+
+				// Front
 				if (i == 0)
 				{
-					if ((int) (map[i + 1][j] * heightMultiplier) > k) n[3] = true;
+					if ((int)(map[i + 1][j] * heightMultiplier) >= k) n[3] = true;
 				}
 
+				// Right
 				if (j == 0)
 				{
-					if ((int) (map[i][j + 1] * heightMultiplier) > k) n[2] = true;
+					if ((int)(map[i][j + 1] * heightMultiplier) >= k -1) n[2] = true;
+				}
+
+				if (i == maxHeight - 1)
+				{
+					if ((int)(map[i + 1][j + 2] * heightMultiplier) >= k) n[1] = true;
+				}
+
+				if (j == maxHeight - 1)
+				{
+					if ((int)(map[i + 2][j + 1] * heightMultiplier) >= k) n[0] = true;
 				}
 
 				chunkBlocks[i][j][k].Render(n);
@@ -133,9 +148,12 @@ void Chunk::Render()
 void Chunk::SetBiome(int i, int j)
 {
 	const siv::PerlinNoise perlin{ seed };
-	float rm = perlin.octave2D_01 (((i + x * chunkSize + biomeMapOffset) * 0.01), ((j + z * chunkSize + biomeMapOffset) * 0.01), octaves);
+	float rm = perlin.octave2D_01(((i + x * chunkSize + biomeMapOffset) * 0.01), ((j + z * chunkSize + biomeMapOffset) * 0.01), octaves);
 	if (rm < 0.5) currentBiome = (char*)"desert";
-	else if (rm < 0.75) currentBiome = (char*)"forest";
+	else if (rm < 0.6) currentBiome = (char*)"desert";
+	else if (rm < 0.7) currentBiome = (char*)"forest";
+	else if (rm < 0.8) currentBiome = (char*)"jungle";
+	else if (rm < 0.9) currentBiome = (char*)"snowy";
 	else currentBiome = (char*)"plains";
 }
 
@@ -154,7 +172,7 @@ void Chunk::CreateTree(int i, int j, int k)
 		unsigned int minSize = 6;
 		unsigned int maxSize = 4;		// Maximum size will be this + the minSize
 		unsigned int size = negRelativeMap * maxSize + minSize;
-		
+
 		for (int n = 0; n < size; n++)
 		{
 			if (n + k >= maxHeight) continue;

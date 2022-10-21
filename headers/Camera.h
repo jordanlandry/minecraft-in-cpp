@@ -35,8 +35,6 @@ public:
 	float jumpSpeed = 0.015f;
 	int playerHeight = 1;
 
-	float G = 0.01f;
-
 	Camera(int width, int height, glm::vec3 position);
 
 	void Matrix(float FOVdeg, float nearPlane, float farPlane, Shader& shader, const char* uniform);

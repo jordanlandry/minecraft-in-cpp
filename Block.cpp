@@ -4,7 +4,7 @@
 
 Block::Block()
 {
-	id =(char*)"air";
+	id = (char*)"air";
 	hasInit = false;
 	pos[0] = 0;
 	pos[1] = 0;
@@ -22,14 +22,14 @@ Block::Block(char* aId, float aPos[3])
 	pos[2] = aPos[2];
 }
 
-void Block::Init(Shader* shaderProgram, bool chunks[6], std::vector<Texture> *Texels)
-{	
+void Block::Init(Shader* shaderProgram, bool chunks[6], std::vector<Texture>* Texels)
+{
 	int x = pos[0];
 	int y = pos[1];
 	int z = pos[2];
 
 	if (chunks[0] == true && chunks[1] == true && chunks[2] == true && chunks[3] == true && chunks[4] == true && chunks[5] == true) return;
-	
+
 	// Front
 	GLfloat vertices1[] = {
 		-0.5f + x, -0.5f + y,  0.5f + z,		0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
@@ -91,6 +91,7 @@ void Block::Init(Shader* shaderProgram, bool chunks[6], std::vector<Texture> *Te
 	else if (id == "birch_leaves") Textures = { (*Texels)[12], (*Texels)[12], (*Texels)[12], (*Texels)[12], (*Texels)[12], (*Texels)[12] };
 	else Textures = { (*Texels)[1], (*Texels)[1], (*Texels)[1], (*Texels)[1], (*Texels)[1], (*Texels)[1] };
 
+
 	// Link VAOs, VBOs, EBOs
 	for (int i = 0; i < 6; i++) {
 		//if (chunks[i] == true) continue;
@@ -141,4 +142,3 @@ void Block::Delete()
 	for (int i = 0; i < VBOs.size(); i++) VBOs[i].Delete();
 	for (int i = 0; i < EBOs.size(); i++) EBOs[i].Delete();
 }
-

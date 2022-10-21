@@ -11,8 +11,8 @@ public:
 	int x;
 	int z;
 
-	unsigned int chunkSize = 16;
-	unsigned int maxHeight = 128;
+	const unsigned int chunkSize = 16;
+	const unsigned int maxHeight = 16;
 
 	double map[18][18];
 	float treeDensity;
@@ -21,7 +21,6 @@ public:
 	const unsigned int octaves = 64;
 	unsigned int treeMapOffset = 500;
 	unsigned int heightMultiplier;
-
 
 	bool neighbours[6] = { false, false, false, false, false, false };
 

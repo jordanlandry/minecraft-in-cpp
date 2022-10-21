@@ -25,6 +25,10 @@ public:
 	int lastX;
 	int lastZ;
 
+	int iterator = 0;
+
+	int loadedChunks = 0;
+
 	std::vector<Texture> Texels;
 
 	double points[256][256];
@@ -33,6 +37,7 @@ public:
 	World();
 	void Generate(Shader *shaderProgram);
 	void Render(float x, float z, Shader* shaderProgram);
+
 	/*void BreakBlock(int pos[6][3], Shader* shaderProgram);
 	void PlaceBlock(int pos[6][3], Shader* shaderProgram);*/
 };
