@@ -100,6 +100,7 @@ void Chunk::Init(Shader* aShaderProgram, std::vector<Texture>* aTexels, siv::Per
 				}
 				else
 				{
+					// TODO experiment instead of a block class, have a matrix of block ids and access the texture in realtime to use less memory, also to limit the block ID to a certain value to only use a few bits instead of 4 bytes
 					Block b(id, pos);
 					b.Init(shaderProgram, neighbours, Texels);
 					chunkBlocks[i - 1][j - 1][k] = b;
