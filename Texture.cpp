@@ -4,11 +4,11 @@ Texture::Texture(const char* image, GLenum texType, GLenum slot, GLenum format, 
 {
 	type = texType;
 	int widthImg, heightImg, numColCh;
-	
+
 	stbi_set_flip_vertically_on_load(true);
 	unsigned char* bytes = stbi_load(image, &widthImg, &heightImg, &numColCh, 0);
 
-	
+
 	glGenTextures(1, &ID);
 	glActiveTexture(slot);
 	glBindTexture(texType, ID);
@@ -19,7 +19,7 @@ Texture::Texture(const char* image, GLenum texType, GLenum slot, GLenum format, 
 	// Configures the way the texture repeats (if it does at all)
 	glTexParameteri(texType, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(texType, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	
+
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	glTexImage2D(texType, 0, GL_RGBA, widthImg, heightImg, 0, format, pixelType, bytes);
 	glGenerateMipmap(texType);

@@ -25,6 +25,8 @@ public:
 	unsigned int biomeOctaves = 64;
 	unsigned int biomeMultiplier = 12;
 
+	
+
 	bool neighbours[6] = { false, false, false, false, false, false };
 
 	Shader* shaderProgram;
