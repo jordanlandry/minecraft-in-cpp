@@ -28,6 +28,7 @@ void World::Generate(Shader *shaderProgram)
 		(char*)"assets/birch_leaves.png",
 	};
 
+
 	for (int i = 0; i < sizeof(textures) / sizeof(*textures); i++)
 	{
 		Texture tex(textures[i], GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
@@ -52,7 +53,58 @@ void World::Render(float x, float z, Shader* shaderProgram)
 {
 	for (int i = 0; i < chunks.size(); i++) chunks[i].Render();
 
+	if (iterator >= renderDistance) iterator = 0;
 
+	std::cout << chunkX << std::endl;
+
+	
+
+	if (chunkX != lastX || iterator != 0)
+	{
+		nextX = chunkX + renderDistance / 2;
+		firstX = chunkX - renderDistance / 2;
+
+		for (int i = 0; i < renderDistance * renderDistance; i++)
+		{
+			if (chunks[i].z == chunkZ - renderDistance / 2 + iterator && chunks[i].x == firstX)
+			{
+				chunks[i].Delete();
+				chunks[i].x = nextX;
+				chunks[i].Init(shaderProgram, &Texels, seed);
+
+				break;
+			}
+		}
+
+		iterator++;
+		lastX = chunkX;
+	}
+
+	/*if (chunkZ != lastZ)
+	{
+		nextZ = chunkZ + renderDistance / 2;
+		firstZ = chunkZ - renderDistance / 2;
+
+		for (int i = 0; i < renderDistance * renderDistance; i++)
+		{
+			if (chunks[i].x == chunkX - renderDistance / 2 + iterator && chunks[i].z == firstZ)
+			{
+				chunks[i].Delete();
+				chunks[i].z = nextZ;
+				chunks[i].Init(shaderProgram, &Texels, seed);
+
+				break;
+			}
+		}
+
+		iterator++;
+		lastZ = chunkZ;
+	}*/
+
+	
+	chunkX = x / chunkSize;
+	chunkZ = z / chunkSize;
+	
 
 
 	// Enter new chunk in X direction
@@ -114,8 +166,6 @@ void World::Render(float x, float z, Shader* shaderProgram)
 	//	//}
 	//}
 }
-
-
 
 
 // TODO Fix Break block

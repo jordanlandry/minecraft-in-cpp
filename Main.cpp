@@ -113,7 +113,7 @@ int main()
 	glFrontFace(GL_CCW);
 
 	// Camera
-	Camera* camera = new Camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f));
+	Camera* camera = new Camera(width, height, glm::vec3(16.0f, 16.0f, 32.0f));
 
 	// Frame rate
 	double prevTime = 0.0;
@@ -123,14 +123,10 @@ int main()
 
 	glfwSwapInterval(0);          // Turning this on will disable VSync
 
-
-
-
 	World* world = new World();
 	world->Generate(shaderProgram);
 
 	// TODO Add multi-threading for either movement or chunk rendering so it doesn't lag when you enter a new chunk
-	
 	
 	bool pressing = false;
 	bool showLines = true;
@@ -138,6 +134,9 @@ int main()
 	// Game Loop
 	while (!glfwWindowShouldClose(window))
 	{
+
+		camera->PrintCoords();
+		// Toggle wireframe
 		if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS)
 		{
 			if (showLines) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -155,12 +154,7 @@ int main()
 				if (showLines) showLines = false;
 				else showLines = true;
 			}
-
-
-
 		}
-
-
 
 		// FPS
 		crntTime = glfwGetTime();
@@ -181,7 +175,6 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		shaderProgram->Activate();
 
-
 		camera->Inputs(window);
 		camera->updateMatrix(70.0f, 0.1f, 100.0f);
 		camera->Matrix(shaderProgram, "camMatrix");
@@ -192,10 +185,10 @@ int main()
 		world->Render(camera->Position.x, camera->Position.z, shaderProgram);
 
 		// Lighting
-		lightShader->Activate();
+		/*lightShader->Activate();
 		camera->Matrix(lightShader, "camMatrix");
 		lightVAO.Bind();
-		glDrawElements(GL_TRIANGLES, sizeof(lightIndices) / sizeof(int), GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, sizeof(lightIndices) / sizeof(int), GL_UNSIGNED_INT, 0);*/
 
 		// Window buffer
 		glfwSwapBuffers(window);

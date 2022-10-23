@@ -57,6 +57,7 @@ void Chunk::Init(Shader* aShaderProgram, std::vector<Texture>* aTexels, siv::Per
 				rock = (char*)"stone_block";
 				treeDensity = currentBiome == (char*)"forest" ? 0.1f : currentBiome == "mountains" ? 0.0f : 0.02f;
 			}
+
 			else
 			{
 				surface = (char*) "grass_block";
@@ -81,7 +82,7 @@ void Chunk::Init(Shader* aShaderProgram, std::vector<Texture>* aTexels, siv::Per
 				else if (k > height) id = (char*)"air";
 				else if (k == height) id = surface;
 				else if (k > height - 4) id = secondary;
-				else id = rock;
+				else id = rock; 
 
 				// Generate trees
 				if (k == height) CreateTree(i, j, k);

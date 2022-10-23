@@ -36,7 +36,7 @@ void Block::Init(Shader* shaderProgram, bool chunks[6], std::vector<Texture>* Te
 	// Front
 	GLfloat vertices1[] = {
 		-0.5f + x, -0.5f + y,  0.5f + z,		0.0f, 0.0f, 0.0f,	0.0f, 0.0f,		-0.5f, -0.5f,  0.5f,
-		 0.5f + x, -0.5f + y,  0.5f + z,		0.0f, 0.0f, 0.0f,	1.0f, 0.0f,		-1.0f, -0.5f,  0.5f,
+		 0.5f + x, -0.5f + y,  0.5f + z,		0.0f, 0.0f, 0.0f,	1.0f, 0.0f,		-0.5f, -0.5f,  0.5f,
 		 0.5f + x,  0.5f + y,  0.5f + z,		0.0f, 0.0f, 0.0f,	1.0f, 1.0f,		 0.0f, -0.5f,  0.5f,
 		-0.5f + x,  0.5f + y,  0.5f + z,		0.0f, 0.0f, 0.0f,	0.0f, 1.0f,		 0.0f, -0.5f,  0.5f,
 	};
