@@ -32,11 +32,12 @@ Terrain Generation
 
 ## Controls
 
-| Button     | Action   |
-| ---------- | -------- |
-| Space      | Fly      |
-| Left Ctrl  | Fly down |
-| W, A, S, D | Move     |
+| Button     | Action           |
+| ---------- | ---------------- |
+| Space      | Fly              |
+| Left Ctrl  | Fly down         |
+| W, A, S, D | Move             |
+| Enter      | Toggle Wireframe |
 
 ## Implemented features
 
