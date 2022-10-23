@@ -1,5 +1,6 @@
 #include "headers/Chunk.h"
 #include <chrono>
+#include "headers/VAO.h"
 
 Chunk::Chunk(int i, int j)
 {
@@ -9,6 +10,9 @@ Chunk::Chunk(int i, int j)
 
 	std::vector<std::vector<std::vector<Block>>> c(chunkSize, std::vector<std::vector<Block>>(chunkSize, std::vector<Block>(maxHeight)));
 	chunkBlocks = c;
+
+	std::vector<std::vector<std::vector<int>>> b(chunkSize, std::vector<std::vector<int>>(chunkSize, std::vector<int>(maxHeight)));
+	blocks = b;
 }
 
 void Chunk::Init(Shader* aShaderProgram, std::vector<Texture>* aTexels, siv::PerlinNoise::seed_type aSeed)
@@ -172,7 +176,7 @@ void Chunk::SetBiome(int i, int j)
 	else if (rm < 1) {
 		currentBiome = (char*)"mountains";
 		biomeOctaves = 512;
-		biomeMultiplier = 64;
+		biomeMultiplier = 12;
 	}
 	else if (rm < 0.7) {
 		currentBiome = (char*)"forest";

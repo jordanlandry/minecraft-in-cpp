@@ -82,17 +82,17 @@ void Block::Init(Shader* shaderProgram, bool chunks[6], std::vector<Texture>* Te
 	};
 
 	// Assign textures based on id
-	if		(id == "grass_block")		Textures = { (*Texels)[1], (*Texels)[1], (*Texels)[1], (*Texels)[1], (*Texels)[0], (*Texels)[2] };
-	else if (id == "dirt_block")		Textures = { (*Texels)[2],(*Texels)[2], (*Texels)[2], (*Texels)[2], (*Texels)[2], (*Texels)[2] };
-	else if (id == "bedrock_block")		Textures = { (*Texels)[3], (*Texels)[3], (*Texels)[3], (*Texels)[3], (*Texels)[3], (*Texels)[3] };
-	else if (id == "stone_block")		Textures = { (*Texels)[4],(*Texels)[4], (*Texels)[4], (*Texels)[4], (*Texels)[4], (*Texels)[4] };
-	else if (id == "sand_block")		Textures = { (*Texels)[5], (*Texels)[5], (*Texels)[5], (*Texels)[5], (*Texels)[5], (*Texels)[5] };
-	else if (id == "water")				Textures = { (*Texels)[6], (*Texels)[6], (*Texels)[6], (*Texels)[6], (*Texels)[6], (*Texels)[6] };
-	else if (id == "oak_log")			Textures = { (*Texels)[7], (*Texels)[7], (*Texels)[7], (*Texels)[7], (*Texels)[8], (*Texels)[8] };
-	else if (id == "oak_leaves")		Textures = { (*Texels)[9], (*Texels)[9], (*Texels)[9], (*Texels)[9], (*Texels)[9], (*Texels)[9] };
+	if		(id == "grass_block")		Textures = { (*Texels)[1],  (*Texels)[1],  (*Texels)[1],  (*Texels)[1],  (*Texels)[0],  (*Texels)[2]  };
+	else if (id == "dirt_block")		Textures = { (*Texels)[2],  (*Texels)[2],  (*Texels)[2],  (*Texels)[2],  (*Texels)[2],  (*Texels)[2]  };
+	else if (id == "bedrock_block")		Textures = { (*Texels)[3],  (*Texels)[3],  (*Texels)[3],  (*Texels)[3],  (*Texels)[3],  (*Texels)[3]  };
+	else if (id == "stone_block")		Textures = { (*Texels)[4],  (*Texels)[4],  (*Texels)[4],  (*Texels)[4],  (*Texels)[4],  (*Texels)[4]  };
+	else if (id == "sand_block")		Textures = { (*Texels)[5],  (*Texels)[5],  (*Texels)[5],  (*Texels)[5],  (*Texels)[5],  (*Texels)[5]  };
+	else if (id == "water")				Textures = { (*Texels)[6],  (*Texels)[6],  (*Texels)[6],  (*Texels)[6],  (*Texels)[6],  (*Texels)[6]  };
+	else if (id == "oak_log")			Textures = { (*Texels)[7],  (*Texels)[7],  (*Texels)[7],  (*Texels)[7],  (*Texels)[8],  (*Texels)[8]  };
+	else if (id == "oak_leaves")		Textures = { (*Texels)[9],  (*Texels)[9],  (*Texels)[9],  (*Texels)[9],  (*Texels)[9],  (*Texels)[9]  };
 	else if (id == "birch_log")			Textures = { (*Texels)[10], (*Texels)[10], (*Texels)[10], (*Texels)[10], (*Texels)[11], (*Texels)[11] };
 	else if (id == "birch_leaves")		Textures = { (*Texels)[12], (*Texels)[12], (*Texels)[12], (*Texels)[12], (*Texels)[12], (*Texels)[12] };
-	else								Textures = { (*Texels)[1], (*Texels)[1], (*Texels)[1], (*Texels)[1], (*Texels)[1], (*Texels)[1] };
+	else								Textures = { (*Texels)[1],  (*Texels)[1],  (*Texels)[1],  (*Texels)[1],  (*Texels)[1],  (*Texels)[1]  };
 
 
 	// Link VAOs, VBOs, EBOs
@@ -109,6 +109,7 @@ void Block::Init(Shader* shaderProgram, bool chunks[6], std::vector<Texture>* Te
 		/*VAOs[i].LinkAttrib(VBO1, 0, 3, GL_FLOAT, 8 * sizeof(float), (void*)0);
 		VAOs[i].LinkAttrib(VBO1, 1, 3, GL_FLOAT, 8 * sizeof(float), (void*)(3 * sizeof(float)));
 		VAOs[i].LinkAttrib(VBO1, 2, 2, GL_FLOAT, 8 * sizeof(float), (void*)(6 * sizeof(float)));*/
+
 
 		VAOs[i].LinkAttrib(VBO1, 0, 3, GL_FLOAT, 11 * sizeof(float), (void*)0);
 		VAOs[i].LinkAttrib(VBO1, 1, 3, GL_FLOAT, 11 * sizeof(float), (void*)(3 * sizeof(float)));

@@ -121,7 +121,9 @@ int main()
 	double timeDiff;
 	unsigned int counter = 0;
 
-	//glfwSwapInterval(0);          // Turning this on will disable VSync
+	glfwSwapInterval(0);          // Turning this on will disable VSync
+
+
 
 
 	World* world = new World();
@@ -129,9 +131,37 @@ int main()
 
 	// TODO Add multi-threading for either movement or chunk rendering so it doesn't lag when you enter a new chunk
 	
+	
+	bool pressing = false;
+	bool showLines = true;
+
 	// Game Loop
 	while (!glfwWindowShouldClose(window))
 	{
+		if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS)
+		{
+			if (showLines) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+			else glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+			pressing = true;
+		}
+
+		if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_RELEASE)
+		{
+			if (pressing)
+			{
+				pressing = false;
+
+				if (showLines) showLines = false;
+				else showLines = true;
+			}
+
+
+
+		}
+
+
+
 		// FPS
 		crntTime = glfwGetTime();
 		timeDiff = crntTime - prevTime;
@@ -158,10 +188,8 @@ int main()
 
 		glUniform3f(glGetUniformLocation(shaderProgram->ID, "camPos"), camera->Position.x, camera->Position.y, camera->Position.z);
 
-
 		// Render World
 		world->Render(camera->Position.x, camera->Position.z, shaderProgram);
-		
 
 		// Lighting
 		lightShader->Activate();

@@ -55,8 +55,6 @@ void World::Render(float x, float z, Shader* shaderProgram)
 
 
 
-	
-
 	// Enter new chunk in X direction
 	//if (chunkX != lastX)
 	//{

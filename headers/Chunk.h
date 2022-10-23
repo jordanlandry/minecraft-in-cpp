@@ -5,6 +5,7 @@
 #include "Block.h"
 #include "shaderClass.h"
 #include "headers/PerlinNoise.hpp"
+#include "headers/Texture.h"
 
 class Chunk {
 public:
@@ -29,12 +30,18 @@ public:
 
 	bool neighbours[6] = { false, false, false, false, false, false };
 
+	std::vector<std::vector<std::vector<int>>> blocks;
+
 	Shader* shaderProgram;
 	std::vector<Texture>* Texels;
 	siv::PerlinNoise::seed_type seed;
 
-	std::vector <std::vector<std::vector<Block>>> blocks;
+	//std::vector <std::vector<std::vector<Block>>> blocks;
 	std::vector <std::vector<std::vector<Block>>> chunkBlocks;
+
+
+	std::vector<GLfloat> vertices1;
+	VAO* VAO1 = new VAO();
 
 	char* currentBiome;
 
